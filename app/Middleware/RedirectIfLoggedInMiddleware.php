@@ -1,0 +1,14 @@
+<?php 
+
+namespace App\Middleware;
+
+class RedirectIfLoggedInMiddleware implements IMiddleware {
+    public function handle(): bool {
+        if (isset($_SESSION['user'])) {
+            header('Location: /');
+            exit;
+        }
+
+        return true;
+    }
+}
