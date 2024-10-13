@@ -6,6 +6,7 @@ use App\Controller\AuthController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
+use App\Repository\Db\Db;
 
 
 class App {
@@ -30,9 +31,9 @@ class App {
         //     $redirectIfLoggedInMiddleware
         // ]);
 
-        // $this->router->register(RequestMethodEnum::GET, '/:id/:nama', [AuthController::class, 'login'], [
-        //     $redirectIfLoggedInMiddleware
-        // ]);
+        $this->router->register(RequestMethodEnum::GET, '/:id/profile', [AuthController::class, 'login'], [
+            $redirectIfLoggedInMiddleware
+        ]);
     }
 
     // The app handles the request by resolving the route

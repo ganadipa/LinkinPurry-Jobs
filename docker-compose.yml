@@ -6,10 +6,10 @@ services:
     image: postgres:13
     ports:
       - "5432:5432"
-    environment:
-      - ENVIRONMENT=DOCKER
     env_file:
       - .env
+    environment:
+      - ENVIRONMENT=docker
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -27,6 +27,8 @@ services:
       - postgres-local
     env_file:
       - .env
+    environment:
+      - ENVIRONMENT=docker
     networks:
       - internal-network
 

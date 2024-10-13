@@ -11,7 +11,7 @@ class Db {
     private PDO $pdo;
 
     private function __construct() {
-        $host = $_ENV['ENVIRONMENT'] === 'docker' ? $_ENV['POSTGRES_HOST'] : 'localhost';
+        $host = $_ENV['ENVIRONMENT'] === 'docker' ? 'postgres-local' : 'localhost';
         $port = $_ENV['POSTGRES_PORT'];
         $dbname = $_ENV['POSTGRES_DB'];
         $user = $_ENV['POSTGRES_USER'];
@@ -24,6 +24,7 @@ class Db {
         } catch (PDOException $e) {
             error_log('Database connection error: ' . $e->getMessage());
             throw new Exception('Database connection error. Please try again later.');
+
         }
     }
 
