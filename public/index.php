@@ -18,10 +18,12 @@ $app = new App();
 // Register routes
 $app->registerRoutes();
 
+// Prepare the db connection
+$app->prepareDbConnection();
+
 // Handle the request
 /**
  *  param:
- *  1. $_SERVER['REQUEST_URI'] as the request path
  *  2. $_SERVER['REQUEST_METHOD'] as the request method
  *  3. $_GET as the query parameters
  * 
