@@ -1,26 +1,26 @@
 <?php
 
 namespace App\Repository\Db;
+use \PDO;
+use \PDOException;
+use \Exception;
+
 
 class Db {
-    private static $instance = null;
-    private $pdo;
+    private static ?Db $instance = null;
+    private PDO $pdo;
 
     private function __construct() {
-        $host = getenv('POSTGRES_HOST');
-        $port = getenv('POSTGRES_PORT');
-        $dbname = getenv('POSTGRES_DB');
-        $user = getenv('POSTGRES_USER');
-        $password = getenv('POSTGRES_PASSWORD');
+        $host = $_ENV['ENVIRONMENT'] === 'docker' ? $_ENV['POSTGRES_HOST'] : 'localhost';
+        $port = $_ENV['POSTGRES_PORT'];
+        $dbname = $_ENV['POSTGRES_DB'];
+        $user = $_ENV['POSTGRES_USER'];
+        $password = $_ENV['POSTGRES_PASSWORD'];
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
 
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ];
-
         try {
-            $this->pdo = new PDO($dsn, $user, $password, $options);
+            $this->pdo = new PDO($dsn, $user, $password);
         } catch (PDOException $e) {
             error_log('Database connection error: ' . $e->getMessage());
             throw new Exception('Database connection error. Please try again later.');
@@ -36,5 +36,30 @@ class Db {
 
     public function getConnection() {
         return $this->pdo;
+    }
+
+    public function createTables() {
+        $attachmentLowongan = new DbAttachmentLowongan($this->pdo);
+        $companyDetail = new DbCompanyDetail($this->pdo);
+        $lamaran = new DbLamaran($this->pdo);
+        $lowongan = new DbLowongan($this->pdo);
+        $user = new DbUser($this->pdo);
+
+
+        $lamaran->deleteTable();
+        $attachmentLowongan->deleteTable();
+        $lowongan->deleteTable();
+        $companyDetail->deleteTable();
+        $user->deleteTable();
+
+        $user->createTable();
+
+        $companyDetail->createTable();
+
+        $lowongan->createTable();
+
+        $attachmentLowongan->createTable();
+
+        $lamaran->createTable();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Util\Enum;
 
-enum StatusLowonganEnum: string {
+enum StatusLamaranEnum: string {
     case ACCEPTED = 'accepted';
     case REJECTED = 'rejected';
     case WAITING = 'waiting';

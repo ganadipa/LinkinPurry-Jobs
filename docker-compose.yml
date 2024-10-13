@@ -6,6 +6,8 @@ services:
     image: postgres:13
     ports:
       - "5432:5432"
+    environment:
+      - ENVIRONMENT=DOCKER
     env_file:
       - .env
     volumes:

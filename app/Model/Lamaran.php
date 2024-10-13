@@ -1,7 +1,7 @@
 <?
 
 namespace App\Model;
-use App\Util\Enum\StatusLowonganEnum;
+use App\Util\Enum\StatusLamaranEnum;
 
 class Lamaran {
     public int $lamaran_id;
@@ -9,11 +9,11 @@ class Lamaran {
     public int $lowongan_id;
     public string $cv_path;
     public string $video_path;
-    public StatusLowonganEnum $status;
+    public StatusLamaranEnum $status;
     public string $status_reason;
     public DateTime $created_at;
 
-    public function __construct(int $lamaran_id, int $user_id, int $lowongan_id, string $cv_path, string $video_path, StatusLowonganEnum $status, string $status_reason, DateTime $created_at) {
+    public function __construct(int $lamaran_id, int $user_id, int $lowongan_id, string $cv_path, string $video_path, StatusLamaranEnum $status, string $status_reason, DateTime $created_at) {
         $this->lamaran_id = $lamaran_id;
         $this->user_id = $user_id;
         $this->lowongan_id = $lowongan_id;

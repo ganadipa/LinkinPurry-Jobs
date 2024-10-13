@@ -2,6 +2,8 @@
 
 namespace App\Repository\Db;
 use App\Model\AttachmentLowongan;
+use App\Repository\Interface\RAttachmentLowongan;
+use \PDO;
 
 class DbAttachmentLowongan implements RAttachmentLowongan {
 
@@ -11,18 +13,34 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
         try {
             $this->db->exec('
                 CREATE TABLE IF NOT EXISTS attachment_lowongan (
-                    attachment_id SERIAL PRIMARY KEY,
+                    attachment_id INT PRIMARY KEY,
                     lowongan_id INT NOT NULL,
-                    file_path VARCHAR(255) NOT NULL
+                    file_path VARCHAR(255) NOT NULL,
+                    CONSTRAINT fk_lowongan_id
+                        FOREIGN KEY (lowongan_id) 
+                        REFERENCES lowongan(lowongan_id)
+                        ON DELETE CASCADE
                 )
             ');
+            echo "Table 'attachment_lowongan' created successfully.\n";
         } catch (PDOException $e) {
             error_log('Create table error: ' . $e->getMessage());
             throw new Exception('Create table error. Please try again later.');
         }
     }
 
-    public function insert(AttachmentLowongan $attachmentLowongan): void {
+    public function deleteTable() {
+        try {
+            $this->db->exec('
+                DROP TABLE IF EXISTS attachment_lowongan
+            ');
+        } catch (PDOException $e) {
+            error_log('Delete table error: ' . $e->getMessage());
+            throw new Exception('Delete table error. Please try again later.');
+        }
+    }
+
+    public function insert(AttachmentLowongan $attachmentLowongan): AttachmentLowongan {
         try {
             $stmt = $this->db->prepare('
                 INSERT INTO attachment_lowongan (lowongan_id, file_path)
@@ -33,13 +51,16 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
                 'lowongan_id' => $attachmentLowongan->lowongan_id,
                 'file_path' => $attachmentLowongan->file_path,
             ]);
+
+            $attachmentLowongan->attachment_id = (int) $this->db->lastInsertId();
+            return $attachmentLowongan;
         } catch (PDOException $e) {
             error_log('Insert attachment lowongan error: ' . $e->getMessage());
             throw new Exception('Insert attachment lowongan error. Please try again later.');
         }
     }
 
-    public function delete(int $attachmentId): void {
+    public function delete(int $attachmentId): AttachmentLowongan {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM attachment_lowongan
@@ -49,6 +70,10 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
             $stmt->execute([
                 'attachment_id' => $attachmentId,
             ]);
+
+            $attachmentLowongan = new AttachmentLowongan();
+            $attachmentLowongan->attachment_id = $attachmentId;
+            return $attachmentLowongan;
         } catch (PDOException $e) {
             error_log('Delete attachment lowongan error: ' . $e->getMessage());
             throw new Exception('Delete attachment lowongan error. Please try again later.');
