@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  # PostgreSQL service for local development
+  postgres-local:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal-network
+
+  # PHP Application service for local development
+  app-local:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - postgres-local
+    env_file:
+      - .env
+    networks:
+      - internal-network
+
+volumes:
+  postgres_data:
+
+networks:
+  internal-network:
+    driver: bridge

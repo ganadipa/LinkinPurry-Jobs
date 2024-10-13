@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Util;
 
 enum RequestMethodEnum: string {
     case GET = 'GET';

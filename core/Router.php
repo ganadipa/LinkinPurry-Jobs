@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use App\Utils\RequestMethodEnum;
+use App\Util\RequestMethodEnum;
 use App\Middleware\IMiddleware;
 
 class Router {

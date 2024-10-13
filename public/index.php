@@ -6,6 +6,11 @@ use Core\App;
 
 
 // Prepare
+// If prefix is /public/index.php, then remove it
+$requestUri = $_SERVER['REQUEST_URI'];
+if (strpos($requestUri, '/public/index.php') === 0) {
+    $requestUri = substr($requestUri, strlen('/public/index.php'));
+}
 
 // Instantiate the app
 $app = new App();
@@ -21,4 +26,4 @@ $app->registerRoutes();
  *  3. $_GET as the query parameters
  * 
  *  */ 
-$app->handleRequest($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET);
+$app->handleRequest($requestUri, $_SERVER['REQUEST_METHOD'], $_GET);
