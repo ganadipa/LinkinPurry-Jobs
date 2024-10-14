@@ -3,6 +3,7 @@ session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use Core\App;
+use App\Util\EnvLoader;
 
 
 // Prepare
@@ -11,6 +12,13 @@ $requestUri = $_SERVER['REQUEST_URI'];
 if (strpos($requestUri, '/public/index.php') === 0) {
     $requestUri = substr($requestUri, strlen('/public/index.php'));
 }
+
+// If the environment is not docker, then env is not automatically loaded
+if ($_ENV['ENVIRONMENT'] !== 'docker') {
+    EnvLoader::load(__DIR__ . "/../.env");
+}
+
+
 
 // Instantiate the app
 $app = new App();

@@ -23,6 +23,4 @@ class EnvLoader {
             $_ENV[$key] = $value;
         }
     }
-
-
 } 

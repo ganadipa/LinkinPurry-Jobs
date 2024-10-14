@@ -18,6 +18,7 @@ class Db {
         $password = $_ENV['POSTGRES_PASSWORD'];
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
+        echo $dsn;
 
         try {
             $this->pdo = new PDO($dsn, $user, $password);

@@ -7,13 +7,18 @@ use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
 use App\Repository\Db\Db;
-
+use App\Util\EnvLoader;
 
 class App {
     private Router $router;
 
     public function __construct() {
         $this->router = new Router();
+    }
+
+    // Load the environment variables
+    public function loadEnv(string $path): void {
+        EnvLoader::load($path);
     }
 
     // Register the routes
