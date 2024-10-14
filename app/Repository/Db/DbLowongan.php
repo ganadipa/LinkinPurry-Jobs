@@ -105,4 +105,30 @@ class DbLowongan implements RLowongan {
             throw new Exception('Delete lowongan error. Please try again later.');
         }
     }
+
+    public function update(int $lowonganId, array $data): Lowongan {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lowongan 
+                SET posisi = :posisi, deskripsi = :deskripsi, jenis_pekerjaan = :jenis_pekerjaan, jenis_lokasi = :jenis_lokasi, is_open = :is_open, updated_at = NOW()
+                WHERE lowongan_id = :lowongan_id
+            ');
+    
+            $stmt->execute([
+                'posisi' => $data['posisi'],
+                'deskripsi' => $data['deskripsi'],
+                'jenis_pekerjaan' => $data['jenis_pekerjaan'],
+                'jenis_lokasi' => $data['jenis_lokasi'],
+                'is_open' => $data['is_open'],
+                'lowongan_id' => $lowonganId,
+            ]);
+    
+            $stmt = $this->db->prepare('SELECT * FROM lowongan WHERE lowongan_id = :lowongan_id');
+            $stmt->execute(['lowongan_id' => $lowonganId]);
+            return $stmt->fetchObject(Lowongan::class);
+        } catch (PDOException $e) {
+            error_log('Update lowongan error: ' . $e->getMessage());
+            throw new Exception('Update lowongan error. Please try again later.');
+        }
+    }    
 }
