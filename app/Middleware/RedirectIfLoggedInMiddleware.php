@@ -9,6 +9,7 @@ class RedirectIfLoggedInMiddleware implements IMiddleware {
             exit;
         }
 
+        // True means move on to the next middleware.
         return true;
     }
 }

@@ -6,7 +6,6 @@ use Core\App;
 use App\Util\EnvLoader;
 
 
-// Prepare
 // If prefix is /public/index.php, then remove it
 $requestUri = $_SERVER['REQUEST_URI'];
 if (strpos($requestUri, '/public/index.php') === 0) {
