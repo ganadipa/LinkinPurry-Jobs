@@ -83,4 +83,44 @@ class DbCompanyDetail implements RCompanyDetail {
             throw new Exception('Delete company detail error. Please try again later.');
         }
     }
+
+    public function update(CompanyDetail $companyDetail): CompanyDetail {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE company_detail
+                SET lokasi = :lokasi, about = :about
+                WHERE company_id = :company_id
+            ');
+
+            $stmt->execute([
+                'company_id' => $companyDetail->company_id,
+                'lokasi' => $companyDetail->lokasi,
+                'about' => $companyDetail->about,
+            ]);
+
+            return $companyDetail;
+        } catch (PDOException $e) {
+            error_log('Update company detail error: ' . $e->getMessage());
+            throw new Exception('Update company detail error. Please try again later.');
+        }
+    }
+
+    public function getCompanyDetailByUserId(int $userId): CompanyDetail {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM company_detail
+                WHERE user_id = :user_id
+            ');
+
+            $stmt->execute([
+                'user_id' => $userId,
+            ]);
+
+            $companyDetail = $stmt->fetchObject(CompanyDetail::class);
+            return $companyDetail;
+        } catch (PDOException $e) {
+            error_log('Get company detail error: ' . $e->getMessage());
+            throw new Exception('Get company detail error. Please try again later.');
+        }
+    }
 }

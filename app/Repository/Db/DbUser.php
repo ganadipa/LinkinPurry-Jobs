@@ -64,7 +64,7 @@ class DbUser implements RUser {
             $stmt->execute([
                 'email' => $user->email,
                 'password' => $user->password,
-                'role' => $user->role,
+                'role' => $user->role->value,
             ]);
 
             $user->user_id = (int) $this->db->lastInsertId();

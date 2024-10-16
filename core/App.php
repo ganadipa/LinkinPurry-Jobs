@@ -3,6 +3,8 @@
 namespace Core;
 
 use App\Controller\AuthController;
+use App\Controller\HomeController;
+use App\Controller\CompanyController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
@@ -39,6 +41,16 @@ class App {
         $this->router->register(RequestMethodEnum::GET, '/:id/profile', [AuthController::class, 'login'], [
             $redirectIfLoggedInMiddleware
         ]);
+        
+        // Home Page Routes
+        $this->router->register(RequestMethodEnum::GET, '/home', [HomeController::class, 'home']);
+        $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
+        $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
+
+        // Company Page Routes
+        $this->router->register(RequestMethodEnum::GET, '/company/:id/profile', [CompanyController::class, 'showProfile'], [
+            $redirectIfLoggedInMiddleware
+        ]); 
     }
 
     // The app handles the request by resolving the route
