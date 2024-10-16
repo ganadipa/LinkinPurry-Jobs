@@ -5,8 +5,12 @@ use App\Util\Enum\JenisLokasiEnum;
 
 
 class Lowongan {
+    // key
     public int $lowongan_id;
+
+    // foreign key to company detail (user_id)
     public int $company_id;
+
     public string $posisi;
     public string $deskripsi;
     public string $jenis_pekerjaan;
@@ -15,7 +19,7 @@ class Lowongan {
     public DateTime $created_at;
     public DateTime $updated_at;
 
-    public function __construct(int $lowongan_id, int $company_id, string $posisi, string $deskripsi, string $jenis_pekerjaan, JenisLokasiEnum $jenis_lokasi, bool $is_open = true, DateTime $created_at, DateTime $updated_at) {
+    public function __construct(int $company_id, string $posisi, string $deskripsi, string $jenis_pekerjaan, JenisLokasiEnum $jenis_lokasi, bool $is_open = true, DateTime $created_at, DateTime $updated_at, int $lowongan_id = null) {
         $this->lowongan_id = $lowongan_id;
         $this->company_id = $company_id;
         $this->posisi = $posisi;

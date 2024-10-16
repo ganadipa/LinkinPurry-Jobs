@@ -3,7 +3,9 @@
 namespace App\Model;
 
 class CompanyDetail {
+    // foreign key to user (user_id) (must be defined)
     public int $user_id;
+
     public string $lokasi;
     public string $about;
 
