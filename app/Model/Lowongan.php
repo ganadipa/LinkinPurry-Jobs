@@ -2,6 +2,7 @@
 
 namespace App\Model;
 use App\Util\Enum\JenisLokasiEnum;
+use \DateTime;
 
 
 class Lowongan {

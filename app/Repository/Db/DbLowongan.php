@@ -5,6 +5,8 @@ use App\Model\Lowongan;
 use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
 use \PDO;
+use \PDOException;
+use \Exception;
 
 
 class DbLowongan implements RLowongan {
@@ -86,7 +88,7 @@ class DbLowongan implements RLowongan {
         }
     }
 
-    public function delete(int $lowonganId): Lowongan {
+    public function delete(int $lowonganId): bool {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM lowongan
@@ -97,9 +99,7 @@ class DbLowongan implements RLowongan {
                 'lowongan_id' => $lowonganId,
             ]);
 
-            $lowongan = new Lowongan();
-            $lowongan->lowongan_id = $lowonganId;
-            return $lowongan;
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log('Delete lowongan error: ' . $e->getMessage());
             throw new Exception('Delete lowongan error. Please try again later.');
@@ -131,4 +131,22 @@ class DbLowongan implements RLowongan {
             throw new Exception('Update lowongan error. Please try again later.');
         }
     }    
+
+    public function getById(int $lowonganId): Lowongan {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $lowonganId,
+            ]);
+
+            return $stmt->fetchObject(Lowongan::class);
+        } catch (PDOException $e) {
+            error_log('Get lowongan by ID error: ' . $e->getMessage());
+            throw new Exception('Get lowongan by ID error. Please try again later.');
+        }
+    }
 }
