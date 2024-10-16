@@ -1,0 +1,105 @@
+:root {
+  --primary-color: #0a66c2;
+  --secondary-color: #fff;
+  --border-color: #e0e0e0;
+  --background-color: #f3f2ef;
+  --text-color: #0a66c2;
+  --button-bg-color: #0a66c2;
+  --button-text-color: #fff;
+}
+
+body {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell,
+    "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+}
+.navbar {
+  background-color: var(--secondary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  color: var(--primary-color);
+  font-size: 24px;
+  font-weight: bold;
+}
+.container {
+  max-width: 1128px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.job-list {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.job-item {
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.job-item:last-child {
+  border-bottom: none;
+}
+.job-title {
+  font-size: 18px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+.job-actions button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+}
+.add-job {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.search-sort-filter {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.search-sort-filter input,
+.search-sort-filter select {
+  padding: 5px;
+  margin-right: 10px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--primary-color);
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.pagination button.active {
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+}

@@ -6,7 +6,7 @@ use App\Repository\Db\Db;
 use App\Util\EnvLoader;
 
 // Load environment variables;
-if ($_ENV['ENVIRONMENT'] !== 'docker') {
+if (getenv('ENVIRONMENT') !== 'docker') {
     EnvLoader::load(__DIR__ . "/../.env");
 }
 

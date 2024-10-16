@@ -18,12 +18,17 @@ class Db {
         $password = $_ENV['POSTGRES_PASSWORD'];
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
-        echo $dsn;
+        // echo "Connecting to database...\n" . $dsn . "<br>";
+        // echo "User: $user<br>";
+        // echo "Password: " . str_repeat('*', strlen($password)) . "<br>";
 
         try {
             $this->pdo = new PDO($dsn, $user, $password);
+            // $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Database connected successfully\n";
         } catch (PDOException $e) {
             error_log('Database connection error: ' . $e->getMessage());
+            echo "Database connection error: " . $e->getMessage();
             throw new Exception('Database connection error. Please try again later.');
 
         }
