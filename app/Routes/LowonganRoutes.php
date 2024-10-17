@@ -2,6 +2,7 @@
 
 namespace App\Routes;
 
+use \PDO;
 use App\Controller\LowonganController;
 use App\Repository\Db\DbLowongan;
 use App\Util\Enum\RequestMethodEnum;
