@@ -51,6 +51,10 @@ class App {
         $this->router->register(RequestMethodEnum::GET, '/company/:id/profile', [CompanyController::class, 'showProfile'], [
             $redirectIfLoggedInMiddleware
         ]); 
+
+        // Lowongan Routes
+        require_once __DIR__ . '/../app/Routes/LowonganRoutes.php';
+        \App\Routes\registerLowonganRoutes($this->router);
     }
 
     // The app handles the request by resolving the route
