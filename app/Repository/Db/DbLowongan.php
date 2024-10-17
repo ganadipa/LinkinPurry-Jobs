@@ -149,4 +149,94 @@ class DbLowongan implements RLowongan {
             throw new Exception('Get lowongan by ID error. Please try again later.');
         }
     }
+
+    public function getPaginatedJobs(int $page, int $limit, string $search = '', string $jenisPekerjaan = '', string $jenisLokasi = ''): array {
+        $offset = ($page - 1) * $limit;
+    
+        $sql = '
+            SELECT * FROM lowongan
+            WHERE 1=1
+        ';
+    
+        // Add search query
+        if (!empty($search)) {
+            $sql .= ' AND posisi ILIKE :search';
+        }
+    
+        // Add filters
+        if (!empty($jenisPekerjaan)) {
+            $sql .= ' AND jenis_pekerjaan = :jenis_pekerjaan';
+        }
+        
+        if (!empty($jenisLokasi)) {
+            $sql .= ' AND jenis_lokasi = :jenis_lokasi';
+        }
+    
+        $sql .= ' ORDER BY created_at DESC LIMIT :limit OFFSET :offset';
+    
+        try {
+            $stmt = $this->db->prepare($sql);
+    
+            // Bind params
+            if (!empty($search)) {
+                $stmt->bindValue(':search', '%' . $search . '%');
+            }
+    
+            if (!empty($jenisPekerjaan)) {
+                $stmt->bindValue(':jenis_pekerjaan', $jenisPekerjaan);
+            }
+    
+            if (!empty($jenisLokasi)) {
+                $stmt->bindValue(':jenis_lokasi', $jenisLokasi);
+            }
+    
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_CLASS, Lowongan::class);
+        } catch (PDOException $e) {
+            error_log('Error fetching paginated jobs: ' . $e->getMessage());
+            throw new Exception('Error fetching paginated jobs');
+        }
+    }
+    
+    public function countJobs(string $search = '', string $jenisPekerjaan = '', string $jenisLokasi = ''): int {
+        $sql = 'SELECT COUNT(*) FROM lowongan WHERE 1=1';
+    
+        if (!empty($search)) {
+            $sql .= ' AND posisi ILIKE :search';
+        }
+    
+        if (!empty($jenisPekerjaan)) {
+            $sql .= ' AND jenis_pekerjaan = :jenis_pekerjaan';
+        }
+    
+        if (!empty($jenisLokasi)) {
+            $sql .= ' AND jenis_lokasi = :jenis_lokasi';
+        }
+    
+        try {
+            $stmt = $this->db->prepare($sql);
+    
+            // Bind params
+            if (!empty($search)) {
+                $stmt->bindValue(':search', '%' . $search . '%');
+            }
+    
+            if (!empty($jenisPekerjaan)) {
+                $stmt->bindValue(':jenis_pekerjaan', $jenisPekerjaan);
+            }
+    
+            if (!empty($jenisLokasi)) {
+                $stmt->bindValue(':jenis_lokasi', $jenisLokasi);
+            }
+    
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log('Error counting jobs: ' . $e->getMessage());
+            throw new Exception('Error counting jobs');
+        }
+    }    
 }

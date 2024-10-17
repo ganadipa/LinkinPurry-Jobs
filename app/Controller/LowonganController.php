@@ -66,4 +66,28 @@ class LowonganController {
             return null;
         }
     }
+
+    // Get paginated jobs
+    public function getPaginatedJobs(array $query): void {
+        $page = isset($query['page']) ? (int)$query['page'] : 1;
+        $limit = 10; // Set limit per page
+        $search = $query['search'] ?? '';
+        $jenisPekerjaan = $query['jenisPekerjaan'] ?? '';
+        $jenisLokasi = $query['jenisLokasi'] ?? '';
+    
+        try {
+            $jobs = $this->lowonganRepo->getPaginatedJobs($page, $limit, $search, $jenisPekerjaan, $jenisLokasi);
+            $totalJobs = $this->lowonganRepo->countJobs($search, $jenisPekerjaan, $jenisLokasi);
+            $totalPages = ceil($totalJobs / $limit);
+    
+            echo json_encode([
+                'jobs' => $jobs,
+                'totalPages' => $totalPages
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+    
 }

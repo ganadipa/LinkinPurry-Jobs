@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home (Job Seeker)</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Home</title>
+  <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
   <div class="search-container">
@@ -35,6 +35,6 @@
   <div id="pagination">
   </div>
 
-  <script src="js/home.js"></script>
+  <script src="/public/js/home.js"></script>
 </body>
 </html>
