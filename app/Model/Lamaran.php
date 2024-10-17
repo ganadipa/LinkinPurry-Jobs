@@ -5,7 +5,7 @@ use App\Util\Enum\StatusLamaranEnum;
 
 class Lamaran {
     // key
-    public int $lamaran_id;
+    public ?int $lamaran_id;
 
     // foreign key to user (user_id)
     public int $user_id;

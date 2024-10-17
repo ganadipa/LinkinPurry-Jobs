@@ -7,7 +7,7 @@ use App\Util\EnvLoader;
 
 // Load environment variables;
 if (getenv('ENVIRONMENT') !== 'docker') {
-    EnvLoader::load(__DIR__ . "/../.env");
+    EnvLoader::load(__DIR__ . "/../.env.local");
 }
 
 // Create the db tables;

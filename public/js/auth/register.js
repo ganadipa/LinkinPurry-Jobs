@@ -1,3 +1,5 @@
+import { toast } from "../toast.js";
+
 function nextStep(currentStep, nextStep) {
   if (validateStep(currentStep)) {
     document.getElementById(`step${currentStep}`).classList.remove("active");
@@ -5,10 +7,14 @@ function nextStep(currentStep, nextStep) {
   }
 }
 
+window.nextStep = nextStep;
+
 function prevStep(currentStep, prevStep) {
   document.getElementById(`step${currentStep}`).classList.remove("active");
   document.getElementById(`step${prevStep}`).classList.add("active");
 }
+
+window.prevStep = prevStep;
 
 function validateStep(step) {
   const currentStep = document.getElementById(`step${step}`);
@@ -63,11 +69,18 @@ function clearError(input) {
   }
 }
 
+window.validateStep = validateStep;
+window.validateField = validateField;
+window.showError = showError;
+window.clearError = clearError;
+
 function isValidEmail(email) {
-  const re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // simple email validation
+  const re = /\S+@\S+\.\S+/;
   return re.test(String(email).toLowerCase());
 }
+
+window.isValidEmail = isValidEmail;
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("registrationForm");
@@ -88,7 +101,30 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (validateStep(2)) {
-      alert("Registration successful! Redirecting to home page...");
+      const formData = new FormData(this);
+      const submitButton = this.querySelector("button[type=submit]");
+      submitButton.disabled = true;
+      submitButton.textContent = "Loading...";
+
+      fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            toast("success", data.message);
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 3000);
+          } else {
+            submitButton.disabled = false;
+            submitButton.textContent = "Agree & Join";
+
+            // Display toast
+            toast("error", data.message);
+          }
+        });
     }
   });
 
@@ -96,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function () {
   inputs.forEach((input) => {
     input.addEventListener("focusout", function () {
       const error = validateField(this);
-      console.log("error");
       if (error) {
         showError(this, error);
       } else {

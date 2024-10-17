@@ -7,6 +7,7 @@ use App\View\View;
 use Core\Repositories;
 use App\Validator\EmailValidator;
 use App\Validator\PasswordValidator;
+use App\Validator\UserRoleValidator;
 use App\Service\AuthService;
 use \Exception;
 
@@ -53,21 +54,147 @@ class AuthController {
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-                'data' => [
-
-                ]
+                'data' => null
             ]);
             $res->send();
             return;
         }
 
+
         // Then there exist a valid user
-        $res->redirect('/dashboard');
+        $res->json([
+            'status' => 'success',
+            'message' => 'User logged in successfully',
+            'data' => [
+                'user_id' => $user->user_id,
+                'role' => $user->role,
+                'name' => $user->nama,
+                'email' => $user->email,
+            ]
+        ]);
+
+        $res->send();
     }
 
     public static function register(Request $req, Response $res): void {
-        // Register logic       
+        $role = $req->getPost('userType', '');
+        $name = $req->getPost('name', '');
+        $email = $req->getPost('email', '');
+        $password = $req->getPost('password', '');
+        $confirmPassword = $req->getPost('confirmPassword', '');
+        
+        // Validation of what is needed
+        $emailValid = EmailValidator::validate($email);
+        $passwordValid = PasswordValidator::validate($password);
+        $nameValid = $name;
+        $roleValid = UserRoleValidator::validate($role);
+
+        // Check if the password and confirm password are the same
+        if ($passwordValid !== $confirmPassword) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'Password and Confirm Password do not match',
+                'data' => null
+            ]);
+            $res->send();
+            return;
+        }
+
+        // Register the user
+        try {
+            $user = AuthService::registerUser($roleValid, $nameValid, $emailValid, $passwordValid);
+
+            if ($roleValid == 'company') {
+
+                $location = $req->getPost('location', '');
+                $about = $req->getPost('about', '');
+
+                $company = AuthService::registerCompany($user->user_id, $location, $about);
+            }
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+            $res->send();
+            return;
+        }
+
+        // Then the user is registered
+        $res->json([
+            'status' => 'success',
+            'message' => 'User registered successfully',
+            'data' => [
+                'user_id' => $user->user_id,
+            ]
+        ]);
+
+        $res->send();
+
     }
+
+    public static function logout(Request $req, Response $res): void {
+        session_destroy();
+    }
+
+    public static function self(Request $req, Response $res): void {
+        $user_id = $req->getSessionValue('id', null);
+        
+        if (!isset($user_id)) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'User not found',
+                'data' => null
+            ]);
+            $res->send();
+            return;
+        }
+
+        $user = AuthService::self($user_id);
+        if (!isset($user)) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'User not found',
+                'data' => null
+            ]);
+            $res->send();
+            return;
+        }
+
+        $res->json([
+            'status' => 'success',
+            'message' => 'User found',
+            'data' => [
+                'user_id' => $user->user_id,
+                'role' => $user->role,
+                'name' => $user->nama,
+                'email' => $user->email,
+            ]
+        ]);
+
+        $res->send();
+    }
+
+    public static function currentUserInfo(Request $req, Response $res): void {
+        $user = $req->getUser();
+        $res->json(
+            [
+                'status' => 'success',
+                'message' => 'User found',
+                'data' => [
+                    'user_id' => $user->user_id,
+                    'role' => $user->role,
+                    'name' => $user->nama,
+                    'email' => $user->email,
+                ]
+            ]
+        );
+
+        $res->send();
+    }
+
+
 
 
 

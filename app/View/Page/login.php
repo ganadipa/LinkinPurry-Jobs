@@ -6,6 +6,7 @@
             <input type="email" id="email" name="email" placeholder=" " required>
             <label for="email">Email</label>
         </div>
+
         <div class="input-group password-container">
             <input type="password" id="password" name="password" placeholder=" " required>
             <label for="password">Password</label>
@@ -17,4 +18,4 @@
         <button type="submit" class="sign-in-button">Sign in</button>
     </form>
 </div>
-<p class="join-now ">New to LinkedIn? <a href="/register">Join now</a></p>
+<p class="join-now ">New to LinkinPurry? <a href="/register">Join now</a></p>
