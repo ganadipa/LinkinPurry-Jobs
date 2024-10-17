@@ -15,6 +15,8 @@ class Router {
             RequestMethodEnum::PUT->value => [],
             RequestMethodEnum::DELETE->value => [],
         ];
+
+        require_once __DIR__ . '/../Routes/LowonganRoutes.php';
     }
 
     public function register(RequestMethodEnum $method, string $path, Callable $callback, array $middlewares = []): void {
