@@ -25,7 +25,7 @@ class Db {
         try {
             $this->pdo = new PDO($dsn, $user, $password);
             // $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // echo "Database connected successfully\n";
+            // echo "Database connected successfully<br>";
         } catch (PDOException $e) {
             error_log('Database connection error: ' . $e->getMessage());
             echo "Database connection error: " . $e->getMessage();
