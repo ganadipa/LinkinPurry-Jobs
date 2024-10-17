@@ -14,6 +14,7 @@ use App\Http\Request;
 
 class App {
     private Router $router;
+    private IRepository $repo;
 
     public function __construct() {
         $this->router = new Router();
@@ -31,18 +32,30 @@ class App {
 
 
         // Register the routes
-        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'login'], [
+
+        // Auth Routes (GET)
+        $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
             $redirectIfLoggedInMiddleware
         ]);
+
+        $this->router->register(RequestMethodEnum::GET, '/register', [AuthController::class, 'registerPage'], [
+            $redirectIfLoggedInMiddleware
+        ]);
+
+        // Auth Routes (POST)
+        $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
+        ]);
+
+        $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
+        ]);
+
+
 
         // $this->router->register(RequestMethodEnum::GET, '/:id', [AuthController::class, 'login'], [
         //     $redirectIfLoggedInMiddleware
         // ]);
 
-        $this->router->register(RequestMethodEnum::GET, '/:id/profile', [AuthController::class, 'login'], [
-            $redirectIfLoggedInMiddleware
-        ]);
-        
+            
         // Home Page Routes
         $this->router->register(RequestMethodEnum::GET, '/home', [HomeController::class, 'home']);
         $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
@@ -57,11 +70,6 @@ class App {
     // The app handles the request by resolving the route
     public function handleRequest(Request $req): void {
         $this->router->resolve($req);
-    }
-
-    // Prepare the db connection
-    public function prepareDbConnection() {
-        Db::getInstance();
     }
 
     // Set the directory aliases

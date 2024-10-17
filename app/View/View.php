@@ -1,6 +1,7 @@
 <?php
 
-namespace Core;
+namespace App\View;
+use Core\DirectoryAlias;
 
 class View
 {
@@ -14,12 +15,12 @@ class View
      */
     public static function render(string $dir, string $view, array $vars = []): string
     {
-        $file = DirectoryAlias::get('@view')."/$dir/$view.php";
+        $file = DirectoryAlias::get('@view'). "/$dir/$view.php";
 
         if(file_exists($file)) {
             return self::renderFile($file, $vars);
         } else {
-            throw new Exception("'$file' not found.");
+            throw new \Exception("'$file' not found.");
         }
     }
 

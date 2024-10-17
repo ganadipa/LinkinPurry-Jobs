@@ -143,11 +143,13 @@ class Router {
                 }
             }
 
-            // Set the request's url parameters
-            $req->setParams($params);
-
+            
             if ($match) {
                 // Found a match
+
+                // Set the request's url parameters
+                $req->setParams($params);
+
                 $this->call($req, $res);
                 return;
             }

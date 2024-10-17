@@ -61,10 +61,6 @@ class Request
 
     public function getUri(): string
     {
-        if (preg_match("/^\/.+/", $this->uri)) {
-            $this->uri = substr($this->uri, 1);
-        }
-
         return $this->uri;
     }
 

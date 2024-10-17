@@ -132,4 +132,33 @@ class DbUser implements RUser {
             throw new Exception('Update user error. Please try again later.');
         }
     }
+
+    public function findByEmail(string $email): ?User {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT user_id, email, password, role
+                FROM users
+                WHERE email = :email
+            ');
+
+            $stmt->execute([
+                'email' => $email,
+            ]);
+
+            $row = $stmt->fetch();
+            if (!$row) {
+                return null;
+            }
+
+            return new User(
+                $row['email'],
+                $row['password'],
+                new UserRoleEnum($row['role']),
+                $row['user_id']
+            );
+        } catch (PDOException $e) {
+            error_log('Find user by email error: ' . $e->getMessage());
+            throw new Exception('Find user by email error. Please try again later.');
+        }
+    }
 }
