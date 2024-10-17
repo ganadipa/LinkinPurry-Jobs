@@ -4,7 +4,7 @@ namespace App\Model;
 
 class AttachmentLowongan {
     // key
-    public int $attachment_id;
+    public ?int $attachment_id;
 
     public int $lowongan_id;
     public string $file_path;

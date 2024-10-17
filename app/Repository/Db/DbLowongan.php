@@ -30,13 +30,13 @@ class DbLowongan implements RLowongan {
                     posisi VARCHAR(255) NOT NULL,
                     deskripsi VARCHAR(255),
                     jenis_pekerjaan VARCHAR(255),
-                    jenis_lokasi VARCHAR(50) NOT NULL CHECK (jenis_lokasi IN (\'on-site\', \'hybrid\', \'remote\')),
+                    jenis_lokasi jenis_lokasi NOT NULL,
                     is_open BOOLEAN DEFAULT TRUE,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     CONSTRAINT fk_company_id
                         FOREIGN KEY (company_id) 
-                        REFERENCES company_detail(company_id)
+                        REFERENCES users(user_id)
                         ON DELETE CASCADE
                 )
             ');

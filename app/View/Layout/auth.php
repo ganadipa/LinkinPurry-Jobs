@@ -17,6 +17,10 @@ use App\View\View;
     
     <link rel="stylesheet" href="/public/css/globals.css">
     <link rel="stylesheet" href="/public/css/utils.css">
+    <link rel="stylesheet" href="/public/css/toast.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <?
         if (isset($css)) {
             foreach ($css as $style) {
@@ -26,14 +30,17 @@ use App\View\View;
 
         if (isset($js)) {
             foreach ($js as $script) {
-                echo "<script src='/public/js/$script'></script>";
+                echo "<script src='/public/js/$script' type='module' defer></script>";
             }
         }
 
 
     ?>
+
+    <script src="/public/js/toast.js" type="module" defer ></script>
 </head>
 <body>
+    <div id="toast-container"></div>
     <nav class="navbar">
         <div class="logo font-extrabold">LinkinPurry</div>
     </nav>

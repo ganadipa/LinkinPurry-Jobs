@@ -13,7 +13,8 @@ class Request
     private array $post = [];
     private array $headers = [];
     private array $uriParams = [];
-    private User $user;
+    private ?User $user;
+    private array $session = [];
 
     public function __construct()
     {
@@ -32,6 +33,9 @@ class Request
         // Set the headers
         $this->headers = getallheaders();
 
+        // Set the session
+        $this->session = $_SESSION;
+
         /**
          * Note that the uri params will be set by the router
          */
@@ -41,6 +45,7 @@ class Request
          * Also, the following will be set by the middleware:
          * 1. The user
          */
+        $this->user = null;
     }
 
     public function getMethod(): string
@@ -118,6 +123,26 @@ class Request
         } else {
             return $this->post[$field] ?? $default;
         }
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getSession(): array
+    {
+        return $this->session;
+    }
+
+    public function getSessionValue(string $key, $default = null)
+    {
+        return $this->session[$key] ?? $default;
     }
 
 

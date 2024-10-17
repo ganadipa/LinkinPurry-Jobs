@@ -7,4 +7,5 @@ interface RUser {
     public function insert(User $user): User;
     public function delete(int $userId): User;
     public function findByEmail(string $email): ?User;
+    public function getUserProfileById(int $userId): ?User;
 }

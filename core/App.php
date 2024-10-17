@@ -11,10 +11,12 @@ use App\Middleware\IMiddleware;
 use App\Repository\Db\Db;
 use App\Util\EnvLoader;
 use App\Http\Request;
+use App\Http\Response;
 
 class App {
     private Router $router;
     private IRepository $repo;
+    public static array $globalMiddlewares = [];
 
     public function __construct() {
         $this->router = new Router();
@@ -33,6 +35,9 @@ class App {
 
         // Register the routes
 
+        // Root, for home page
+        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
+
         // Auth Routes (GET)
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
             $redirectIfLoggedInMiddleware
@@ -42,12 +47,27 @@ class App {
             $redirectIfLoggedInMiddleware
         ]);
 
-        // Auth Routes (POST)
-        $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
-        ]);
+        // Api Routes
+        {        
 
-        $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
-        ]);
+            // Auth Routes (POST)
+
+            // Login
+            $this->router->register(RequestMethodEnum::POST, '/api/login', [AuthController::class, 'login'], [
+            ]);
+
+            // Register
+            $this->router->register(RequestMethodEnum::POST, '/api/register', [AuthController::class, 'register'], [
+            ]);
+
+            // Logout
+            $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [
+            ]);
+
+            // Gets the current user
+            $this->router->register(RequestMethodEnum::GET, '/api/self', [AuthController::class, 'self'], [
+            ]);
+        }
 
 
 
@@ -78,6 +98,22 @@ class App {
 
     // The app handles the request by resolving the route
     public function handleRequest(Request $req): void {
+        // Apply the global middlewares
+        foreach (self::$globalMiddlewares as $middleware) {
+            $ok = $middleware->handle($req);
+            if (!$ok) {
+                $res = new Response();
+                $res->json([
+                    'status' => 'error',
+                    'message' => $middleware->getMessage(),
+                    'data' => null
+                ]);
+                $res->send();
+                return;
+            }
+        }
+
+        // then resolve the route
         $this->router->resolve($req);
     }
 
@@ -87,5 +123,14 @@ class App {
         DirectoryAlias::set('@app', __DIR__ . '/../app');
         DirectoryAlias::set('@public', __DIR__ . '/../public');
         DirectoryAlias::set('@view', __DIR__ . '/../app/View');
+    }
+
+    // set the global middlewares
+    public function setGlobalMiddlewares(array $middlewares): void {
+        foreach ($middlewares as $middleware) {
+            if ($middleware instanceof IMiddleware) {
+                array_push(self::$globalMiddlewares, $middleware);
+            }
+        }
     }
 }

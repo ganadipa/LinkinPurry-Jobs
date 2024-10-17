@@ -23,11 +23,12 @@ class Db {
 
 
     private function __construct() {
-        $host = $_ENV['ENVIRONMENT'] === 'docker' ? 'postgres-local' : 'localhost';
+        $host = $_ENV['POSTGRES_HOST'];
         $port = $_ENV['POSTGRES_PORT'];
         $dbname = $_ENV['POSTGRES_DB'];
         $user = $_ENV['POSTGRES_USER'];
         $password = $_ENV['POSTGRES_PASSWORD'];
+        
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
 
@@ -35,7 +36,6 @@ class Db {
             $this->pdo = new PDO($dsn, $user, $password);
         } catch (PDOException $e) {
             error_log('Database connection error: ' . $e->getMessage());
-            echo "Database connection error: " . $e->getMessage();
             throw new Exception('Database connection error. Please try again later.');
         }
 
@@ -59,21 +59,17 @@ class Db {
 
     public function createTables() {
 
-        $lamaran->deleteTable();
-        $attachmentLowongan->deleteTable();
-        $lowongan->deleteTable();
-        $companyDetail->deleteTable();
-        $user->deleteTable();
+        $this->lamaran->deleteTable();
+        $this->attachmentLowongan->deleteTable();
+        $this->lowongan->deleteTable();
+        $this->companyDetail->deleteTable();
+        $this->user->deleteTable();
 
-        $user->createTable();
-
-        $companyDetail->createTable();
-
-        $lowongan->createTable();
-
-        $attachmentLowongan->createTable();
-
-        $lamaran->createTable();
+        $this->user->createTable();
+        $this->companyDetail->createTable();
+        $this->lowongan->createTable();
+        $this->attachmentLowongan->createTable();
+        $this->lamaran->createTable();
     }
 
     public function getDbAttachmentLowongan(): DbAttachmentLowongan {

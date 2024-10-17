@@ -7,6 +7,7 @@ use Core\Repositories;
 use App\Util\EnvLoader;
 use App\Http\Request;
 use App\Repository\Db\Db;
+use App\Middleware\AuthMiddleware;
 
 
 // If prefix is /public/index.php, then remove it
@@ -30,6 +31,11 @@ Repositories::$user = $db->user;
 
 // Instantiate the app
 $app = new App();
+
+// set global middlewares
+$app->setGlobalMiddlewares([
+    new AuthMiddleware()
+]);
 
 // Register routes
 $app->registerRoutes();

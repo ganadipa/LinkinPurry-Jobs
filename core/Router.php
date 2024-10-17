@@ -166,7 +166,7 @@ class Router {
         // Loop throguh all the middlewares
         foreach ($this->routes[$method][$route]['MIDDLEWARES'] as $middleware) {
             // Call the middleware
-            $ok = $middleware->handle();
+            $ok = $middleware->handle($req);
             if (!$ok) {
                 return;
             }

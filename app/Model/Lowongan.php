@@ -6,7 +6,7 @@ use App\Util\Enum\JenisLokasiEnum;
 
 class Lowongan {
     // key
-    public int $lowongan_id;
+    public ?int $lowongan_id;
 
     // foreign key to company detail (user_id)
     public int $company_id;

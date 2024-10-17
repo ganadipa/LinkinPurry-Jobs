@@ -28,7 +28,8 @@ class DbUser implements RUser {
                     user_id SERIAL PRIMARY KEY,
                     email VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
-                    role user_role NOT NULL
+                    role user_role NOT NULL,
+                    nama VARCHAR(255) NOT NULL
                 )
             ');
 
@@ -69,14 +70,15 @@ class DbUser implements RUser {
             }
 
             $stmt = $this->db->prepare('
-                INSERT INTO users (email, password, role)
-                VALUES (:email, :password, :role)
+                INSERT INTO users (email, password, role, nama)
+                VALUES (:email, :password, :role, :nama)
             ');
 
             $stmt->execute([
                 'email' => $user->email,
                 'password' => $user->password,
                 'role' => $user->role->value,
+                'nama' => $user->nama,
             ]);
 
             $user->user_id = (int) $this->db->lastInsertId();
@@ -115,7 +117,7 @@ class DbUser implements RUser {
 
             $stmt = $this->db->prepare('
                 UPDATE users
-                SET email = :email, password = :password, role = :role
+                SET email = :email, password = :password, role = :role, nama = :nama
                 WHERE user_id = :user_id
             ');
 
@@ -124,6 +126,7 @@ class DbUser implements RUser {
                 'email' => $user->email,
                 'password' => $user->password,
                 'role' => $user->role->value,
+                'nama' => $user->nama,
             ]);
 
             return $user;
@@ -136,7 +139,7 @@ class DbUser implements RUser {
     public function findByEmail(string $email): ?User {
         try {
             $stmt = $this->db->prepare('
-                SELECT user_id, email, password, role
+                SELECT user_id, email, password, role, nama
                 FROM users
                 WHERE email = :email
             ');
@@ -150,12 +153,14 @@ class DbUser implements RUser {
                 return null;
             }
 
-            return new User(
+            $user = new User(
                 $row['email'],
                 $row['password'],
-                new UserRoleEnum($row['role']),
-                $row['user_id']
+                UserRoleEnum::from($row['role']),
+                $row['nama'],
+                (int) $row['user_id']
             );
+            return $user;
         } catch (PDOException $e) {
             error_log('Find user by email error: ' . $e->getMessage());
             throw new Exception('Find user by email error. Please try again later.');
@@ -165,7 +170,7 @@ class DbUser implements RUser {
     public function getUserProfileById(int $userId): ?User {
         try {
             $stmt = $this->db->prepare('
-                SELECT user_id, email, role
+                SELECT user_id, email, role, nama
                 FROM users
                 WHERE user_id = :user_id
             ');
@@ -177,7 +182,6 @@ class DbUser implements RUser {
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if (!$userData) {
-                // throw new Exception("User with ID $userId not found.");
                 return null;
             }
     
@@ -186,7 +190,7 @@ class DbUser implements RUser {
                 email: $userData['email'],
                 password: '',
                 role: UserRoleEnum::from($userData['role']), 
-                nama: ''
+                nama: $userData['nama']
             );
         } catch (PDOException $e) {
             error_log('Get user profile error: ' . $e->getMessage());

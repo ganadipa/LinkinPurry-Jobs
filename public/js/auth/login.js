@@ -1,3 +1,5 @@
+import { toast } from "../toast.js";
+
 function validateEmail(email) {
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
@@ -28,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const responseContainer = document.getElementById("response-container");
 
-    fetch("/login", {
+    fetch("/api/login", {
       method: "POST",
       body: formData,
     })
@@ -44,6 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
           // Display error message
           responseContainer.innerText = `${data.message}`;
           responseContainer.classList.remove("hidden");
+
+          // Display toast
+          toast("error", data.message);
         }
       });
   });
@@ -53,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
   emailInput.addEventListener("focusout", function () {
     const email = this.value;
     if (!validateEmail(email)) {
-    } else {
+      toast("error", "Invalid email address");
     }
   });
 
@@ -61,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
   passwordInput.addEventListener("focusout", function () {
     const password = this.value;
     if (password.length == 0) {
-    } else {
+      toast("error", "Password cannot be empty");
     }
   });
 });
