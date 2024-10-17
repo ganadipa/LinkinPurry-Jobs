@@ -10,9 +10,11 @@ use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
 use App\Repository\Db\Db;
 use App\Util\EnvLoader;
+use App\Http\Request;
 
 class App {
     private Router $router;
+    private IRepository $repo;
 
     public function __construct() {
         $this->router = new Router();
@@ -30,18 +32,30 @@ class App {
 
 
         // Register the routes
-        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'login'], [
+
+        // Auth Routes (GET)
+        $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
             $redirectIfLoggedInMiddleware
         ]);
+
+        $this->router->register(RequestMethodEnum::GET, '/register', [AuthController::class, 'registerPage'], [
+            $redirectIfLoggedInMiddleware
+        ]);
+
+        // Auth Routes (POST)
+        $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
+        ]);
+
+        $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
+        ]);
+
+
 
         // $this->router->register(RequestMethodEnum::GET, '/:id', [AuthController::class, 'login'], [
         //     $redirectIfLoggedInMiddleware
         // ]);
 
-        $this->router->register(RequestMethodEnum::GET, '/:id/profile', [AuthController::class, 'login'], [
-            $redirectIfLoggedInMiddleware
-        ]);
-        
+            
         // Home Page Routes
         $this->router->register(RequestMethodEnum::GET, '/home', [HomeController::class, 'home']);
         {
@@ -63,12 +77,15 @@ class App {
     }
 
     // The app handles the request by resolving the route
-    public function handleRequest(string $requestUri, string $requestMethod, array $queryParams): void {
-        $this->router->resolve($requestMethod, $requestUri, $queryParams);
+    public function handleRequest(Request $req): void {
+        $this->router->resolve($req);
     }
 
-    // Prepare the db connection
-    public function prepareDbConnection() {
-        Db::getInstance();
+    // Set the directory aliases
+    public function setDirectoryAliases(): void {
+        DirectoryAlias::set('@core', __DIR__);
+        DirectoryAlias::set('@app', __DIR__ . '/../app');
+        DirectoryAlias::set('@public', __DIR__ . '/../public');
+        DirectoryAlias::set('@view', __DIR__ . '/../app/View');
     }
 }

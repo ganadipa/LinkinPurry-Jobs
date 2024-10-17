@@ -40,8 +40,20 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
         }
     }
 
+    public function save(AttachmentLowongan $attachmentLowongan): AttachmentLowongan {
+        if (isset($attachmentLowongan->attachment_id)) {
+            return $this->update($attachmentLowongan);
+        } else {
+            return $this->insert($attachmentLowongan);
+        }
+    }
+
     public function insert(AttachmentLowongan $attachmentLowongan): AttachmentLowongan {
         try {
+            if (isset($attachmentLowongan->attachment_id)) {
+                throw new Exception('Cannot insert attachment lowongan that already has attachment id');
+            }
+
             $stmt = $this->db->prepare('
                 INSERT INTO attachment_lowongan (lowongan_id, file_path)
                 VALUES (:lowongan_id, :file_path)
@@ -77,6 +89,32 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
         } catch (PDOException $e) {
             error_log('Delete attachment lowongan error: ' . $e->getMessage());
             throw new Exception('Delete attachment lowongan error. Please try again later.');
+        }
+    }
+
+    public function update(AttachmentLowongan $attachmentId): AttachmentLowongan {
+        try {
+            // if attachment id is not set, throw error
+            if (!isset($attachmentLowongan->attachment_id)) {
+                throw new Exception('Cannot update attachment lowongan that does not have attachment id');
+            }
+
+            $stmt = $this->db->prepare('
+                UPDATE attachment_lowongan
+                SET lowongan_id = :lowongan_id, file_path = :file_path
+                WHERE attachment_id = :attachment_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $attachmentLowongan->lowongan_id,
+                'file_path' => $attachmentLowongan->file_path,
+                'attachment_id' => $attachmentLowongan->attachment_id,
+            ]);
+
+            return $attachmentLowongan;
+        } catch (PDOException $e) {
+            error_log('Update attachment lowongan error: ' . $e->getMessage());
+            throw new Exception('Update attachment lowongan error. Please try again later.');
         }
     }
 }

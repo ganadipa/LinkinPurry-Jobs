@@ -67,8 +67,20 @@ class DbLamaran implements RLamaran {
         }
     }
 
+    public function save(Lamaran $lamaran): Lamaran {
+        if (isset($lamaran->lamaran_id)) {
+            return $this->update($lamaran);
+        } else {
+            return $this->insert($lamaran);
+        }
+    }
+
     public function insert(Lamaran $lamaran): Lamaran {
         try {
+            if (isset($lamaran->lamaran_id)) {
+                throw new Exception('Cannot insert lamaran that already has lamaran id');
+            }
+        
             $stmt = $this->db->prepare('
                 INSERT INTO lamaran (user_id, lowongan_id, cv_path, video_path, status, status_reason)
                 VALUES (:user_id, :lowongan_id, :cv_path, :video_path, :status, :status_reason)
@@ -79,7 +91,7 @@ class DbLamaran implements RLamaran {
                 'lowongan_id' => $lamaran->lowongan_id,
                 'cv_path' => $lamaran->cv_path,
                 'video_path' => $lamaran->video_path,
-                'status' => $lamaran->status,
+                'status' => $lamaran->status->value,
                 'status_reason' => $lamaran->status_reason,
             ]);
 
@@ -108,6 +120,40 @@ class DbLamaran implements RLamaran {
         } catch (PDOException $e) {
             error_log('Delete lamaran error: ' . $e->getMessage());
             throw new Exception('Delete lamaran error. Please try again later.');
+        }
+    }
+
+    public function update(Lamaran $lamaran): Lamaran {
+        try {
+            if (!isset($lamaran->lamaran_id)) {
+                throw new Exception('Cannot update lamaran that does not have lamaran id');
+            }
+
+            $stmt = $this->db->prepare('
+                UPDATE lamaran
+                SET user_id = :user_id,
+                    lowongan_id = :lowongan_id,
+                    cv_path = :cv_path,
+                    video_path = :video_path,
+                    status = :status,
+                    status_reason = :status_reason
+                WHERE lamaran_id = :lamaran_id
+            ');
+
+            $stmt->execute([
+                'user_id' => $lamaran->user_id,
+                'lowongan_id' => $lamaran->lowongan_id,
+                'cv_path' => $lamaran->cv_path,
+                'video_path' => $lamaran->video_path,
+                'status' => $lamaran->status->value,
+                'status_reason' => $lamaran->status_reason,
+                'lamaran_id' => $lamaran->lamaran_id,
+            ]);
+
+            return $lamaran;
+        } catch (PDOException $e) {
+            error_log('Update lamaran error: ' . $e->getMessage());
+            throw new Exception('Update lamaran error. Please try again later.');
         }
     }
 }

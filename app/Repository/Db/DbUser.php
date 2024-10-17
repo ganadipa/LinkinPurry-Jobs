@@ -54,8 +54,20 @@ class DbUser implements RUser {
         }
     }
 
+    public function save(User $user): User {
+        if (isset($user->user_id)) {
+            return $this->update($user);
+        } else {
+            return $this->insert($user);
+        }
+    }
+
     public function insert(User $user): User {
         try {
+            if (isset($user->user_id)) {
+                throw new Exception('Cannot insert user that already has user id');
+            }
+
             $stmt = $this->db->prepare('
                 INSERT INTO users (email, password, role)
                 VALUES (:email, :password, :role)
@@ -92,6 +104,61 @@ class DbUser implements RUser {
         } catch (PDOException $e) {
             error_log('Delete user error: ' . $e->getMessage());
             throw new Exception('Delete user error. Please try again later.');
+        }
+    }
+
+    public function update(User $user): User {
+        try {
+            if (!isset($user->user_id)) {
+                throw new Exception('Cannot update user that does not have user id');
+            }
+
+            $stmt = $this->db->prepare('
+                UPDATE users
+                SET email = :email, password = :password, role = :role
+                WHERE user_id = :user_id
+            ');
+
+            $stmt->execute([
+                'user_id' => $user->user_id,
+                'email' => $user->email,
+                'password' => $user->password,
+                'role' => $user->role->value,
+            ]);
+
+            return $user;
+        } catch (PDOException $e) {
+            error_log('Update user error: ' . $e->getMessage());
+            throw new Exception('Update user error. Please try again later.');
+        }
+    }
+
+    public function findByEmail(string $email): ?User {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT user_id, email, password, role
+                FROM users
+                WHERE email = :email
+            ');
+
+            $stmt->execute([
+                'email' => $email,
+            ]);
+
+            $row = $stmt->fetch();
+            if (!$row) {
+                return null;
+            }
+
+            return new User(
+                $row['email'],
+                $row['password'],
+                new UserRoleEnum($row['role']),
+                $row['user_id']
+            );
+        } catch (PDOException $e) {
+            error_log('Find user by email error: ' . $e->getMessage());
+            throw new Exception('Find user by email error. Please try again later.');
         }
     }
 
