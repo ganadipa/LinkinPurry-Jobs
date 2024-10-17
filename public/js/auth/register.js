@@ -16,20 +16,9 @@ function validateStep(step) {
   let isValid = true;
 
   inputs.forEach((input) => {
-    if (input.hasAttribute("required") && input.value.trim() === "") {
-      showError(input, "This field is required");
-      isValid = false;
-    } else if (input.type === "email" && !isValidEmail(input.value)) {
-      showError(input, "Please enter a valid email address");
-      isValid = false;
-    } else if (input.id === "password" && input.value.length < 6) {
-      showError(input, "Password must be at least 6 characters long");
-      isValid = false;
-    } else if (
-      input.id === "confirmPassword" &&
-      input.value !== document.getElementById("password").value
-    ) {
-      showError(input, "Passwords do not match");
+    const error = validateField(input);
+    if (error) {
+      showError(input, error);
       isValid = false;
     } else {
       clearError(input);
@@ -37,6 +26,26 @@ function validateStep(step) {
   });
 
   return isValid;
+}
+
+function validateField(input) {
+  const value = input.value.trim();
+  switch (input.id) {
+    case "name":
+      return value === "" ? "Name is required" : "";
+    case "email":
+      return !isValidEmail(value) ? "Please enter a valid email address" : "";
+    case "password":
+      return value.length < 6
+        ? "Password must be at least 6 characters long"
+        : "";
+    case "confirmPassword":
+      return value !== document.getElementById("password").value
+        ? "Passwords do not match"
+        : "";
+    default:
+      return "";
+  }
 }
 
 function showError(input, message) {
@@ -79,10 +88,20 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (validateStep(2)) {
-      // Simulate form submission
       alert("Registration successful! Redirecting to home page...");
-      // In a real application, you would send the data to a server here
-      // and handle the response before redirecting
     }
+  });
+
+  const inputs = form.querySelectorAll("input, textarea");
+  inputs.forEach((input) => {
+    input.addEventListener("focusout", function () {
+      const error = validateField(this);
+      console.log("error");
+      if (error) {
+        showError(this, error);
+      } else {
+        clearError(this);
+      }
+    });
   });
 });

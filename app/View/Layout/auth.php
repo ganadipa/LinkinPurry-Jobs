@@ -13,9 +13,10 @@ use App\View\View;
             echo $title
         ?>
     </title>
-    <link rel="stylesheet" href="/public/css/globals.css">
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
-
+    
+    <link rel="stylesheet" href="/public/css/globals.css">
+    <link rel="stylesheet" href="/public/css/utils.css">
     <?
         if (isset($css)) {
             foreach ($css as $style) {

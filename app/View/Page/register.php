@@ -47,5 +47,5 @@
             <button type="submit">Agree & Join</button>
         </div>
     </form>
-    <p class="signin-link">Already on LinkedIn? <a href="/login">Sign in</a></p>
-</div>
+    <p class="signin-link">Already on LinkinPurry? <a href="/login">Sign in</a></p>
+</div>  

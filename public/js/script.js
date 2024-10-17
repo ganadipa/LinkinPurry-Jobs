@@ -17,8 +17,8 @@ function renderJobs() {
     jobList.innerHTML = '';
 
     const searchTerm = document.querySelector('.search-sort-filter input').value.toLowerCase();
-    const sortValue = document.querySelector('.search-sort-filter select:nth-of-type(1)').value;
-    const filterValue = document.querySelector('.search-sort-filter select:nth-of-type(2)').value;
+    const sortValue = document.getElementById('sort-select').value;
+    const filterValue = document.getElementById('filter-select').value;
 
     // Filter data berdasarkan pencarian dan status
     let filteredJobs = jobs.filter(job =>
@@ -46,8 +46,8 @@ function renderJobs() {
             <span class="job-title" onclick="viewJobDetails(${job.id})">${job.title}</span>
             <div class="job-actions">
                 <button onclick="editJob(${job.id})">Edit</button>
-                <button onclick="deleteJob(${job.id})">Hapus</button>
-                <button onclick="toggleJobStatus(${job.id})">${job.status === 'open' ? 'Tutup' : 'Buka'}</button>
+                <button onclick="deleteJob(${job.id})">Delete</button>
+                <button onclick="toggleJobStatus(${job.id})">${job.status === 'open' ? 'Close' : 'Open'}</button>
             </div>
         `;
         jobList.appendChild(jobItem);
@@ -77,7 +77,7 @@ function renderPagination(totalItems) {
 
 // Fungsi untuk menambahkan lowongan pekerjaan baru
 function addJob() {
-    const newJobTitle = prompt("Masukkan judul lowongan:");
+    const newJobTitle = prompt("Enter new job title:");
     if (newJobTitle) {
         const newJob = {
             id: jobs.length + 1,
@@ -93,7 +93,7 @@ function addJob() {
 // Fungsi untuk mengedit lowongan pekerjaan
 function editJob(id) {
     const job = jobs.find(j => j.id === id);
-    const newTitle = prompt("Edit judul lowongan:", job.title);
+    const newTitle = prompt("Edit job title:", job.title);
     if (newTitle) {
         job.title = newTitle;
         renderJobs();
@@ -102,13 +102,13 @@ function editJob(id) {
 
 // Fungsi untuk menghapus lowongan pekerjaan
 function deleteJob(id) {
-    if (confirm("Anda yakin ingin menghapus lowongan ini?")) {
+    if (confirm("Are you sure you want to delete this job?")) {
         jobs = jobs.filter(j => j.id !== id);
         renderJobs();
     }
 }
 
-// Fungsi untuk mengubah status lowongan (Buka/Tutup)
+// Fungsi untuk mengubah status lowongan (Open/Close)
 function toggleJobStatus(id) {
     const job = jobs.find(j => j.id === id);
     job.status = job.status === 'open' ? 'closed' : 'open';
@@ -118,16 +118,12 @@ function toggleJobStatus(id) {
 // Fungsi untuk melihat detail lowongan pekerjaan
 function viewJobDetails(id) {
     const job = jobs.find(j => j.id === id);
-    alert(`Detail Lowongan: \n${job.title}\nStatus: ${job.status}\nTanggal: ${job.date.toLocaleDateString()}`);
+    alert(`Job Details: \n${job.title}\nStatus: ${job.status}\nDate: ${job.date.toLocaleDateString()}`);
 }
 
 // Event listener untuk pencarian dan filter
 document.querySelector('.search-sort-filter input').addEventListener('input', renderJobs);
-document.querySelector('.search-sort-filter select:nth-of-type(1)').addEventListener('change', renderJobs);
-document.querySelector('.search-sort-filter select:nth-of-type(2)').addEventListener('change', renderJobs);
-
-// Inisialisasi pertama kali render data
-renderJobs();
+document.getElementById('sort-select').addEventListener('change', renderJobs);
+document.getElementById('filter-select').addEventListener('change', renderJobs);
 
 // Event listener untuk tombol tambah lowongan baru
-document.querySelector('.add-job').addEventListener('click', addJob);

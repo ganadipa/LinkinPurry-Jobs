@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const submitButton = this.querySelector("button[type=submit]");
     submitButton.disabled = true;
     submitButton.textContent = "Loading...";
+
+    const responseContainer = document.getElementById("response-container");
+
     fetch("/login", {
       method: "POST",
       body: formData,
@@ -33,12 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.status === "success") {
           window.location.href = "/";
+          responseContainer.classList.add("hidden");
         } else {
           submitButton.disabled = false;
           submitButton.textContent = "Sign in";
 
           // Display error message
-          // Implement the error message
+          responseContainer.innerText = `${data.message}`;
+          responseContainer.classList.remove("hidden");
         }
       });
   });

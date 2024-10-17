@@ -36,7 +36,7 @@ class AuthController {
         return View::render('Layout', 'auth', array_merge_recursive($vars, 
                 [
                     'content' => View::render('Page', $view, $vars),
-                    'css' => ['auth/shared.css', 'typography.css'],
+                    'css' => ['auth/shared.css', 'text.css'],
                 ]
         ));
     }
