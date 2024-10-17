@@ -94,4 +94,148 @@ class DbUser implements RUser {
             throw new Exception('Delete user error. Please try again later.');
         }
     }
+
+    public function getUserProfileById(int $userId): ?User {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT user_id, email, role
+                FROM users
+                WHERE user_id = :user_id
+            ');
+    
+            $stmt->execute([
+                'user_id' => $userId,
+            ]);
+    
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if (!$userData) {
+                // throw new Exception("User with ID $userId not found.");
+                return null;
+            }
+    
+            return new User(
+                user_id: (int) $userData['user_id'],
+                email: $userData['email'],
+                password: '',
+                role: UserRoleEnum::from($userData['role']), 
+                nama: ''
+            );
+        } catch (PDOException $e) {
+            error_log('Get user profile error: ' . $e->getMessage());
+            throw new Exception('Get user profile error. Please try again later.');
+        }
+    }    
+
+    public function getAllUsers(): array {
+        try {
+            $stmt = $this->db->query('
+                SELECT user_id, email, role
+                FROM users
+            ');
+            
+            $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $users = [];
+            
+            foreach ($usersData as $userData) {
+                $user = new User(
+                    user_id: (int) $userData['user_id'],
+                    email: $userData['email'],
+                    password: '', 
+                    role: UserRoleEnum::from($userData['role']),
+                    nama: ''
+                );
+                $users[] = $user;
+            }
+    
+            return $users;
+    
+        } catch (PDOException $e) {
+            error_log('Get all users error: ' . $e->getMessage());
+            throw new Exception('Get all users error. Please try again later.');
+        }
+    }
+    
+
+    public function saveProfile(int $userId, string $email, string $password, UserRoleEnum $role): void {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT user_id
+                FROM users
+                WHERE user_id = :user_id
+            ');
+            $stmt->execute([
+                'user_id' => $userId,
+            ]);
+            
+            $existingUser = $stmt->fetch();
+            
+            if ($existingUser) {
+                $stmt = $this->db->prepare('
+                UPDATE users
+                SET email = :email, password = :password, role = :role
+                WHERE user_id = :user_id
+                ');
+                
+                $stmt->execute([
+                    'email' => $email,
+                    'password' => $password,
+                    'role' => $role->value,
+                    'user_id' => $userId,
+                ]);
+                
+                echo "User profile updated successfully<br>";
+                
+            } else {
+                $stmt = $this->db->prepare('
+                INSERT INTO users (email, password, role)
+                VALUES (:email, :password, :role)
+                ');
+                
+                $stmt->execute([
+                    'email' => $email,
+                    'password' => $password,
+                    'role' => $role->value,
+                ]);
+                
+                echo "User profile inserted successfully<br>";
+            }
+            
+        } catch (PDOException $e) {
+            error_log('Save profile error: ' . $e->getMessage());
+            throw new Exception('Save profile error. Please try again later.');
+        }
+    }
+    
+    public function removeProfile(int $userId): bool {
+        try {
+            echo "Removing user profile with ID: $userId...<br>";
+            
+            // Prepare the delete statement
+            $stmt = $this->db->prepare('
+                DELETE FROM users
+                WHERE user_id = :user_id
+            ');
+            
+            // Execute the statement with the provided user ID
+            $stmt->execute([
+                'user_id' => $userId,
+            ]);
+            
+            if ($stmt->rowCount() > 0) {
+                // If a row was deleted, the profile was successfully removed
+                echo "User profile with ID $userId removed successfully.<br>";
+                return true;
+            } else {
+                // If no row was deleted, the user wasn't found
+                echo "No user profile found with ID $userId.<br>";
+                return false;
+            }
+    
+        } catch (PDOException $e) {
+            error_log('Remove profile error: ' . $e->getMessage());
+            throw new Exception('Remove profile error. Please try again later.');
+        }
+    }
+    
 }
