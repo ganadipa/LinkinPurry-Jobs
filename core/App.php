@@ -21,7 +21,6 @@ use App\Http\Response;
 
 class App {
     private Router $router;
-    private IRepository $repo;
     public static array $globalMiddlewares = [];
 
     public function __construct() {
@@ -74,6 +73,10 @@ class App {
             // Gets the current user
             $this->router->register(RequestMethodEnum::GET, '/api/self', [AuthController::class, 'self'], [
             ]);
+
+            // Get job details
+            $this->router->register(RequestMethodEnum::GET, '/api/jobs' , [JobController::class, 'generateJobs'], [
+            ]);
         }
 
         // A job routes
@@ -119,7 +122,7 @@ class App {
         }
 
         // Client Page Routes
-        $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+            $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
     }
 
     // The app handles the request by resolving the route

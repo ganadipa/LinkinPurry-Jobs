@@ -21,6 +21,21 @@ use App\View\View;
     <link rel="stylesheet" href="/public/css/globals.css">
     <link rel="stylesheet" href="/public/css/utils.css">
     <link rel="stylesheet" href="/public/css/text.css">
+
+    <?php 
+        if(isset($ext_css)) {
+            foreach ($ext_css as $style) {
+                echo "<link rel='stylesheet' href='$style'>";
+            }
+        }
+
+        if (isset($ext_js)) {
+            foreach ($ext_js as $script) {
+                echo "<script src='$script' defer type='module'></script>";
+            }
+        }
+    ?>
+
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <?php

@@ -33,12 +33,14 @@ class CompanyController {
         $res->setBody($html);
         $res->send();
     }
-
+    
     public static function showCreateJobPage(Request $req, Response $res): void {
         $html = self::render('CreateJob', [
             'css' => ['company/create-job.css'],
-            'js' => ['company/create-job.js'],
-            'title' => 'Create Job'
+            'js' => ['company/job-create.js'],
+            'title' => 'Create Job',
+            'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
+            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js']
         ]);
         $res->setBody($html);
         $res->send();

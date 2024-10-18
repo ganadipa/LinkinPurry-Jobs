@@ -59,7 +59,17 @@ class JobService {
         ]);
     }
 
-
-
+    public static function generateJob($id) {
+        $titles = ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'UI/UX Designer', 'Product Manager'];
+        $companies = ['TechCorp', 'InnoSoft', 'WebGenius', 'DataDrive', 'CloudNine'];
+        $locations = ['New York, NY', 'San Francisco, CA', 'London, UK', 'Berlin, Germany', 'Tokyo, Japan'];
     
+        return [
+            'id' => $id,
+            'title' => $titles[array_rand($titles)],
+            'company' => $companies[array_rand($companies)],
+            'location' => $locations[array_rand($locations)],
+            'created' => rand(1, 30) . ' days ago'
+        ];
+    }
 }
