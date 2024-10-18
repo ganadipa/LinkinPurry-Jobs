@@ -2,12 +2,12 @@ version: "3.8"
 
 services:
   # PostgreSQL service for local development
-  postgres-local:
+  postgres-docker:
     image: postgres:13
     ports:
       - "5433:5432"
     env_file:
-      - .env
+      - .env.docker
     environment:
       - ENVIRONMENT=docker
     volumes:
@@ -16,7 +16,7 @@ services:
       - internal-network
 
   # PHP Application service for local development
-  app-local:
+  app-docker:
     build: .
     ports:
       - "8080:80"
@@ -24,9 +24,9 @@ services:
       - .:/var/www/html
       - ./php.ini:/usr/local/etc/php/php.ini
     depends_on:
-      - postgres-local
+      - postgres-docker
     env_file:
-      - .env
+      - .env.docker
     environment:
       - ENVIRONMENT=docker
     networks:

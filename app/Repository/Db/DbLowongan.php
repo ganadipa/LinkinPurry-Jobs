@@ -32,13 +32,13 @@ class DbLowongan implements RLowongan {
                     posisi VARCHAR(255) NOT NULL,
                     deskripsi VARCHAR(255),
                     jenis_pekerjaan VARCHAR(255),
-                    jenis_lokasi VARCHAR(50) NOT NULL CHECK (jenis_lokasi IN (\'on-site\', \'hybrid\', \'remote\')),
+                    jenis_lokasi jenis_lokasi NOT NULL,
                     is_open BOOLEAN DEFAULT TRUE,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     CONSTRAINT fk_company_id
                         FOREIGN KEY (company_id) 
-                        REFERENCES company_detail(company_id)
+                        REFERENCES users(user_id)
                         ON DELETE CASCADE
                 )
             ');
@@ -65,8 +65,20 @@ class DbLowongan implements RLowongan {
         }
     }
 
+    public function save(Lowongan $lowongan): Lowongan {
+        if (isset($lowongan->lowongan_id)) {
+            return $this->update($lowongan);
+        } else {
+            return $this->insert($lowongan);
+        }
+    }
+
     public function insert(Lowongan $lowongan): Lowongan {
         try {
+            if (isset($lowongan->lowongan_id)) {
+                throw new Exception('Cannot insert lowongan that already has lowongan id');
+            }
+
             $stmt = $this->db->prepare('
                 INSERT INTO lowongan (company_id, posisi, deskripsi, jenis_pekerjaan, jenis_lokasi)
                 VALUES (:company_id, :posisi, :deskripsi, :jenis_pekerjaan, :jenis_lokasi)
@@ -106,26 +118,32 @@ class DbLowongan implements RLowongan {
         }
     }
 
-    public function update(int $lowonganId, array $data): Lowongan {
+    public function update(Lowongan $lowongan): Lowongan {
         try {
+            if (!isset($lowongan->lowongan_id)) {
+                throw new Exception('Cannot update lowongan that does not have lowongan id');
+            }
+
             $stmt = $this->db->prepare('
-                UPDATE lowongan 
-                SET posisi = :posisi, deskripsi = :deskripsi, jenis_pekerjaan = :jenis_pekerjaan, jenis_lokasi = :jenis_lokasi, is_open = :is_open, updated_at = NOW()
+                UPDATE lowongan
+                SET company_id = :company
+                posisi = :posisi,
+                deskripsi = :deskripsi,
+                jenis_pekerjaan = :jenis_pekerjaan,
+                jenis_lokasi = :jenis_lokasi
                 WHERE lowongan_id = :lowongan_id
             ');
-    
+
             $stmt->execute([
-                'posisi' => $data['posisi'],
-                'deskripsi' => $data['deskripsi'],
-                'jenis_pekerjaan' => $data['jenis_pekerjaan'],
-                'jenis_lokasi' => $data['jenis_lokasi'],
-                'is_open' => $data['is_open'],
-                'lowongan_id' => $lowonganId,
+                'company_id' => $lowongan->company_id,
+                'posisi' => $lowongan->posisi,
+                'deskripsi' => $lowongan->deskripsi,
+                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
+                'jenis_lokasi' => $lowongan->jenis_lokasi,
+                'lowongan_id' => $lowongan->lowongan_id,
             ]);
-    
-            $stmt = $this->db->prepare('SELECT * FROM lowongan WHERE lowongan_id = :lowongan_id');
-            $stmt->execute(['lowongan_id' => $lowonganId]);
-            return $stmt->fetchObject(Lowongan::class);
+
+            return $lowongan;
         } catch (PDOException $e) {
             error_log('Update lowongan error: ' . $e->getMessage());
             throw new Exception('Update lowongan error. Please try again later.');

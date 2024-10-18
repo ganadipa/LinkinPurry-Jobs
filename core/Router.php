@@ -4,6 +4,8 @@ namespace Core;
 
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\IMiddleware;
+use App\Http\Request;
+use App\Http\Response;
 
 class Router {
     private array $routes = [];
@@ -86,12 +88,18 @@ class Router {
         $this->routes[$method->value][$path]['MIDDLEWARES'] = $middlewares;
     }
 
-    public function resolve(string $method, string $path, array $query): void {
+    public function resolve(Request $req): void {
+        // Prepare the response
+        $res = new Response();
+
+
         // Validate the HTTP method
-        $method = strtoupper($method);
+        $method = strtoupper($req->getMethod());
         if (!in_array($method, [RequestMethodEnum::GET->value, RequestMethodEnum::POST->value, RequestMethodEnum::PUT->value, RequestMethodEnum::DELETE->value])) {
             throw new \InvalidArgumentException("Unsupported HTTP method: $method");
         }
+
+        $path = $req->getUri();
 
         // Is it static?
         if (isset($this->routes[$method][$path])) {
@@ -100,7 +108,8 @@ class Router {
              * 1. the first parameter is the url parameter
              * 2. the second parameter is the url query
              */
-            $this->call($method, $path, [], $query);
+            $req->setMatchedRoute($path);
+            $this->call($req, $res);
             return;
 
         }  
@@ -136,9 +145,18 @@ class Router {
                 }
             }
 
+            
             if ($match) {
                 // Found a match
-                $this->call($method, $route, $params, $query);
+
+                // Set the request's url parameters
+                $req->setUriParams($params);
+
+                // Set the matched route
+                $req->setMatchedRoute($route);
+
+                // Call the callback
+                $this->call($req, $res);
                 return;
             }
         }
@@ -147,21 +165,21 @@ class Router {
         echo "404 - Not Found";
     }
 
-    public function call(string $method, string $route, array $params, array $query): void {
+    public function call(Request $req, Response $res): void {
+        $method = $req->getMethod();
+        $route = $req->getMatchedRoute();
+
         // Loop throguh all the middlewares
         foreach ($this->routes[$method][$route]['MIDDLEWARES'] as $middleware) {
             // Call the middleware
-            $ok = $middleware->handle();
+            $ok = $middleware->handle($req);
             if (!$ok) {
                 return;
             }
         }
 
         // Call the callback
-        $this->routes[$method][$route]['CALLBACK']([
-            'params' => $params,
-            'query' => $query
-        ]);
+        $this->routes[$method][$route]['CALLBACK']($req, $res);
     }
 
     private function validateMiddlewares(array $middlewares): void {

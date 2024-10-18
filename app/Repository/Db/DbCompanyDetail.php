@@ -14,8 +14,7 @@ class DbCompanyDetail implements RCompanyDetail {
         try {
             $this->db->exec('
                 CREATE TABLE IF NOT EXISTS company_detail (
-                    company_id SERIAL PRIMARY KEY,
-                    user_id INT NOT NULL,
+                    user_id SERIAL PRIMARY KEY,
                     lokasi VARCHAR(255),
                     about VARCHAR(255),
                     CONSTRAINT fk_user_id
@@ -42,7 +41,6 @@ class DbCompanyDetail implements RCompanyDetail {
         }
     }
     
-
     public function insert(CompanyDetail $companyDetail): CompanyDetail {
         try {
             $stmt = $this->db->prepare('
@@ -56,7 +54,6 @@ class DbCompanyDetail implements RCompanyDetail {
                 'about' => $companyDetail->about,
             ]);
 
-            $companyDetail->company_id = (int) $this->db->lastInsertId();
             return $companyDetail;
         } catch (PDOException $e) {
             error_log('Insert company detail error: ' . $e->getMessage());
@@ -64,19 +61,18 @@ class DbCompanyDetail implements RCompanyDetail {
         }
     }
 
-    public function delete(int $companyId): CompanyDetail {
+    public function delete(int $userId): CompanyDetail {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM company_detail
-                WHERE company_id = :company_id
+                WHERE user_id = :user_id
             ');
 
             $stmt->execute([
-                'company_id' => $companyId,
+                'user_id' => $userId,
             ]);
 
-            $companyDetail = new CompanyDetail();
-            $companyDetail->company_id = $companyId;
+            $companyDetail = $stmt->fetchObject(CompanyDetail::class);
             return $companyDetail;
         } catch (PDOException $e) {
             error_log('Delete company detail error: ' . $e->getMessage());
@@ -89,11 +85,11 @@ class DbCompanyDetail implements RCompanyDetail {
             $stmt = $this->db->prepare('
                 UPDATE company_detail
                 SET lokasi = :lokasi, about = :about
-                WHERE company_id = :company_id
+                WHERE user_id = :user_id
             ');
 
             $stmt->execute([
-                'company_id' => $companyDetail->company_id,
+                'user_id' => $companyDetail->user_id,
                 'lokasi' => $companyDetail->lokasi,
                 'about' => $companyDetail->about,
             ]);

@@ -1,0 +1,116 @@
+.sign-in-card {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 352px;
+  margin-top: 2rem;
+}
+h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 24px;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 16px;
+}
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  box-sizing: border-box;
+}
+.input-group label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  padding: 0 4px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 12px;
+  color: #0073b1;
+}
+.input-group input:focus {
+  border-color: #0073b1;
+}
+.password-container {
+  position: relative;
+}
+.show-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0073b1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+.sign-in-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+}
+.sign-in-button:hover {
+  background-color: #005d8f;
+}
+
+.join-now a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.show-password:hover {
+  background-color: #e8f3ff;
+}
+
+.join-now {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.join-now a:hover {
+  background-color: #e8f3ff;
+}
+
+.join-now a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
