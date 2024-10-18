@@ -186,11 +186,11 @@ class DbUser implements RUser {
             }
     
             return new User(
-                (int) $userData['user_id'],
                 $userData['email'],
                 '',
-                UserRoleEnum::from($userData['role']), 
-                $userData['nama']
+                UserRoleEnum::from($userData['role']),
+                $userData['nama'],
+                (int) $userData['user_id']
             );
         } catch (PDOException $e) {
             error_log('Get user profile error: ' . $e->getMessage());

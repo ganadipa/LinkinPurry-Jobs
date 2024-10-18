@@ -45,19 +45,19 @@ handleFileUpload(
 );
 
 // Handle form submission
-document
-  .getElementById("application-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    const cv = document.getElementById("cv-upload").files[0];
-    const video = document.getElementById("video-upload").files[0];
+// document
+//   .getElementById("application-form")
+//   .addEventListener("submit", function (event) {
+//     event.preventDefault();
+//     const cv = document.getElementById("cv-upload").files[0];
+//     const video = document.getElementById("video-upload").files[0];
 
-    if (!cv || !video) {
-      alert("Please upload both CV and introduction video before submitting.");
-      return;
-    }
+//     if (!cv || !video) {
+//       alert("Please upload both CV and introduction video before submitting.");
+//       return;
+//     }
 
-    // Here you would typically send the files to your server
-    console.log("Submitting application:", { cv, video });
-    alert("Application submitted successfully!");
-  });
+//     // Here you would typically send the files to your server
+//     console.log("Submitting application:", { cv, video });
+//     alert("Application submitted successfully!");
+//   });

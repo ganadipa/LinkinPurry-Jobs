@@ -2,6 +2,8 @@
 
 namespace App\Service;
 use App\View\View;
+use Core\DirectoryAlias;
+use Core\Repositories;
 
 class JobService {
     public static function detailsFromJobSeekerPage(string $jobId): string {
@@ -56,4 +58,8 @@ class JobService {
             'title' => 'Apply for Backend Engineer - Paper.id',
         ]);
     }
+
+
+
+    
 }

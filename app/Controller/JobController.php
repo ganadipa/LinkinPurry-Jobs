@@ -5,7 +5,10 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
+use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
+use App\Service\LamaranService;
+use Exception;
 
 class JobController {
     public static function jobdetails(Request $req, Response $res): void {
@@ -68,6 +71,73 @@ class JobController {
     
             $res->setBody($html);
             $res->send(); 
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+        }
+    }
+
+    public static function applyjob(Request $req, Response $res) {
+        try {
+            // Get the needed value
+            $cv = $req->getPost('cv', null);
+            $video = $req->getPost('video', null);
+            $lowongan_id = $req->getUriParamsValue('id', null);
+
+            if ($req->getUser() == null) {
+                throw new UnauthorizedException('You must login first');
+            }
+
+            $user_id = $req->getUser()->user_id;
+
+    
+            if (!isset($cv) || !isset($video)) {
+                throw new Exception ('CV or Video not found');
+            }
+
+            $lamaran_id = LamaranService::applyJob($lowongan_id, $user_id, $cv, $video);
+    
+
+            $res->json([
+                'status' => 'success',
+                'message' => 'Job applied successfully',
+                'data' => [
+                    'lamaran_id' => $lamaran_id,
+                ]
+            ]);
+    
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
         } catch (HttpException $e) {
             // Either its a classified HttpException
     
