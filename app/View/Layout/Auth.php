@@ -10,7 +10,11 @@ use App\View\View;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         <?php
-            echo $title
+            if (isset($title)) {
+                echo $title;
+            } else {
+                echo "LinkinPurry";
+            }
         ?>
     </title>
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon">

@@ -107,6 +107,7 @@ class Router {
              * 1. the first parameter is the url parameter
              * 2. the second parameter is the url query
              */
+            $req->setMatchedRoute($path);
             $this->call($req, $res);
             return;
 
@@ -148,8 +149,12 @@ class Router {
                 // Found a match
 
                 // Set the request's url parameters
-                $req->setParams($params);
+                $req->setUriParams($params);
 
+                // Set the matched route
+                $req->setMatchedRoute($route);
+
+                // Call the callback
                 $this->call($req, $res);
                 return;
             }
@@ -161,7 +166,7 @@ class Router {
 
     public function call(Request $req, Response $res): void {
         $method = $req->getMethod();
-        $route = $req->getUri();
+        $route = $req->getMatchedRoute();
 
         // Loop throguh all the middlewares
         foreach ($this->routes[$method][$route]['MIDDLEWARES'] as $middleware) {

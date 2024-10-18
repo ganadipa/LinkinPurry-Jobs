@@ -5,10 +5,14 @@ namespace Core;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\CompanyController;
+use App\Controller\JobController;
+
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
+
 use App\Repository\Db\Db;
+
 use App\Util\EnvLoader;
 use App\Http\Request;
 use App\Http\Response;
@@ -36,7 +40,7 @@ class App {
         // Register the routes
 
         // Root, for home page
-        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
+        // $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
 
         // Auth Routes (GET)
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
@@ -69,11 +73,20 @@ class App {
             ]);
         }
 
+        // A job routes
+        $this->router->register(RequestMethodEnum::GET, '/job/:id', [JobController::class, 'jobdetails'], [
+            // Redirect to /login if not logged in
+            // Not implemented yet
+        ]);
+
+        {
+            $this->router->register(RequestMethodEnum::GET, '/job/:id/apply', [JobController::class, 'jobapplication'], [
+                // Redirect to /login if not logged in
+                // Not implemented yet
+            ]);
+        }
 
 
-        // $this->router->register(RequestMethodEnum::GET, '/:id', [AuthController::class, 'login'], [
-        //     $redirectIfLoggedInMiddleware
-        // ]);
 
             
         // Home Page Routes

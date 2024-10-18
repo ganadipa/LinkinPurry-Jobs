@@ -48,21 +48,13 @@ class DbCompanyDetail implements RCompanyDetail {
                 VALUES (:user_id, :lokasi, :about)
             ');
 
-            $row = $stmt->execute([
+            $stmt->execute([
                 'user_id' => $companyDetail->user_id,
                 'lokasi' => $companyDetail->lokasi,
                 'about' => $companyDetail->about,
             ]);
 
-            if (!$row) {
-                throw new Exception('Insert company detail failed');
-            }
-
-            return new CompanyDetail(
-                $row['user_id'],
-                $row['lokasi'],
-                $row['about']
-            );
+            return $companyDetail;
         } catch (PDOException $e) {
             error_log('Insert company detail error: ' . $e->getMessage());
             throw new Exception('Insert company detail error. Please try again later.');

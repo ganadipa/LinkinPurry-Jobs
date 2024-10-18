@@ -2,8 +2,8 @@
 
 namespace App\Validator;
 use App\Validator\IValidator;
-use \Exception;
 use App\Util\Enum\UserRoleEnum;
+use App\Http\Exception\BadRequestException;
 
 class UserRoleValidator implements IValidator {
     public static function validate(mixed $data): mixed {
@@ -13,7 +13,7 @@ class UserRoleValidator implements IValidator {
         try {
             $data = strtolower($data);
         } catch (Exception $e) {
-            throw new Exception("Role is not valid");
+            throw new BadRequestException("Role is not valid");
         }
         
         if (in_array($data, [UserRoleEnum::JOBSEEKER->value, UserRoleEnum::COMPANY->value])) {
@@ -21,6 +21,6 @@ class UserRoleValidator implements IValidator {
         }
 
 
-        throw new Exception("Role is not valid");
+        throw new BadRequestException("Role is not valid");
     }
 }

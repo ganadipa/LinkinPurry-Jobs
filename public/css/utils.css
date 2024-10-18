@@ -1,3 +1,44 @@
 .hidden {
   display: none;
 }
+
+.lucide-xxs {
+  width: 8px;
+  height: 8px;
+}
+
+.lucide-xs {
+  width: 12px;
+  height: 12px;
+}
+
+.lucide-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.lucide-md {
+  width: 24px;
+  height: 24px;
+}
+
+.lucide-lg {
+  width: 32px;
+  height: 32px;
+}
+
+.mr-icon-xs {
+  margin-right: 4px;
+}
+
+.mr-icon-sm {
+  margin-right: 8px;
+}
+
+.mr-icon-md {
+  margin-right: 12px;
+}
+
+.mr-icon-lg {
+  margin-right: 16px;
+}

@@ -9,6 +9,7 @@ class Request
 {
     private RequestMethodEnum $method;
     private string $uri;
+    private ?string $matchedRoute = null;
     private array $queryParams = [];
     private array $post = [];
     private array $headers = [];
@@ -96,6 +97,16 @@ class Request
 
     }
 
+    public function setMatchedRoute(string $route): void
+    {
+        $this->matchedRoute = $route;
+    }
+
+    public function getMatchedRoute(): ?string
+    {
+        return $this->matchedRoute;
+    }
+
     public function setUriParams(array $params): void
     {
         $this->uriParams = $params;
@@ -104,6 +115,11 @@ class Request
     public function getUriParams(): array
     {
         return $this->uriParams;
+    }
+
+    public function getUriParamsValue(string $key, $default = null)
+    {
+        return $this->uriParams[$key] ?? $default;
     }
 
     public function getQueryParams(): array
