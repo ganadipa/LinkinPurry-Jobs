@@ -123,7 +123,6 @@ class App {
 
         // Client Page Routes
             $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
-        }
     }
 
     // The app handles the request by resolving the route

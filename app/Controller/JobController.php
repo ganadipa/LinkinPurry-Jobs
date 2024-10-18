@@ -7,6 +7,7 @@ use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
 use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
+use App\Service\LamaranService;
 use Exception;
 
 class JobController {
@@ -160,5 +161,18 @@ class JobController {
     
             $res->send();
         }
+    }
+
+    public static function generateJobs(Request $req, Response $res): void {
+        $page = $req->getQueryParam('page', 1);
+        $perPage = 10;
+
+        $jobs = [];
+        for ($i = 0; $i < $perPage; $i++) {
+            $jobs[] = JobService::generateJob(($page - 1) * $perPage + $i + 1);
+        }
+
+        $res->json($jobs);
+        $res->send();
     }
 }
