@@ -17,6 +17,17 @@ class LowonganController {
     // Create Lowongan
     public function create(array $data): void {
         try {
+            $requiredKeys = ['company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
+            foreach ($requiredKeys as $key) {
+                if (!isset($data[$key])) {
+                    throw new Exception("Missing required field: $key");
+                }
+            }
+
+            if (is_null($data['jenis_lokasi'])) {
+                throw new Exception("Invalid value for jenis_lokasi: null");
+            }
+
             // make a Lowongan object
             $lowongan = new Lowongan(
                 0,
@@ -25,7 +36,6 @@ class LowonganController {
                 $data['deskripsi'],
                 $data['jenis_pekerjaan'],
                 JenisLokasiEnum::from($data['jenis_lokasi']),
-                true, // default open
                 new \DateTime(),
                 new \DateTime()
             );
