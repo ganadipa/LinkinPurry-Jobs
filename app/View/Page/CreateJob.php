@@ -32,8 +32,13 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="editor">Description*</label>
-            <div id="editor"></div>
+            <label for="editor">Job Description*</label>
+            <div id="editor">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="attachments">Attachment(s)</label>
+            <input type="file" id="attachments" name="attachments" accept="image/*" multiple>
         </div>
         <button type="submit" class="submit-btn">Next</button>
     </form>
