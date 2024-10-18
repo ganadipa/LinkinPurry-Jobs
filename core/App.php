@@ -9,6 +9,7 @@ use App\Controller\JobController;
 
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
+use App\Middleware\RedirectIfNotLoggedInMiddleware;
 use App\Middleware\IMiddleware;
 
 use App\Repository\Db\Db;
@@ -35,7 +36,7 @@ class App {
     public function registerRoutes() {
         // Define the needed middlewares 
         $redirectIfLoggedInMiddleware = new RedirectIfLoggedInMiddleware();
-
+        $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
 
         // Register the routes
 
@@ -102,6 +103,8 @@ class App {
         $this->router->register(RequestMethodEnum::GET, '/company', [CompanyController::class, 'showCompanyPage']);
         {
             $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
+            $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
+            $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
             $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 
