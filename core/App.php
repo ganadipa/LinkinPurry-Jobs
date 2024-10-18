@@ -13,7 +13,6 @@ use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\FilesMiddleware;
 use App\Middleware\IMiddleware;
 
-use App\Repository\Db\Db;
 
 use App\Util\EnvLoader;
 use App\Http\Request;
@@ -21,7 +20,6 @@ use App\Http\Response;
 
 class App {
     private Router $router;
-    private IRepository $repo;
     public static array $globalMiddlewares = [];
 
     public function __construct() {

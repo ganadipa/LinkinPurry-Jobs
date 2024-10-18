@@ -1,6 +1,7 @@
 <?
 
 namespace App\Model;
+
 use App\Util\Enum\StatusLamaranEnum;
 use Datetime;
 

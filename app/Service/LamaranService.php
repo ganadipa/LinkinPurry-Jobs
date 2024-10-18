@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Service;
-use App\View\View;
 use Core\DirectoryAlias;
 use Core\Repositories;
-use App\Model\Lamaran;
 use App\Util\Enum\StatusLamaranEnum;
 use DateTime;
+use Exception;
+use App\Model\Lamaran;
 
 class LamaranService {
 // returns lamaran_id

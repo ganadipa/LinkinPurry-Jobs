@@ -5,6 +5,8 @@ use App\Model\User;
 use App\Repository\Interface\RUser;
 use \PDO;
 use App\Util\Enum\UserRoleEnum;
+use \PDOException;
+use \Exception;
 
 
 class DbUser implements RUser {
@@ -89,7 +91,7 @@ class DbUser implements RUser {
         }
     }
 
-    public function delete(int $userId): User {
+    public function delete(int $userId): void {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM users
@@ -100,9 +102,7 @@ class DbUser implements RUser {
                 'user_id' => $userId,
             ]);
 
-            $user = new User();
-            $user->user_id = $userId;
-            return $user;
+
         } catch (PDOException $e) {
             error_log('Delete user error: ' . $e->getMessage());
             throw new Exception('Delete user error. Please try again later.');
