@@ -127,6 +127,11 @@ class Request
         return $this->queryParams;
     }
 
+    public function getQueryParam(string $key, $default = null)
+    {
+        return $this->queryParams[$key] ?? $default;
+    }
+
     /**
      * Get POST variables
      *
