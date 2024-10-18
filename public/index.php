@@ -16,6 +16,12 @@ if (strpos($requestUri, '/public/index.php') === 0) {
     $requestUri = substr($requestUri, strlen('/public/index.php'));
 }
 
+// If there exist consecutive forward slashes, make it one
+$requestUri = preg_replace('/\/+/', '/', $requestUri);
+
+// If the request uri ends with a forward slash, remove it
+$requestUri = rtrim($requestUri, '/');
+
 // If the environment is not docker, then env is not automatically loaded
 if ($_ENV['ENVIRONMENT'] !== 'docker') {
     EnvLoader::load(__DIR__ . "/../.env");

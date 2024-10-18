@@ -9,7 +9,8 @@ use App\Controller\JobController;
 
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
-use App\Middleware\RedirectIfNotLoggedInMiddleware;
+// use App\Middleware\RedirectIfNotLoggedInMiddleware;
+use App\Middleware\FilesMiddleware;
 use App\Middleware\IMiddleware;
 
 use App\Repository\Db\Db;
@@ -35,7 +36,8 @@ class App {
     public function registerRoutes() {
         // Define the needed middlewares 
         $redirectIfLoggedInMiddleware = new RedirectIfLoggedInMiddleware();
-        $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
+        // $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
+        $cvAndVideoMiddleware = new FilesMiddleware(['cv', 'video']);
 
         // Register the routes
 
@@ -89,6 +91,14 @@ class App {
                 // Not implemented yet
             ]);
 
+            $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
+                // Redirect to /login if not logged in
+                // Not implemented yet
+
+                // Validate the cv and video
+                $cvAndVideoMiddleware
+            ]);
+        }
 
 
 
@@ -143,6 +153,7 @@ class App {
         DirectoryAlias::set('@app', __DIR__ . '/../app');
         DirectoryAlias::set('@public', __DIR__ . '/../public');
         DirectoryAlias::set('@view', __DIR__ . '/../app/View');
+        DirectoryAlias::set('@uploads', __DIR__ . '/../uploads');
     }
 
     // set the global middlewares

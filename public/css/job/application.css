@@ -5,6 +5,8 @@
   padding: 24px;
   width: 100%;
   max-width: 552px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .job-header {
   border-bottom: 1px solid #e0e0e0;

@@ -5,6 +5,7 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
+use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
 use Exception;
 
@@ -94,16 +95,70 @@ class JobController {
         }
     }
 
-    public static function generateJobs(Request $req, Response $res): void {
-        $page = $req->getQueryParam('page', 1);
-        $perPage = 10;
+    public static function applyjob(Request $req, Response $res) {
+        try {
+            // Get the needed value
+            $cv = $req->getPost('cv', null);
+            $video = $req->getPost('video', null);
+            $lowongan_id = $req->getUriParamsValue('id', null);
 
-        $jobs = [];
-        for ($i = 0; $i < $perPage; $i++) {
-            $jobs[] = JobService::generateJob(($page - 1) * $perPage + $i + 1);
+            if ($req->getUser() == null) {
+                throw new UnauthorizedException('You must login first');
+            }
+
+            $user_id = $req->getUser()->user_id;
+
+    
+            if (!isset($cv) || !isset($video)) {
+                throw new Exception ('CV or Video not found');
+            }
+
+            $lamaran_id = LamaranService::applyJob($lowongan_id, $user_id, $cv, $video);
+    
+
+            $res->json([
+                'status' => 'success',
+                'message' => 'Job applied successfully',
+                'data' => [
+                    'lamaran_id' => $lamaran_id,
+                ]
+            ]);
+    
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
         }
-
-        $res->json($jobs);
-        $res->send();
     }
 }

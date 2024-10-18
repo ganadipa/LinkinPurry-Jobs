@@ -146,6 +146,10 @@ class Request
         }
     }
 
+    public function setPostValue(string $field, mixed $value) {
+        $this->post[$field] = $value;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;

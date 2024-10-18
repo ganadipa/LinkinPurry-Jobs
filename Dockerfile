@@ -8,15 +8,22 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
+
+# Copy custom php.ini to the PHP configuration directory
+COPY php.ini /usr/local/etc/php/
 
 # Set the working directory
 WORKDIR /var/www/html
 
 # Copy application source code
 COPY . /var/www/html
+
+# Create the uploads directory with write permissions for Apache
+RUN mkdir -p /var/www/html/uploads && \
+    chown -R www-data:www-data /var/www/html/uploads && \
+    chmod -R 755 /var/www/html/uploads
 
 # Expose port 80
 EXPOSE 80
