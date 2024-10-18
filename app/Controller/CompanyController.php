@@ -2,157 +2,86 @@
 
 namespace App\Controller;
 
-use App\Model\CompanyDetail;
-use App\Repository\Db\DbCompanyDetail;
-use App\Repository\Db\Db;
+use App\Http\Request;
+use App\Http\Response;
+use App\View\View;
+use App\Service\CompanyService;
 
 class CompanyController {
-    private static DbCompanyDetail $DbCompanyDetail;
+    private static CompanyService $companyService;
 
     public function __construct() {
-        $db = Db::getInstance()->getConnection();
-        self::$DbCompanyDetail = new DbCompanyDetail($db);
+        self::$companyService = new CompanyService();
     }
 
-    public static function showProfile(array $params) {
-        try {
-            $user_id = (int) $params['params']['id'];
-            
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-            
-            $companyDetail = self::$DbCompanyDetail->getCompanyDetailByUserId($user_id);
-    
-            if (!$companyDetail) {
-                echo json_encode(['error' => 'Company detail not found']);
-                return;
-            }
-    
-            echo json_encode($companyDetail);
-        } catch (Exception $e) {
-            error_log('Show profile error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Show profile error: ' . $e->getMessage()]);
-        }
+    public static function showCompanyPage(Request $req, Response $res): void {
+        $html = self::render('HomeCompany', [
+            'css' => ['company/company.css'],
+            'js' => ['company/script.js'],
+            'title' => 'Company Page'
+        ]);
+        $res->setBody($html);
+        $res->send();
     }
 
-    public static function updateProfile() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $user_id = $data['user_id'];
-            $lokasi = $data['lokasi'];
-            $about = $data['about'];
-
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-
-            $companyDetail = new CompanyDetail($user_id, $lokasi, $about);
-            $updatedCompany = self::$DbCompanyDetail->update($companyDetail);
-
-            echo json_encode(['success' => true, 'message' => 'Profile updated successfully']);
-        } catch (Exception $e) {
-            error_log('Update profile error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Update profile error: ' . $e->getMessage()]);
-        }
+    public static function showJobPage(Request $req, Response $res): void {
+        $html = self::render('JobCompany', [
+            'css' => ['company/job.css'],
+            'js' => ['company/job.js'],
+            'title' => 'Jobs'
+        ]);
+        $res->setBody($html);
+        $res->send();
     }
 
-    // Add methods for job vacancy management here
-    // (e.g., getJobVacancies, addJobVacancy, updateJobVacancy, deleteJobVacancy)
-    public static function getJobVacancies(array $params) {
-        try {
-            $user_id = (int) $params['params']['id'];
-            
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-            
-            $jobVacancies = self::$DbCompanyDetail->getJobVacanciesByUserId($user_id);
-    
-            if (!$jobVacancies) {
-                echo json_encode(['error' => 'Job vacancies not found']);
-                return;
-            }
-    
-            echo json_encode($jobVacancies);
-        } catch (Exception $e) {
-            error_log('Get job vacancies error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Get job vacancies error: ' . $e->getMessage()]);
-        }
+    public static function showCreateJobPage(Request $req, Response $res): void {
+        $html = self::render('CreateJob', [
+            'css' => ['company/create-job.css'],
+            'js' => ['company/create-job.js'],
+            'title' => 'Create Job'
+        ]);
+        $res->setBody($html);
+        $res->send();
     }
 
-    public static function addJobVacancy() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $user_id = $data['user_id'];
-            $jobTitle = $data['job_title'];
-            $jobDescription = $data['job_description'];
+    public static function showProfile(Request $req, Response $res): void {
+        $userId = (int) $req->getUriParams()['id'];
+        $companyDetail = self::$companyService->getCompanyDetailByUserId($userId);
 
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-
-            $jobVacancy = new JobVacancy($user_id, $jobTitle, $jobDescription);
-            $addedJobVacancy = self::$DbCompanyDetail->addJobVacancy($jobVacancy);
-
-            echo json_encode(['success' => true, 'message' => 'Job vacancy added successfully']);
-        } catch (Exception $e) {
-            error_log('Add job vacancy error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Add job vacancy error: ' . $e->getMessage()]);
+        if (!$companyDetail) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'Company detail not found'
+            ]);
+            $res->send();
+            return;
         }
+
+        $res->json([
+            'status' => 'success',
+            'data' => $companyDetail
+        ]);
+        $res->send();
     }
 
-    public static function updateJobVacancy() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $jobVacancyId = $data['job_vacancy_id'];
-            $jobTitle = $data['job_title'];
-            $jobDescription = $data['job_description'];
+    public static function updateProfile(Request $req, Response $res): void {
+        $data = json_decode($req->getPost(), true);
+        $updatedCompany = self::$companyService->updateCompanyDetail($data);
 
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-
-            $jobVacancy = new JobVacancy($jobVacancyId, $jobTitle, $jobDescription);
-            $updatedJobVacancy = self::$DbCompanyDetail->updateJobVacancy($jobVacancy);
-
-            echo json_encode(['success' => true, 'message' => 'Job vacancy updated successfully']);
-        } catch (Exception $e) {
-            error_log('Update job vacancy error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Update job vacancy error: ' . $e->getMessage()]);
-        }
+        $res->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'data' => $updatedCompany
+        ]);
+        $res->send();
     }
 
-    public static function deleteJobVacancy() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $jobVacancyId = $data['job_vacancy_id'];
-
-            if (!isset(self::$DbCompanyDetail)) {
-                $db = Db::getInstance()->getConnection();
-                self::$DbCompanyDetail = new DbCompanyDetail($db);
-            }
-
-            $deletedJobVacancy = self::$DbCompanyDetail->deleteJobVacancy($jobVacancyId);
-
-            echo json_encode(['success' => true, 'message' => 'Job vacancy deleted successfully']);
-        } catch (Exception $e) {
-            error_log('Delete job vacancy error: ' . $e->getMessage());
-            echo json_encode(['error' => 'Delete job vacancy error: ' . $e->getMessage()]);
-        }
-    }
-
-    public static function showCompanyPage() {
-        $viewPath = dirname(__DIR__) . '/View/CompanyView.php';
-        if (file_exists($viewPath)) {
-            require_once $viewPath;
-        } else {
-            echo "View not found";
-        }
+    private static function render(string $view, array $vars = []): string {
+        return View::render('Layout', 'Main', array_merge_recursive($vars, 
+            [
+                'content' => View::render('Page', $view, $vars),
+                'css' => ['company/shared.css'],
+            ]
+        ));
     }
 }
