@@ -38,20 +38,31 @@
 .content {
   padding: 24px;
 }
-.tag {
+.blue-tag {
   display: inline-block;
-  padding: 8px 20px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  padding: 10px 20px;
   background-color: #e7f3ff;
   color: #0a66c2;
   border-radius: 100px;
-  font-size: 20px;
+  font-size: 16px;
   transition: background-color 0.3s;
 }
-.tag:hover {
+.blue-tag:hover {
   background-color: #d0e8ff;
 }
+.red-tag {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ffe7e7;
+  color: #ff4d4f;
+  border-radius: 100px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+.red-tag:hover {
+  background-color: #ffd0d0;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -135,4 +146,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 16px;
+}
+.status-indicator i {
+  margin-right: 10px;
+}
+#waiting {
+  background-color: #fff5e6;
+  color: #ffa500;
+  border: 2px solid #ffa500;
+}
+#accepted {
+  background-color: #e6ffe6;
+  color: #008000;
+  border: 2px solid #008000;
+}
+#rejected {
+  background-color: #ffe6e6;
+  color: #ff0000;
+  border: 2px solid #ff0000;
+}
+
+#jobStatus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }

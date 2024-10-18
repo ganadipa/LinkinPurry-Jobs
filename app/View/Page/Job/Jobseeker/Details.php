@@ -8,7 +8,7 @@ use App\View\View;
             'company' => [
                 'name' => $company['name'],
                 'location' => $company['location']
-            ]
+            ]   
         ]) ?>
         <h1 class="job-title" id="jobTitle">
             <?= $job['title'] ?>
@@ -34,8 +34,29 @@ use App\View\View;
     </div>
     <div class="content">
         <div id="jobStatus">
-            <span class='tag'>Open</span>
+            <span class=' red-tag blue-tag font-semibold'>
+                <?= $job['isOpen'] ? 'Open' : 'Closed' ?>
+            </span>
+            <?php
+                if ($status === 'waiting') {
+                    echo '<div id="waiting" class="status-indicator">
+                    <i data-lucide="clock" class="lucide-sm mr-icon-sm"></i>
+                    <span>Waiting</span>
+                </div>';
+                } else if ($status === 'accepted') {
+                    echo '<div id="accepted" class="status-indicator">
+                    <i data-lucide="check-circle" class="lucide-sm mr-icon-sm"></i>
+                    <span>Accepted</span>
+                    </div>';
+                }  else if ($status === 'rejected') {
+                    echo '<div id="rejected" class="status-indicator">
+                    <i data-lucide="x-circle" class="lucide-sm mr-icon-sm"></i>
+                    <span>Rejected</span>
+                    </div>';
+                }
+            ?>
         </div>
+
         <div class="image-carousel">
             <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
             <button class="carousel-button prev" id="prevButton">
@@ -58,10 +79,34 @@ use App\View\View;
             </span>
         </div>
         <div>
-        <a href="/job/<?php echo $job['id']; ?>/apply" class="button button-primary" id="applyButton">
-            <i data-lucide="send" class='lucide-sm mr-icon-sm'></i>
-            Apply
-        </a>
+        <?php
+            if ($job['isOpen'] && !$applied) {
+                echo '
+                <a href="/job/' . $job['id'] . '/apply" class="button button-primary" id="applyButton">
+                    <i data-lucide="send" class="lucide-sm mr-icon-sm"></i>
+                    Apply
+                </a>';
+            }
+
+            if ($applied) {
+                if ($submission['cv']) {
+                    echo '
+                    <a href = "#" class="button button-secondary">
+                        <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
+                        CV
+                    </a>';
+                }
+
+                if ($submission['video']) {
+                    echo '
+                    <a href = "#" class="button button-secondary">
+                        <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
+                        Video
+                    </a>';
+                }
+                
+            }
+            ?>
             <!-- <button class="button button-secondary">
                 <i data-lucide="bookmark"></i>
                 Save

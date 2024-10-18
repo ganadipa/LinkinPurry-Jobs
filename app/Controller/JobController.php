@@ -63,9 +63,10 @@ class JobController {
     
             // Validate
             $validatedId = PositiveNumericValidator::validate($id);
+
+            $html = JobService::application($id);
     
-    
-            $res->setBody("Job application for job id: $id");
+            $res->setBody($html);
             $res->send(); 
         } catch (HttpException $e) {
             // Either its a classified HttpException

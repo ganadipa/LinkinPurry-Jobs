@@ -2,15 +2,10 @@ lucide.createIcons();
 
 // Simulated attachments (images) for the job posting
 const jobImages = [
+  "https://placehold.co/400",
   "https://placehold.co/600x400",
-  "https://placehold.co/600x400",
-  "https://placehold.co/600x400",
+  "https://placehold.co/600",
 ];
-
-// Handle apply button click
-document.getElementById("applyButton").addEventListener("click", function () {
-  alert("Application submitted!");
-});
 
 // Image carousel functionality
 let currentImageIndex = 0;
@@ -35,3 +30,10 @@ nextButton.addEventListener("click", () => {
 
 // Initialize carousel
 updateCarouselImage();
+
+document.addEventListener("DOMContentLoaded", function () {
+  const statusOffer = document.querySelector("#jobStatus span");
+  if (statusOffer.textContent.trim() === "Open") {
+    statusOffer.classList.remove("red-tag");
+  }
+});

@@ -20,6 +20,7 @@ use App\View\View;
     
     <link rel="stylesheet" href="/public/css/globals.css">
     <link rel="stylesheet" href="/public/css/utils.css">
+    <link rel="stylesheet" href="/public/css/text.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <?php

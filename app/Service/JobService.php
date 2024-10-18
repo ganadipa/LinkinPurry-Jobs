@@ -31,10 +31,29 @@ class JobService {
                     "https://placehold.co/600x400",
                     "https://placehold.co/600x400",
                     "https://placehold.co/600x400",
-                  ]
+                ],
+                'isOpen' => true,
             ],
+            'applied' => false,
+            'submission' => [
+                'cv' => 'h',
+                'video' => 'h',
+            ],
+            'status' => '',
             'numberOfApplicantsMessage' => 'Over 100 applicants',
         ]);
 
+    }
+
+    public static function application(string $jobId): string {
+        return View::view('Page/Job/Jobseeker', 'Application', [
+            'css' => [
+                'job/application.css',
+            ],
+            'js' => [
+                'job/jobseeker/application.js'
+            ],
+            'title' => 'Apply for Backend Engineer - Paper.id',
+        ]);
     }
 }
