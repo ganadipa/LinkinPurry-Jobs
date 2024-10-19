@@ -6,6 +6,7 @@ use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
 use App\Service\JobService;
+use \Exception;
 
 class JobController {
     public static function jobdetails(Request $req, Response $res): void {

@@ -89,7 +89,7 @@ class DbLowongan implements RLowongan {
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
                 'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
-                'jenis_lokasi' => $lowongan->jenis_lokasi,
+                'jenis_lokasi' => $lowongan->jenis_lokasi->value,
             ]);
 
             $lowongan->lowongan_id = (int) $this->db->lastInsertId();
@@ -139,7 +139,7 @@ class DbLowongan implements RLowongan {
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
                 'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
-                'jenis_lokasi' => $lowongan->jenis_lokasi,
+                'jenis_lokasi' => $lowongan->jenis_lokasi->value,
                 'lowongan_id' => $lowongan->lowongan_id,
             ]);
 

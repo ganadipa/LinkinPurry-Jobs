@@ -8,6 +8,7 @@ use App\Controller\CompanyController;
 use App\Controller\JobController;
 
 use App\Util\Enum\RequestMethodEnum;
+use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\IMiddleware;
 
@@ -19,7 +20,7 @@ use App\Http\Response;
 
 class App {
     private Router $router;
-    private IRepository $repo;
+    // private IRepository $repo;
     public static array $globalMiddlewares = [];
 
     public function __construct() {

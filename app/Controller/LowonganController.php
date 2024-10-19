@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Http\Request;
+use App\Http\Response;
 use App\Model\Lowongan;
 use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
@@ -15,89 +17,111 @@ class LowonganController {
     }
 
     // Create Lowongan
-    public function create(array $data): void {
+    public function create(Request $req, Response $res): void {
         try {
+            // Dapatkan input JSON
+            $inputJson = file_get_contents('php://input');
+            $inputData = json_decode($inputJson, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $res->json([
+                    'status' => 'error',
+                    'message' => 'Invalid JSON input'
+                ]);
+                return;
+            }
+
+            // Validasi input data
             $requiredKeys = ['company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
             foreach ($requiredKeys as $key) {
-                if (!isset($data[$key])) {
-                    throw new Exception("Missing required field: $key");
+                if (!isset($inputData[$key])) {
+                    $res->json([
+                        'status' => 'error',
+                        'message' => "Missing required field: $key"
+                    ]);
+                    return;
                 }
             }
 
-            if (is_null($data['jenis_lokasi'])) {
-                throw new Exception("Invalid value for jenis_lokasi: null");
-            }
+            error_log(print_r($inputData, true)); // debug
 
-            // make a Lowongan object
+            // Buat objek Lowongan baru
             $lowongan = new Lowongan(
-                0,
-                $data['company_id'],
-                $data['posisi'],
-                $data['deskripsi'],
-                $data['jenis_pekerjaan'],
-                JenisLokasiEnum::from($data['jenis_lokasi']),
+                $inputData['company_id'],
+                $inputData['posisi'],
+                $inputData['deskripsi'],
+                $inputData['jenis_pekerjaan'],
+                JenisLokasiEnum::from($inputData['jenis_lokasi']), 
                 new \DateTime(),
                 new \DateTime()
             );
-            // save to database
+
+            // Simpan lowongan ke database
             $this->lowonganRepo->insert($lowongan);
-            echo "Lowongan created successfully.\n";
-        } catch (Exception $e){
-            echo "Lowongan creation failed: " . $e->getMessage() . "\n";
+            error_log('Data berhasil disimpan.'); // debug
+            $res->json([
+                'status' => 'success',
+                'message' => 'Lowongan created successfully.'
+            ]);
+
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
     // Update Lowongan
-    public function update(int $id, array $data): void {
+    public function update(Request $req, Response $res): void {
         try {
-            $this->lowonganRepo->update($id, $data);
-            echo "Lowongan updated successfully.\n";
-        } catch (Exception $e){
-            echo "Lowongan update failed: " . $e->getMessage() . "\n";
+            $id = $req->getUriParamsValue('id', null);
+            $postData = $req->getPost();
+
+            if (!isset($id)) {
+                throw new Exception("Lowongan ID is required.");
+            }
+
+            // Update di database
+            $updatedLowongan = $this->lowonganRepo->update($id, $postData);
+
+            $res->json([
+                'status' => 'success',
+                'message' => 'Lowongan updated successfully.',
+                'data' => $updatedLowongan
+            ]);
+            $res->send();
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            $res->send();
         }
     }
 
     // Delete Lowongan
-    public function delete(int $id): void {
+    public function delete(Request $req, Response $res): void {
         try {
+            $id = $req->getUriParamsValue('id', null);
+
+            if (!isset($id)) {
+                throw new Exception("Lowongan ID is required.");
+            }
+
             $this->lowonganRepo->delete($id);
-            echo "Lowongan deleted successfully.\n";
-        } catch (Exception $e){
-            echo "Lowongan deletion failed: " . $e->getMessage() . "\n";
-        }
-    }
 
-    // Get Lowongan by ID
-    public function getLowonganById(int $id): ?Lowongan {
-        try {
-            return $this->lowonganRepo->getById($id);
-        } catch (Exception $e){
-            echo "Get Lowongan by ID failed: " . $e->getMessage() . "\n";
-            return null;
-        }
-    }
-
-    // Get paginated jobs
-    public function getPaginatedJobs(array $query): void {
-        $page = isset($query['page']) ? (int)$query['page'] : 1;
-        $limit = 10; // Set limit per page
-        $search = $query['search'] ?? '';
-        $jenisPekerjaan = $query['jenisPekerjaan'] ?? '';
-        $jenisLokasi = $query['jenisLokasi'] ?? '';
-    
-        try {
-            $jobs = $this->lowonganRepo->getPaginatedJobs($page, $limit, $search, $jenisPekerjaan, $jenisLokasi);
-            $totalJobs = $this->lowonganRepo->countJobs($search, $jenisPekerjaan, $jenisLokasi);
-            $totalPages = ceil($totalJobs / $limit);
-    
-            echo json_encode([
-                'jobs' => $jobs,
-                'totalPages' => $totalPages
+            $res->json([
+                'status' => 'success',
+                'message' => 'Lowongan deleted successfully.'
             ]);
+            $res->send();
         } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['error' => $e->getMessage()]);
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            $res->send();
         }
     }
-    
 }
