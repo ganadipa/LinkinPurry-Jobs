@@ -6,6 +6,7 @@ use App\Http\Request;
 use App\Http\Response;
 use \PDO;
 use App\Controller\LowonganController;
+use App\Service\LowonganService;
 use \PDOException;
 use App\Repository\Db\DbLowongan;
 use App\Util\Enum\RequestMethodEnum;
@@ -22,7 +23,8 @@ function registerLowonganRoutes($router) {
         $db = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
         $lowonganRepo = new DbLowongan($db);
-        $lowonganController = new LowonganController($lowonganRepo);
+        $lowonganService = new LowonganService($lowonganRepo);
+        $lowonganController = new LowonganController($lowonganService);
 
         // Route to create a lowongan
         $router->register(RequestMethodEnum::POST, '/lowongan/create', function(Request $req, Response $res) use ($lowonganController) {
