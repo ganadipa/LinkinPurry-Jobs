@@ -11,7 +11,6 @@ use App\Validator\UserRoleValidator;
 use App\Service\AuthService;
 use App\Http\Exception\HttpException;
 use Exception;
-use App\Http\Exception\BadRequestException;
 
 
 class AuthController {
