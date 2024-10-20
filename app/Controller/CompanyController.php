@@ -25,11 +25,28 @@ class CompanyController {
     }
 
     public static function showJobPage(Request $req, Response $res): void {
-        $html = self::render('JobCompany', [
-            'css' => ['company/job.css'],
-            'js' => ['company/job.js'],
-            'title' => 'Jobs'
-        ]);
+        $user = $req->getUser();
+
+        if ($user === null || !isset($user->role)) {
+            $res->redirect('/login', 302);
+            $res->send();
+            return;
+        }
+
+        if ($user->role == 'jobseeker') {
+            $html = self::render('JobSeeker', [
+                'css' => ['company/job.css'],
+                'js' => ['company/job.js'],
+                'title' => 'Jobs (Job Seeker)',
+            ]);
+        } else {
+            $html = self::render('JobCompany', [
+                'css' => ['company/job.css'],
+                'js' => ['company/job.js'],
+                'title' => 'Jobs (Company)',
+            ]);
+        }
+        
         $res->setBody($html);
         $res->send();
     }
@@ -41,6 +58,31 @@ class CompanyController {
             'title' => 'Create Job',
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
             'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js']
+        ]);
+        $res->setBody($html);
+        $res->send();
+    }
+
+    public static function showEditJobPage(Request $req, Response $res): void {
+        // In a real application, you would fetch the job data based on an ID
+        // For this example, we're using dummy data
+        $jobData = [
+            'title' => 'Frontend Developer',
+            'company' => 'TechCorp Inc.',
+            'workplaceType' => 'on-site',
+            'location' => 'Makassar, South Sulawesi, Indonesia',
+            'jobType' => 'full-time',
+            'description' => '<p>Ini Headernya</p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Ini Satu</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Dua</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>TIga</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>List</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Haha</li></ol><p><u>Italic</u></p><p>Bold</p>',
+            'attachments' => ['https://placehold.co/40x40', 'https://placehold.co/50x50']
+        ];
+
+        $html = self::render('EditJob', [
+            'css' => ['company/create-job.css'],
+            'js' => ['company/job-edit.js'],
+            'title' => 'Edit Job',
+            'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
+            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
+            'jobData' => $jobData
         ]);
         $res->setBody($html);
         $res->send();

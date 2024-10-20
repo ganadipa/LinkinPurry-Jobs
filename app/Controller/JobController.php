@@ -14,17 +14,19 @@ class JobController {
     public static function jobdetails(Request $req, Response $res): void {
         try {
             // Get the needed value
+            $user = $req->getUser();
             $id = $req->getUriParamsValue('id', null);
 
             if (!isset($id)) {
                 throw new Exception ('Job not found');
             }
 
-            // Validate
             $validatedId = PositiveNumericValidator::validate($id);
-
-            $html = JobService::detailsFromJobSeekerPage($id);
-            
+            if ($user == null || $user->role == 'jobseeker') {
+                $html = JobService::detailsFromJobSeekerPage($validatedId);
+            } else {
+                $html = JobService::detailsFromCompanyPage($validatedId);
+            }
 
             $res->setBody($html);
             $res->send();
@@ -159,6 +161,46 @@ class JobController {
                 'data' => null
             ]);
     
+            $res->send();
+        }
+    }
+
+    public static function applicationDetails(Request $req, Response $res): void {
+        try {
+            $user = $req->getUser();
+            if ($user == null || $user->role == 'jobseeker') {
+                throw new UnauthorizedException('You must login as a company');
+            }
+
+            $jobId = $req->getUriParamsValue('jobId', null);
+            $applicationId = $req->getUriParamsValue('applicationId', null);
+
+            if (!isset($jobId) || !isset($applicationId)) {
+                throw new Exception('Job or application not found');
+            }
+
+            $validatedJobId = PositiveNumericValidator::validate($jobId);
+            $validatedApplicationId = PositiveNumericValidator::validate($applicationId);
+
+            $html = JobService::applicationDetails($validatedJobId, $validatedApplicationId);
+
+            $res->setBody($html);
+            $res->send();
+
+        } catch (HttpException $e) {
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+            $res->send();
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
             $res->send();
         }
     }

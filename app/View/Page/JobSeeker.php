@@ -90,8 +90,3 @@
     <div id="job-list"></div>
     <div class="loading-animation" id="loading" style="display: none;"></div>
 </section>
-<aside class="right-sidebar">
-    <div class="action-card">
-        <button class="primary-btn">Post a free job</button>
-    </div>
-</aside>
