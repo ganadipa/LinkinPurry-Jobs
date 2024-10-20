@@ -9,6 +9,7 @@ use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
 use App\Service\LamaranService;
 use Exception;
+use \Exception;
 
 class JobController {
     public static function jobdetails(Request $req, Response $res): void {

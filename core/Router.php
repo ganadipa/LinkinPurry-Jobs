@@ -17,6 +17,7 @@ class Router {
             RequestMethodEnum::PUT->value => [],
             RequestMethodEnum::DELETE->value => [],
         ];
+
     }
 
     public function register(RequestMethodEnum $method, string $path, Callable $callback, array $middlewares = []): void {

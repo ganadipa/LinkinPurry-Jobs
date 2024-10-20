@@ -8,6 +8,7 @@ use App\Controller\CompanyController;
 use App\Controller\JobController;
 
 use App\Util\Enum\RequestMethodEnum;
+use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 // use App\Middleware\RedirectIfNotLoggedInMiddleware;
 use App\Middleware\FilesMiddleware;
@@ -20,6 +21,7 @@ use App\Http\Response;
 
 class App {
     private Router $router;
+    // private IRepository $repo;
     public static array $globalMiddlewares = [];
 
     public function __construct() {
@@ -121,7 +123,11 @@ class App {
         }
 
         // Client Page Routes
-            $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+        $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+
+        // Lowongan Routes
+        require_once __DIR__ . '/../app/Routes/LowonganRoutes.php';
+        \App\Routes\registerLowonganRoutes($this->router);
     }
 
     // The app handles the request by resolving the route
