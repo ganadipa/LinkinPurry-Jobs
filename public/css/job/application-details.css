@@ -1,0 +1,161 @@
+.container {
+    margin-top: 24px;
+}
+
+.application-details {
+    width: 780px;
+    margin: 24px auto;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.applicant-info, .application-attachments, .application-action {
+    margin-bottom: 32px;
+}
+
+.application-action {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 16px;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.attachment {
+    margin-bottom: 24px;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.status-indicator i {
+    margin-right: 8px;
+}
+
+.status-indicator span {
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.status-waiting {
+    background-color: #fff5e6;
+    color: #ffa500;
+}
+
+.status-accepted {
+    background-color: #e6ffe6;
+    color: #008000;
+}
+
+.status-rejected {
+    background-color: #ffe6e6;
+    color: #ff0000;
+}
+
+.rich-text-content {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 8px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-accept {
+    background-color: #e6ffe6;
+    color: #008000;
+    margin-right: 10px;
+    border: 1px solid #008000;
+}
+
+.button-reject {
+    background-color: #ffe6e6;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+}
+
+.button-accept:hover, .button-accept.active {
+    background-color: #ccffcc;
+}
+
+.button-reject:hover, .button-reject.active {
+    background-color: #ffcccc;
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+.approval {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+}
+
+#reasonEditor {
+    height: 200px;
+    margin-bottom: 16px;
+}
+
+/* Quill editor styles */
+.ql-container {
+    font-size: 16px;
+}
+
+.ql-editor {
+    min-height: 150px;
+}

@@ -99,6 +99,11 @@ class App {
                 // Validate the cv and video
                 $cvAndVideoMiddleware
             ]);
+
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
+                // Redirect to /login if not logged in
+                // Not implemented yet
+            ]);
         }
 
 
@@ -119,6 +124,7 @@ class App {
             $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
             $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
+            $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
             $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 

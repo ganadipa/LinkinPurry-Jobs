@@ -1,3 +1,10 @@
+/* Styles for both CreateJob and EditJob pages */
+.container {
+    display: flex;
+    max-width: 1128px;
+    margin: 0 auto;
+}
+
 .main-content {
     margin: 10px auto;
     flex: 1;
@@ -6,36 +13,65 @@
     padding: 24px;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
+
 .right-sidebar {
     margin: 10px 0 0 24px;
     flex: 0 0 300px;
 }
+
 h1 {
     font-size: 24px;
     margin: 0 0 16px;
+    color: #191919;
 }
+
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
+
 label {
     display: block;
     margin-bottom: 4px;
     font-weight: 600;
+    color: #191919;
 }
+
 form input[type="text"], select {
     width: 100%;
-    padding: 8px;
+    height: 40px;
+    margin: 10px auto;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 14px;
+    transition: border-color 0.3s ease;
 }
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23191919' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+form input[type="text"]:focus, select:focus {
+    border-color: #0a66c2;
+    outline: none;
+}
+
 form input[type="file"] {
     width: 100%;
-    padding: 8px;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 14px;
+    background-color: #f9f9f9;
 }
+
+form input[type="file"]:focus {
+    border-color: #0a66c2;
+    outline: none;
+}
+
 .info-card {
     background-color: white;
     border-radius: 8px;
@@ -43,25 +79,201 @@ form input[type="file"] {
     margin-bottom: 16px;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
+
 .info-card h2 {
     font-size: 16px;
     margin: 0 0 8px;
+    color: #191919;
 }
+
 .info-card p {
     font-size: 14px;
     color: #666;
-    margin: 0;
+    margin: 0 0 4px;
 }
-.submit-btn {
-    background-color: #0a66c2;
-    color: white;
+
+.submit-btn, .cancel-btn {
     border: none;
-    border-radius: 16px;
-    padding: 10px 20px;
+    border-radius: 24px;
+    padding: 10px 24px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.submit-btn {
+    background-color: #0a66c2;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #004182;
+}
+
+.cancel-btn {
+    background-color: #fff;
+    color: #0a66c2;
+    border: 1px solid #0a66c2;
+    margin-left: 10px;
+}
+
+.cancel-btn:hover {
+    background-color: #f3f2ef;
+}
+
 #editor {
-    height: 200px;
+    height: 300px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+/* Styles specific to EditJob page */
+.existing-attachments {
+    margin-top: 10px;
+    background-color: #f3f2ef;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.existing-attachments ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.existing-attachments li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.remove-attachment {
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.remove-attachment:hover {
+    background-color: #e0e0e0;
+}
+
+.status {
+    font-weight: 600;
+}
+
+.status.published {
+    color: #057642;
+}
+
+/* Enhanced styles for both pages */
+.info-card ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.info-card li {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.drag-drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.drag-drop-area.dragover {
+    background-color: #f0f0f0;
+    border-color: #0a66c2;
+}
+
+.drag-drop-area p {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.drag-drop-area .icon {
+    font-size: 48px;
+    color: #0a66c2;
+    margin-bottom: 10px;
+}
+
+.upload-button {
+    background-color: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #004182;
+}
+
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.image-preview {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview .remove-image {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview .remove-image:hover {
+    background-color: rgba(255, 255, 255, 0.9);
 }

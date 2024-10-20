@@ -1,5 +1,5 @@
 <section class="main-content">
-    <h1>1 of 2: Review job description</h1>
+    <h1>Review job description</h1>
     <form id="job-post-form">
         <div class="form-group">
             <label for="job-title">Job title*</label>
@@ -38,7 +38,16 @@
         </div>
         <div class="form-group">
             <label for="attachments">Attachment(s)</label>
-            <input type="file" id="attachments" name="attachments" accept="image/*" multiple>
+            <div id="drag-drop-area" class="drag-drop-area">
+                <div id="upload-instructions">
+                    <i data-lucide="upload" class="lucide-md"></i>
+                    <p>Drag and drop files here</p>
+                    <p>or</p>
+                    <button type="button" class="upload-button">Choose Files</button>
+                </div>
+                <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                <div id="image-preview-container" class="image-preview-container"></div>
+            </div>
         </div>
         <button type="submit" class="submit-btn">Next</button>
     </form>
