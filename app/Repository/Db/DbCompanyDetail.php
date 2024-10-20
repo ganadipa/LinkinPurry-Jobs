@@ -4,6 +4,8 @@ namespace App\Repository\Db;
 use App\Model\CompanyDetail;
 use App\Repository\Interface\RCompanyDetail;
 use \PDO;
+use \PDOException;
+use \Exception;
 
 
 class DbCompanyDetail implements RCompanyDetail {

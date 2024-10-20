@@ -4,6 +4,8 @@ namespace App\Repository\Db;
 use App\Model\AttachmentLowongan;
 use App\Repository\Interface\RAttachmentLowongan;
 use \PDO;
+use \PDOException;
+use \Exception;
 
 class DbAttachmentLowongan implements RAttachmentLowongan {
 
@@ -72,7 +74,7 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
         }
     }
 
-    public function delete(int $attachmentId): AttachmentLowongan {
+    public function delete(int $attachmentId): void {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM attachment_lowongan
@@ -83,9 +85,7 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
                 'attachment_id' => $attachmentId,
             ]);
 
-            $attachmentLowongan = new AttachmentLowongan();
-            $attachmentLowongan->attachment_id = $attachmentId;
-            return $attachmentLowongan;
+
         } catch (PDOException $e) {
             error_log('Delete attachment lowongan error: ' . $e->getMessage());
             throw new Exception('Delete attachment lowongan error. Please try again later.');

@@ -4,6 +4,7 @@ namespace App\Validator;
 use App\Validator\IValidator;
 use App\Util\Enum\UserRoleEnum;
 use App\Http\Exception\BadRequestException;
+use Exception;
 
 class UserRoleValidator implements IValidator {
     public static function validate(mixed $data): mixed {

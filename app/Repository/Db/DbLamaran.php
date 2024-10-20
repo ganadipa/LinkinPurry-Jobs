@@ -5,6 +5,8 @@ use App\Model\Lamaran;
 use App\Repository\Interface\RLamaran;
 use App\Util\Enum\StatusLamaranEnum;
 use \PDO;
+use \PDOException;
+use \Exception;
 
 
 class DbLamaran implements RLamaran {
@@ -103,7 +105,7 @@ class DbLamaran implements RLamaran {
         }
     }
 
-    public function delete(int $lamaranId): Lamaran {
+    public function delete(int $lamaranId): void {
         try {
             $stmt = $this->db->prepare('
                 DELETE FROM lamaran
@@ -114,9 +116,6 @@ class DbLamaran implements RLamaran {
                 'lamaran_id' => $lamaranId,
             ]);
 
-            $lamaran = new Lamaran();
-            $lamaran->lamaran_id = $lamaranId;
-            return $lamaran;
         } catch (PDOException $e) {
             error_log('Delete lamaran error: ' . $e->getMessage());
             throw new Exception('Delete lamaran error. Please try again later.');
