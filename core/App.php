@@ -68,7 +68,7 @@ class App {
             ]);
 
             // Logout
-            $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [
+            $this->router->register(RequestMethodEnum::GET, '/api/logout', [AuthController::class, 'logout'], [
             ]);
 
             // Gets the current user
@@ -110,28 +110,26 @@ class App {
 
             
         // Home Page Routes
-        $this->router->register(RequestMethodEnum::GET, '/home', [HomeController::class, 'home']);
-        {
-            $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
-            $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
-            $this->router->register(RequestMethodEnum::POST, '/home/add/:id', [HomeController::class, 'addProfile']);
-            $this->router->register(RequestMethodEnum::DELETE, '/home/remove/:id', [HomeController::class, 'removeProfile']);
-        }
+        $this->router->register(RequestMethodEnum::GET, '/', [HomeController::class, 'showHomePage']);
+        // {
+        //     $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
+        //     $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
+        //     $this->router->register(RequestMethodEnum::POST, '/home/add/:id', [HomeController::class, 'addProfile']);
+        //     $this->router->register(RequestMethodEnum::DELETE, '/home/remove/:id', [HomeController::class, 'removeProfile']);
+        // }
 
         // Company Page Routes
-        $this->router->register(RequestMethodEnum::GET, '/company', [CompanyController::class, 'showCompanyPage']);
+        // $this->router->register(RequestMethodEnum::GET, '/company', [CompanyController::class, 'showCompanyPage']);
         {
-            $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
-            $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
+            // $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
+            // $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
-            $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
+            // $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 
         // Client Page Routes
-
-        
-        $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+        // $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
 
         // Lowongan routes
         // Route to get a lowongan

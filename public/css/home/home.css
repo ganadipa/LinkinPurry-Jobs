@@ -283,7 +283,7 @@ h1 {
     height: 16px;
 }    
 
-.action-card, .info-card, .support-card {
+.action-card {
     background-color: white;
     border-radius: 8px;
     padding: 16px;
@@ -291,9 +291,13 @@ h1 {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
 
+.action-card a {
+    text-decoration: none;
+}
+
 .primary-btn, .secondary-btn {
     width: 100%;
-    padding: 10px;
+    padding: 10px 32px;
     border: none;
     border-radius: 16px;
     font-size: 16px;

@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // For client side validation (on focusout)
+  // For client side validation (on focusout)P
   const emailInput = document.getElementById("email");
   emailInput.addEventListener("focusout", function () {
     const email = this.value;

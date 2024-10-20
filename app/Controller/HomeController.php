@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use \App\Repository\Db\Db;
 use \App\Repository\Db\DbUser;
+use \App\View\View;
 use \PDOException;
 use \App\Util\Enum\UserRoleEnum;
+use \App\Http\Request;
+use \App\Http\Response;
 
 class HomeController {
     public static function home() {
@@ -89,21 +92,42 @@ class HomeController {
         }
     }
 
-    public static function clientPage() {
-        $viewPath = dirname(__DIR__) . '/View/ClientView.php';
-        if (file_exists($viewPath)) {
-            require_once $viewPath;
+    // public static function clientPage() {
+    //     $viewPath = dirname(__DIR__) . '/View/ClientView.php';
+    //     if (file_exists($viewPath)) {
+    //         require_once $viewPath;
+    //     } else {
+    //         echo "View not found";
+    //     }
+    // }
+
+    public static function showHomePage(Request $req, Response $res): void {
+        $user = $req->getUser();
+
+        if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
+            $html = self::render('HomeJobSeeker', [
+                'css' => ['home/home.css'],
+                'js' => ['home/home.js'],
+                'title' => 'Home Page (Job Seeker)',
+            ]);
         } else {
-            echo "View not found";
+            $html = self::render('HomeCompany', [
+                'css' => ['home/home.css'],
+                'js' => ['home/home.js'],
+                'title' => 'Home Page (Company)',
+            ]);
         }
+        
+        $res->setBody($html);
+        $res->send();
     }
 
-    public static function showHomePage() {
-        $viewPath = dirname(__DIR__) . '/View/HomeView.php';
-        if (file_exists($viewPath)) {
-            require_once $viewPath;
-        } else {
-            echo "View not found";
-        }
+    private static function render(string $view, array $vars = []): string {
+        return View::render('Layout', 'Main', array_merge_recursive($vars, 
+            [
+                'content' => View::render('Page', $view, $vars),
+                'css' => ['company/shared.css'],
+            ]
+        ));
     }
 }
