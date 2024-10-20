@@ -149,7 +149,10 @@ class LowonganController {
             $jenisPekerjaan = $req->getQueryParam('jenis_pekerjaan', null); 
             $jenisLokasi = $req->getQueryParam('jenis_lokasi', null); 
     
-            $lowonganList = $this->lowonganRepo->getList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi);
+            // Search
+            $search = $req->getQueryParam('search', null);
+
+            $lowonganList = $this->lowonganRepo->getList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi, $search);
             
             error_log("LIST"); // debug
             error_log(print_r($lowonganList, true)); // debug

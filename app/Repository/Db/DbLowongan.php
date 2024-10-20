@@ -176,7 +176,7 @@ class DbLowongan implements RLowongan {
         );
     }
 
-    public function getList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi): array {
+    public function getList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi, ?string $search): array {
         $offset = ($page - 1) * $limit;
         $query = 'SELECT * FROM lowongan WHERE 1=1';
         $params = [];
@@ -197,6 +197,11 @@ class DbLowongan implements RLowongan {
         if ($jenisLokasi) {
             $query .= ' AND jenis_lokasi = :jenis_lokasi';
             $params['jenis_lokasi'] = $jenisLokasi;
+        }
+
+        if ($search) {
+            $query .= ' AND (posisi ILIKE :search OR deskripsi ILIKE :search)';
+            $params['search'] = '%' . $search . '%';
         }
     
         // Tambahkan limit dan offset untuk pagination
