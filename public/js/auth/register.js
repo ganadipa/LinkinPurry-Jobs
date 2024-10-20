@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.status === "success") {
             toast("success", data.message);
             setTimeout(() => {
-              window.location.href = "/home";
+              window.location.href = "/";
             }, 1000);
           } else {
             submitButton.disabled = false;

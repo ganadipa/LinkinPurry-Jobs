@@ -110,7 +110,7 @@ class App {
 
             
         // Home Page Routes
-        $this->router->register(RequestMethodEnum::GET, '/home', [HomeController::class, 'showHomePage']);
+        $this->router->register(RequestMethodEnum::GET, '/', [HomeController::class, 'showHomePage']);
         // {
         //     $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
         //     $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
@@ -124,7 +124,7 @@ class App {
             // $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
             // $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
-            // $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
+            $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
             // $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 
