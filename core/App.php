@@ -6,7 +6,7 @@ use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\CompanyController;
 use App\Controller\JobController;
-
+use App\Controller\LowonganController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
@@ -129,11 +129,25 @@ class App {
         }
 
         // Client Page Routes
+
+        
         $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
 
-        // Lowongan Routes
-        require_once __DIR__ . '/../app/Routes/LowonganRoutes.php';
-        \App\Routes\registerLowonganRoutes($this->router);
+        // Lowongan routes
+        // Route to get a lowongan
+        $this->router->register(RequestMethodEnum::GET, '/lowongan', [LowonganController::class, 'getList']);
+        {
+            // Route to create a lowongan
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create']);
+    
+            // Route to update a lowongan
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update']);
+    
+            // Route to delete a lowongan
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', [LowonganController::class, 'delete']);
+        }
+
+
     }
 
     // The app handles the request by resolving the route

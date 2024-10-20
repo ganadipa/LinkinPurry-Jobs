@@ -3,25 +3,22 @@
 namespace App\Service;
 
 use App\Model\CompanyDetail;
-use App\Repository\Db\Db;
+use Core\Repositories;
 
 class CompanyService {
-    private $dbCompanyDetail;
 
-    public function __construct() {
-        $this->dbCompanyDetail = Db::getInstance()->getDbCompanyDetail();
+    public static function getCompanyDetailByUserId(int $userId): ?CompanyDetail {
+        $companyDetailRepo = Repositories::$companyDetail;
+        return $companyDetailRepo->getCompanyDetailByUserId($userId);
     }
 
-    public function getCompanyDetailByUserId(int $userId): ?CompanyDetail {
-        return $this->dbCompanyDetail->getCompanyDetailByUserId($userId);
-    }
-
-    public function updateCompanyDetail(array $data): CompanyDetail {
+    public static function updateCompanyDetail(array $data): CompanyDetail {
+        $companyDetailRepo = Repositories::$companyDetail;
         $companyDetail = new CompanyDetail(
             $data['user_id'],
             $data['lokasi'],
             $data['about']
         );
-        return $this->dbCompanyDetail->update($companyDetail);
+        return $companyDetailRepo->update($companyDetail);
     }
 }

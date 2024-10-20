@@ -26,25 +26,7 @@ function registerLowonganRoutes($router) {
         $lowonganService = new LowonganService($lowonganRepo);
         $lowonganController = new LowonganController($lowonganService);
 
-        // Route to create a lowongan
-        $router->register(RequestMethodEnum::POST, '/lowongan/create', function(Request $req, Response $res) use ($lowonganController) {
-            $lowonganController->create($req, $res);
-        });
 
-        // Route to update a lowongan
-        $router->register(RequestMethodEnum::POST, '/lowongan/update/:id', function(Request $req, Response $res) use ($lowonganController) {
-            $lowonganController->update($req, $res);
-        });
-
-        // Route to delete a lowongan
-        $router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', function(Request $req, Response $res) use ($lowonganController) {
-            $lowonganController->delete($req, $res);
-        });
-
-        // Route to get a lowongan
-        $router->register(RequestMethodEnum::GET, '/lowongan', function(Request $req, Response $res) use ($lowonganController) {
-            $lowonganController->getList($req, $res);
-        });
         
     } catch (PDOException $e) {
         error_log('Database connection failed: ' . $e->getMessage());

@@ -3,18 +3,13 @@
 namespace App\Service;
 
 use App\Model\Lowongan;
-use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
+use Core\Repositories;
+use App\Repository\Interface\RLowongan;
 use Exception;
 
 class LowonganService {
-    private RLowongan $lowonganRepo;
-
-    public function __construct(RLowongan $lowonganRepo) {
-        $this->lowonganRepo = $lowonganRepo;
-    }
-
-    public function createLowongan(array $inputData): Lowongan {
+    public static function createLowongan(array $inputData): Lowongan {
         $requiredKeys = ['company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
         
         // Validasi input data
@@ -36,14 +31,16 @@ class LowonganService {
         );
 
         // Simpan lowongan ke database
-        $this->lowonganRepo->insert($lowongan);
+        $lowonganRepo = Repositories::$lowongan;
+        $lowonganRepo->insert($lowongan);
 
         return $lowongan;
     }
 
-    public function updateLowongan(int $id, array $postData): Lowongan {
+    public static function updateLowongan(int $id, array $postData): Lowongan {
         // Ambil lowongan yang ada berdasarkan ID dari database
-        $existingLowongan = $this->lowonganRepo->getById($id);
+        $lowonganRepo = Repositories::$lowongan;
+        $existingLowongan = $lowonganRepo->getById($id);
         if (!$existingLowongan) {
             throw new Exception("Lowongan not found.");
         }
@@ -59,16 +56,18 @@ class LowonganService {
             new \DateTime()  // Set updated_at to current time
         );
 
-        $this->lowonganRepo->update($id, $updatedLowongan);
+        $lowonganRepo->update($id, $updatedLowongan);
 
         return $updatedLowongan;
     }
 
-    public function deleteLowongan(int $id): void {
-        $this->lowonganRepo->delete($id);
+    public static function deleteLowongan(int $id): void {
+        $lowonganRepo = Repositories::$lowongan;
+        $lowonganRepo->delete($id);
     }
 
-    public function getLowonganList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi, ?string $search): array {
-        return $this->lowonganRepo->getList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi, $search);
+    public static function getLowonganList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi, ?string $search): array {
+        $lowonganRepo = Repositories::$lowongan;
+        return $lowonganRepo->getList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi, $search);
     }
 }
