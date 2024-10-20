@@ -176,93 +176,42 @@ class DbLowongan implements RLowongan {
         );
     }
 
-    public function getPaginatedJobs(int $page, int $limit, string $search = '', string $jenisPekerjaan = '', string $jenisLokasi = ''): array {
+    public function getList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi): array {
         $offset = ($page - 1) * $limit;
+        $query = 'SELECT * FROM lowongan WHERE 1=1';
+        $params = [];
     
-        $sql = '
-            SELECT * FROM lowongan
-            WHERE 1=1
-        ';
-    
-        // Add search query
-        if (!empty($search)) {
-            $sql .= ' AND posisi ILIKE :search';
+        // Filter berdasarkan posisi
+        if ($posisi) {
+            $query .= ' AND posisi ILIKE :posisi';
+            $params['posisi'] = "%$posisi%";
         }
     
-        // Add filters
-        if (!empty($jenisPekerjaan)) {
-            $sql .= ' AND jenis_pekerjaan = :jenis_pekerjaan';
-        }
-        
-        if (!empty($jenisLokasi)) {
-            $sql .= ' AND jenis_lokasi = :jenis_lokasi';
+        // Filter berdasarkan jenis pekerjaan
+        if ($jenisPekerjaan) {
+            $query .= ' AND jenis_pekerjaan = :jenis_pekerjaan';
+            $params['jenis_pekerjaan'] = $jenisPekerjaan;
         }
     
-        $sql .= ' ORDER BY created_at DESC LIMIT :limit OFFSET :offset';
+        // Filter berdasarkan jenis lokasi
+        if ($jenisLokasi) {
+            $query .= ' AND jenis_lokasi = :jenis_lokasi';
+            $params['jenis_lokasi'] = $jenisLokasi;
+        }
+    
+        // Tambahkan limit dan offset untuk pagination
+        $query .= ' LIMIT :limit OFFSET :offset';
+        $params['limit'] = $limit;
+        $params['offset'] = $offset;
     
         try {
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare($query);
+            $stmt->execute($params);
     
-            // Bind params
-            if (!empty($search)) {
-                $stmt->bindValue(':search', '%' . $search . '%');
-            }
-    
-            if (!empty($jenisPekerjaan)) {
-                $stmt->bindValue(':jenis_pekerjaan', $jenisPekerjaan);
-            }
-    
-            if (!empty($jenisLokasi)) {
-                $stmt->bindValue(':jenis_lokasi', $jenisLokasi);
-            }
-    
-            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_CLASS, Lowongan::class);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log('Error fetching paginated jobs: ' . $e->getMessage());
-            throw new Exception('Error fetching paginated jobs');
-        }
-    }
-    
-    public function countJobs(string $search = '', string $jenisPekerjaan = '', string $jenisLokasi = ''): int {
-        $sql = 'SELECT COUNT(*) FROM lowongan WHERE 1=1';
-    
-        if (!empty($search)) {
-            $sql .= ' AND posisi ILIKE :search';
-        }
-    
-        if (!empty($jenisPekerjaan)) {
-            $sql .= ' AND jenis_pekerjaan = :jenis_pekerjaan';
-        }
-    
-        if (!empty($jenisLokasi)) {
-            $sql .= ' AND jenis_lokasi = :jenis_lokasi';
-        }
-    
-        try {
-            $stmt = $this->db->prepare($sql);
-    
-            // Bind params
-            if (!empty($search)) {
-                $stmt->bindValue(':search', '%' . $search . '%');
-            }
-    
-            if (!empty($jenisPekerjaan)) {
-                $stmt->bindValue(':jenis_pekerjaan', $jenisPekerjaan);
-            }
-    
-            if (!empty($jenisLokasi)) {
-                $stmt->bindValue(':jenis_lokasi', $jenisLokasi);
-            }
-    
-            $stmt->execute();
-            return $stmt->fetchColumn();
-        } catch (PDOException $e) {
-            error_log('Error counting jobs: ' . $e->getMessage());
-            throw new Exception('Error counting jobs');
+            error_log('Get lowongan list error: ' . $e->getMessage());
+            throw new Exception('Failed to retrieve lowongan list.');
         }
     }    
 }

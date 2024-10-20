@@ -38,6 +38,12 @@ function registerLowonganRoutes($router) {
         $router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', function(Request $req, Response $res) use ($lowonganController) {
             $lowonganController->delete($req, $res);
         });
+
+        // Route to get a lowongan
+        $router->register(RequestMethodEnum::GET, '/lowongan', function(Request $req, Response $res) use ($lowonganController) {
+            $lowonganController->getList($req, $res);
+        });
+        
     } catch (PDOException $e) {
         error_log('Database connection failed: ' . $e->getMessage());
         die("Failed to connect to the database. Please check your connection settings.");

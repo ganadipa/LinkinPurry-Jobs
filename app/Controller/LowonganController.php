@@ -139,4 +139,32 @@ class LowonganController {
             $res->send();
         }
     }
+
+    public function getList(Request $req, Response $res): void {
+        try {
+            $page = $req->getQueryParam('page', 1); // Default halaman 1
+            $limit = $req->getQueryParam('limit', 10); // Default 10 item per halaman
+            // Filter
+            $posisi = $req->getQueryParam('posisi', null); 
+            $jenisPekerjaan = $req->getQueryParam('jenis_pekerjaan', null); 
+            $jenisLokasi = $req->getQueryParam('jenis_lokasi', null); 
+    
+            $lowonganList = $this->lowonganRepo->getList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi);
+            
+            error_log("LIST"); // debug
+            error_log(print_r($lowonganList, true)); // debug
+
+            $res->json([
+                'status' => 'success',
+                'data' => $lowonganList
+            ]);
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        error_log('Respons JSON dikirim: ' . json_encode($lowonganList, JSON_PRETTY_PRINT)); // debug
+    }    
 }
