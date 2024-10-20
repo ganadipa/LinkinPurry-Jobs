@@ -8,7 +8,7 @@ use App\Model\User;
 class Request
 {
     private RequestMethodEnum $method;
-    private string $uri;
+    private ?string $uri;
     private ?string $matchedRoute = null;
     private array $queryParams = [];
     private array $post = [];
@@ -22,8 +22,7 @@ class Request
         // Set the request method
         $this->method = RequestMethodEnum::from($_SERVER['REQUEST_METHOD']);
 
-        // Set the request uri
-        $this->setUri($_SERVER['REQUEST_URI']);
+
 
         // Set the query parameters
         $this->setQueryParams($_GET);
@@ -45,7 +44,10 @@ class Request
         /**
          * Also, the following will be set by the middleware:
          * 1. The user
+         * 2. The uri
          */
+        // Set the request uri
+        $this->uri = null;
         $this->user = null;
     }
 

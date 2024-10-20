@@ -20,7 +20,9 @@ if (strpos($requestUri, '/public/index.php') === 0) {
 $requestUri = preg_replace('/\/+/', '/', $requestUri);
 
 // If the request uri ends with a forward slash, remove it
-$requestUri = rtrim($requestUri, '/');
+if ($requestUri !== '/' && substr($requestUri, -1) === '/') {
+    $requestUri = rtrim($requestUri, '/');
+}
 
 // If the environment is not docker, then env is not automatically loaded
 if ($_ENV['ENVIRONMENT'] !== 'docker') {

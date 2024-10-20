@@ -43,7 +43,7 @@ class App {
         // Register the routes
 
         // Root, for home page
-        // $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
+        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
 
         // Auth Routes (GET)
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
