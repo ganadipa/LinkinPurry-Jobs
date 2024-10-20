@@ -9,11 +9,6 @@ use App\Service\CompanyService;
 use App\Util\Enum\UserRoleEnum;
 
 class CompanyController {
-    private static CompanyService $companyService;
-
-    public function __construct() {
-        self::$companyService = new CompanyService();
-    }
     
     public static function showCreateJobPage(Request $req, Response $res): void {
         $user = $req->getUser();
@@ -23,7 +18,7 @@ class CompanyController {
             return;
         }
 
-        $html = self::$companyService->getCreateJobPage();
+        $html = CompanyService::getCreateJobPage();
         $res->setBody($html);
         $res->send();
     }
@@ -36,14 +31,14 @@ class CompanyController {
             return;
         }
 
-        $html = self::$companyService->getEditJobPage();
+        $html = CompanyService::getEditJobPage();
         $res->setBody($html);
         $res->send();
     }
 
     public static function showProfile(Request $req, Response $res): void {
         $userId = (int) $req->getUriParams()['id'];
-        $companyDetail = self::$companyService->getCompanyDetailByUserId($userId);
+        $companyDetail = CompanyService::getCompanyDetailByUserId($userId);
 
         if (!$companyDetail) {
             $res->json([
@@ -63,7 +58,7 @@ class CompanyController {
 
     public static function updateProfile(Request $req, Response $res): void {
         $data = json_decode($req->getPost(), true);
-        $updatedCompany = self::$companyService->updateCompanyDetail($data);
+        $updatedCompany = CompanyService::updateCompanyDetail($data);
 
         $res->json([
             'status' => 'success',

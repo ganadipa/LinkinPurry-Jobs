@@ -6,6 +6,7 @@ use \Exception;
 use App\Model\User;
 use App\Model\CompanyDetail;
 use App\Util\Enum\UserRoleEnum;
+use App\View\View;
 
 class AuthService {
     public static function login(string $email, string $password): User {
@@ -71,5 +72,31 @@ class AuthService {
         $user = $userRepo->getUserProfileById($user_id);
 
         return $user;
+    }
+
+    // Render the view with the layout auth.
+    public static function render(string $view, array $vars = []): string {
+        return View::render('Layout', 'Auth', array_merge_recursive($vars, 
+                [
+                    'content' => View::render('Page', $view, $vars),
+                    'css' => ['auth/shared.css', 'text.css'],
+                ]
+        ));
+    }
+
+    public static function registerView(): string {
+        return self::render('Register', [
+            'css' =>['auth/register.css'],
+            'js' => ['auth/register.js'],
+            'title' => 'Register'
+        ]);
+    }
+
+    public static function loginView(): string {
+        return self::render('Login', [
+        'css' =>['auth/login.css'],
+        'js' => ['auth/login.js'],
+        'title' => 'Login'
+        ]);
     }
 }

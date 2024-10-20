@@ -3,7 +3,6 @@
 namespace App\Controller;
 use App\Http\Request;
 use App\Http\Response;
-use App\View\View;
 use App\Validator\EmailValidator;
 use App\Validator\PasswordValidator;
 use App\Http\Exception\BadRequestException;
@@ -16,35 +15,19 @@ use Exception;
 class AuthController {
     // Login page
     public static function loginPage(Request $req, Response $res): void {
-        $html = self::render('Login', [
-            'css' =>['auth/login.css'],
-            'js' => ['auth/login.js'],
-            'title' => 'Login'
-        ]);
+        $html = AuthService::loginView();
         $res->setBody($html);
         $res->send();
     }
 
     // Register page
     public static function registerPage(Request $req, Response $res): void {
-        $html = self::render('Register', [
-            'css' => ['auth/register.css'],
-            'js' => ['auth/register.js'],
-            'title' => 'Register'
-        ]);
+        $html = AuthService::registerView();
         $res->setBody($html);
         $res->send();
     }
 
-    // Render the view with the layout auth.
-    private static function render(string $view, array $vars = []): string {
-        return View::render('Layout', 'Auth', array_merge_recursive($vars, 
-                [
-                    'content' => View::render('Page', $view, $vars),
-                    'css' => ['auth/shared.css', 'text.css'],
-                ]
-        ));
-    }
+
 
     public static function login(Request $req, Response $res): void {
         try {
@@ -118,7 +101,7 @@ class AuthController {
                 $location = $req->getPost('location', '');
                 $about = $req->getPost('about', '');
     
-                $company = AuthService::registerCompany($user->user_id, $location, $about);
+                AuthService::registerCompany($user->user_id, $location, $about);
             }
             
     
