@@ -76,29 +76,44 @@ class LowonganController {
     public function update(Request $req, Response $res): void {
         try {
             $id = $req->getUriParamsValue('id', null);
-            $postData = $req->getPost();
-
+            $inputJson = file_get_contents('php://input');
+            $postData = json_decode($inputJson, true);
+    
             if (!isset($id)) {
                 throw new Exception("Lowongan ID is required.");
             }
-
-            // Update di database
-            $updatedLowongan = $this->lowonganRepo->update($id, $postData);
-
+    
+            // Ambil lowongan yang ada berdasarkan ID dari database
+            $existingLowongan = $this->lowonganRepo->getById($id);
+            if (!$existingLowongan) {
+                throw new Exception("Lowongan not found.");
+            }
+    
+            // Update field lowongan yang ada dengan data baru
+            $updatedLowongan = new Lowongan(
+                $existingLowongan->company_id,
+                $postData['posisi'] ?? $existingLowongan->posisi,
+                $postData['deskripsi'] ?? $existingLowongan->deskripsi,
+                $postData['jenis_pekerjaan'] ?? $existingLowongan->jenis_pekerjaan,
+                JenisLokasiEnum::from($postData['jenis_lokasi'] ?? $existingLowongan->jenis_lokasi->value),
+                $existingLowongan->created_at,
+                new \DateTime()  // Set updated_at to current time
+            );
+    
+            $this->lowonganRepo->update($id, $updatedLowongan);
+    
             $res->json([
                 'status' => 'success',
                 'message' => 'Lowongan updated successfully.',
                 'data' => $updatedLowongan
             ]);
-            $res->send();
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ]);
-            $res->send();
         }
-    }
+    }    
 
     // Delete Lowongan
     public function delete(Request $req, Response $res): void {

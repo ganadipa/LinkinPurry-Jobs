@@ -4,6 +4,7 @@ namespace App\Repository\Db;
 use App\Model\Lowongan;
 use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
+use Error;
 use \PDO;
 use \PDOException;
 use \Exception;
@@ -67,7 +68,7 @@ class DbLowongan implements RLowongan {
 
     public function save(Lowongan $lowongan): Lowongan {
         if (isset($lowongan->lowongan_id)) {
-            return $this->update($lowongan);
+            return $this->update($lowongan->lowongan_id, $lowongan);
         } else {
             return $this->insert($lowongan);
         }
@@ -118,15 +119,11 @@ class DbLowongan implements RLowongan {
         }
     }
 
-    public function update(Lowongan $lowongan): Lowongan {
+    public function update(int $lowonganId, Lowongan $lowongan): Lowongan {
         try {
-            if (!isset($lowongan->lowongan_id)) {
-                throw new Exception('Cannot update lowongan that does not have lowongan id');
-            }
-
             $stmt = $this->db->prepare('
                 UPDATE lowongan
-                SET company_id = :company
+                SET company_id = :company_id,
                 posisi = :posisi,
                 deskripsi = :deskripsi,
                 jenis_pekerjaan = :jenis_pekerjaan,
@@ -140,8 +137,14 @@ class DbLowongan implements RLowongan {
                 'deskripsi' => $lowongan->deskripsi,
                 'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
-                'lowongan_id' => $lowongan->lowongan_id,
+                'lowongan_id' => $lowonganId,
             ]);
+
+            if ($stmt->rowCount() > 0) {
+                error_log("Update berhasil dengan ID: " . $lowongan->lowongan_id);
+            } else {
+                error_log("Tidak ada baris yang diupdate.");
+            }            
 
             return $lowongan;
         } catch (PDOException $e) {
@@ -151,21 +154,26 @@ class DbLowongan implements RLowongan {
     }    
 
     public function getById(int $lowonganId): Lowongan {
-        try {
-            $stmt = $this->db->prepare('
-                SELECT * FROM lowongan
-                WHERE lowongan_id = :lowongan_id
-            ');
-
-            $stmt->execute([
-                'lowongan_id' => $lowonganId,
-            ]);
-
-            return $stmt->fetchObject(Lowongan::class);
-        } catch (PDOException $e) {
-            error_log('Get lowongan by ID error: ' . $e->getMessage());
-            throw new Exception('Get lowongan by ID error. Please try again later.');
+        $sql = "SELECT * FROM lowongan WHERE lowongan_id = :lowongan_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':lowongan_id' => $lowonganId]);
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if (!$result) {
+            return null;  
         }
+    
+        return new Lowongan(
+            $result['company_id'],
+            $result['posisi'],
+            $result['deskripsi'],
+            $result['jenis_pekerjaan'],
+            JenisLokasiEnum::from($result['jenis_lokasi']),
+            new \DateTime($result['created_at']),
+            new \DateTime($result['updated_at']),
+            $result['lowongan_id']
+        );
     }
 
     public function getPaginatedJobs(int $page, int $limit, string $search = '', string $jenisPekerjaan = '', string $jenisLokasi = ''): array {
