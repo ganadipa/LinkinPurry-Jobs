@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.status === "success") {
             toast("success", data.message);
             setTimeout(() => {
-              window.location.href = "/login";
-            }, 3000);
+              window.location.href = "/home";
+            }, 1000);
           } else {
             submitButton.disabled = false;
             submitButton.textContent = "Agree & Join";

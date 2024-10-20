@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          window.location.href = "/";
+          window.location.href = "/home";
           responseContainer.classList.add("hidden");
         } else {
           submitButton.disabled = false;
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // For client side validation (on focusout)
+  // For client side validation (on focusout)P
   const emailInput = document.getElementById("email");
   emailInput.addEventListener("focusout", function () {
     const email = this.value;

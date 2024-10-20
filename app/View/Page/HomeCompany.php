@@ -1,43 +1,97 @@
-<aside>
-    <div class="profile-card">
-        <div class="banner"></div>
-        <img src="https://placehold.co/40x40" alt="Profile Picture" class="profile-picture">
-        <h2>Ahmad Mudabbir</h2>
-        <p>School of Electrical and Informatics Engineering</p>
-        <div class="location">Institut Teknologi Bandung</div>
+<aside class="left-sidebar">
+    <div class="menu-card" id="my-items">
+        <div class="menu-title">
+            <img src="/public/images/bookmark.png" alt="My Jobs">
+            <h2>My items</h2>
+        </div>
+        <ul>
+            <li class="active">Posted jobs<span class="count">1</span></li>
+        </ul>
     </div>
-    <div class="job-tools">
-        <a href="#" class="job-tool-link"><img src="public\images\bookmark.png" alt="My Jobs">My Jobs</a>
-        <a href="#" class="job-tool-link"><img src="public\images\list.png" alt="Preferences">Preferences</a>
-        <a href="#" class="job-tool-link"><img src="public\images\document.png" alt="Interview prep">Interview prep</a>
-        <a href="#" class="job-tool-link"><img src="public\images\youtube.png" alt="Job seeker guidance">Job seeker guidance</a>
+    <div id="search" class="menu-card">
+        <input type="text" id="search-input" placeholder="Search jobs...">
+    </div>
+    <div class="menu-card" id="search-filter">
+        <div class="menu-title">
+            <h2>Filter</h2>
+        </div>
+        <div class="search-filter">
+            <div class="filter-group">
+                <h3>Job Type</h3>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="job-type" value="" checked>
+                        <span class="radio-custom"></span>
+                        All Job Types
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="job-type" value="full-time">
+                        <span class="radio-custom"></span>
+                        Full Time
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="job-type" value="part-time">
+                        <span class="radio-custom"></span>
+                        Part Time
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="job-type" value="internship">
+                        <span class="radio-custom"></span>
+                        Internship
+                    </label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>Location Type</h3>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="location-type" value="" checked>
+                        <span class="radio-custom"></span>
+                        All Location Types
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="location-type" value="on-site">
+                        <span class="radio-custom"></span>
+                        On-site
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="location-type" value="hybrid">
+                        <span class="radio-custom"></span>
+                        Hybrid
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="location-type" value="remote">
+                        <span class="radio-custom"></span>
+                        Remote
+                    </label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>Sort Order</h3>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="sort-order" value="desc" checked>
+                        <span class="radio-custom"></span>
+                        Newest First
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="sort-order" value="asc">
+                        <span class="radio-custom"></span>
+                        Oldest First
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 </aside>
-<section class="job-content">
-    <div class="suggested-searches">
-        <h2>Suggested job searches</h2>
-        <div class="search-tags">
-            <a href="#" class="tag">remote</a>
-            <a href="#" class="tag">marketing manager</a>
-            <a href="#" class="tag">hr</a>
-            <a href="#" class="tag">legal</a>
-            <a href="#" class="tag">sales</a>
-        </div>
-    </div>
-    <div class="job-listings">
-        <h2>Top job picks for you</h2>
-        <div class="job-card">
-            <h3>Software Developer</h3>
-            <p class="company">TechCorp</p>
-            <p class="location">New York, NY (Remote)</p>
-            <button class="easy-apply">Easy Apply</button>
-        </div>
-        <div class="job-card">
-            <h3>Data Analyst</h3>
-            <p class="company">DataCo</p>
-            <p class="location">San Francisco, CA (On-site)</p>
-            <button class="easy-apply">Easy Apply</button>
-        </div>
-        <a href="#" class="see-all">Show all →</a>
-    </div>
+<section class="main-content">
+    <h1>Posted Jobs</h1>
+    <div class="loading-animation" id="loading-animation"></div>
+    <div id="job-list"></div>
+    <div class="loading-animation" id="loading" style="display: none;"></div>
 </section>
+<aside class="right-sidebar">
+    <div class="action-card">
+        <a href="/company/create" class="primary-btn">Post a free job</a>
+    </div>
+</aside>
