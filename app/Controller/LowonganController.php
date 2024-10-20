@@ -93,13 +93,19 @@ class LowonganController {
 
             $res->json([
                 'status' => 'success',
+                'message' => 'Lowongan list retrieved successfully.',
                 'data' => $lowonganList
             ]);
+
+            $res->send();
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'data' => null
             ]);
+
+            $res->send();
         }
     }
 }
