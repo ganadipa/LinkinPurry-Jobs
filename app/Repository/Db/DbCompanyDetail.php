@@ -114,8 +114,17 @@ class DbCompanyDetail implements RCompanyDetail {
                 'user_id' => $userId,
             ]);
 
-            $companyDetail = $stmt->fetchObject(CompanyDetail::class);
-            return $companyDetail;
+            $row = $stmt->fetch();
+            if (!$row) {
+                echo $userId;
+                throw new Exception('Company detail not found');
+            }
+
+            return new CompanyDetail(
+                user_id: $row['user_id'],
+                lokasi: $row['lokasi'],
+                about: $row['about'],
+            );
         } catch (PDOException $e) {
             error_log('Get company detail error: ' . $e->getMessage());
             throw new Exception('Get company detail error. Please try again later.');
