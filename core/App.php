@@ -91,6 +91,14 @@ class App {
                 $cvAndVideoMiddleware
             ]);
 
+            $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/cv', [JobController::class, 'appliedCV'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/video', [JobController::class, 'appliedVideo'], [
+                
+            ]);
+
             $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
                 $redirectIfLoggedInMiddleware
             ]);

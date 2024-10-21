@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Controller;
+
+use App\Http\Exception\ForbiddenException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
-use App\Http\Exception\NotFoundException;
 use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
 use App\Service\LamaranService;
-use App\Util\Enum\UserRoleEnum;
 use \Exception;
 use App\Util\Enum\JobTypeEnum;
 use App\Util\Enum\JenisLokasiEnum;
@@ -262,5 +262,113 @@ class JobController {
 
         $res->json($jobs);
         $res->send();
+    }
+
+    public static function appliedCV(Request $req, Response $res) {
+        try {
+
+            $user = $req->getUser();
+            if ($user == null) {
+                throw new UnauthorizedException('You must login first');
+            }
+
+            // Get the needed value
+            $jobId = $req->getUriParamsValue('jobId', null);
+            $userId = $req->getUriParamsValue('userId', null);
+
+            if ($jobId == null || $userId == null) {
+                throw new Exception('Job not found');
+            }
+
+            
+            // Validate 
+            $validatedJobId = PositiveNumericValidator::validate($jobId);
+            $validatedUserId = PositiveNumericValidator::validate($userId);
+            
+            if ($user->user_id !== $validatedUserId) {
+                throw new ForbiddenException('You are not allowed to access this resource');
+            }
+
+            $path = JobService::getCVPath($validatedJobId, $validatedUserId);
+
+            $res->pdf($path);
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+        }
+    }
+
+    public static function appliedVideo(Request $req, Response $res) {
+        try {
+
+            $user = $req->getUser();
+            if ($user == null) {
+                throw new UnauthorizedException('You must login first');
+            }
+
+            // Get the needed value
+            $jobId = $req->getUriParamsValue('jobId', null);
+            $userId = $req->getUriParamsValue('userId', null);
+
+            if ($jobId == null || $userId == null) {
+                throw new Exception('Job not found');
+            }
+
+            
+            // Validate 
+            $validatedJobId = PositiveNumericValidator::validate($jobId);
+            $validatedUserId = PositiveNumericValidator::validate($userId);
+            
+            if ($user->user_id !== $validatedUserId) {
+                throw new ForbiddenException('You are not allowed to access this resource');
+            }
+
+            $path = JobService::getVideoPath($validatedJobId, $validatedUserId);
+
+            $res->video($path);
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+        }
     }
 }

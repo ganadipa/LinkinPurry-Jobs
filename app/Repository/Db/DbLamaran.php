@@ -7,6 +7,7 @@ use App\Util\Enum\StatusLamaranEnum;
 use \PDO;
 use \PDOException;
 use \Exception;
+use DateTime;
 
 
 class DbLamaran implements RLamaran {
@@ -98,6 +99,8 @@ class DbLamaran implements RLamaran {
             ]);
 
             $lamaran->lamaran_id = (int) $this->db->lastInsertId();
+            
+
             return $lamaran;
         } catch (PDOException $e) {
             error_log('Insert lamaran error: ' . $e->getMessage());
@@ -182,7 +185,7 @@ class DbLamaran implements RLamaran {
                 video_path: $row['video_path'],
                 status: StatusLamaranEnum::from($row['status']),
                 status_reason: $row['status_reason'],
-                created_at: $row['created_at'],
+                created_at: new DateTime($row['created_at']),
             );
         } catch (PDOException $e) {
             error_log('Get lamaran error: ' . $e->getMessage());

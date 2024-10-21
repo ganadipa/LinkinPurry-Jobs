@@ -51,6 +51,18 @@ class JobService {
             $message = 'Over 100 applicants';
         }
 
+        $cvUrl = null;
+        $videoUrl = null;
+
+        if ($lamaran !== null) {
+            if ($lamaran->cv_path !== null) {
+                $cvUrl = "/job/".$lamaran->lowongan_id."/apply/".$lamaran->user_id."/cv";
+            }
+
+            if ($lamaran->video_path !== null) {
+                $videoUrl = "/job/".$lamaran->lowongan_id."/apply/".$lamaran->user_id."/video";
+            }
+        }
         
         // print_r($attachment);
         return View::view('Page/Job/Jobseeker', 'Details', [
@@ -85,8 +97,8 @@ class JobService {
             ],
             'applied' => $lamaran !== null,
             'submission' => [
-                'cv' => 'h',
-                'video' => 'h',
+                'cv' => $cvUrl,
+                'video' => $videoUrl,
             ],
             'status' => $lamaran ? $lamaran->status->value : null,
             'numberOfApplicantsMessage' => $message,
@@ -187,6 +199,7 @@ class JobService {
             'js' => [
                 'job/jobseeker/application.js'
             ],
+            'jobId' => $jobId,
             'title' => 'Apply for Backend Engineer - Paper.id',
             'user' => $user,
         ]);
@@ -225,5 +238,17 @@ class JobService {
 
 
         return $jobsRet;
+    }
+
+    public static function getCVPath(int $jobid, int $userId ): string {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($userId, $jobid);
+        return $lamaran->cv_path;
+    }
+
+    public static function getVideoPath(int $jobid, int $userId ): string {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($userId, $jobid);
+        return $lamaran->video_path;
     }
 }
