@@ -9,7 +9,7 @@
         </ul>
     </div>
 
-    <form class="menu-card" id="search-filter">
+    <form class="menu-card sticky" id="search-filter">
     <div id="search" class="menu-card">
     <input type="text" id="search-input" placeholder="Search jobs..." name="q" 
         value="<?php echo htmlspecialchars($filter['q']); ?>">
