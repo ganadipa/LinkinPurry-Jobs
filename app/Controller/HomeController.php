@@ -15,14 +15,14 @@ use App\Validator\ArrayValidator;
 use Exception;
 
 class HomeController {
-    public static function home() {
-        $viewPath = dirname(__DIR__) . '/View/HomePage.php';
-        if (file_exists($viewPath)) {
-            require_once $viewPath;
-        } else {
-            echo "View not found";
-        }
-    }
+    // public static function home() {
+    //     $viewPath = dirname(__DIR__) . '/View/HomePage.php';
+    //     if (file_exists($viewPath)) {
+    //         require_once $viewPath;
+    //     } else {
+    //         echo "View not found";
+    //     }
+    // }
 
     public static function showProfile($params) {
         try {

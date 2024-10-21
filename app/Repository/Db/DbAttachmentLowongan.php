@@ -117,4 +117,82 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
             throw new Exception('Update attachment lowongan error. Please try again later.');
         }
     }
+
+    public function getById(int $attachmentId): ?AttachmentLowongan {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM attachment_lowongan
+                WHERE attachment_id = :attachment_id
+            ');
+
+            $stmt->execute([
+                'attachment_id' => $attachmentId,
+            ]);
+
+            $attachmentLowongan = $stmt->fetch(PDO::FETCH_OBJ);
+            
+            return new AttachmentLowongan(
+                $attachmentLowongan->lowongan_id,
+                $attachmentLowongan->file_path,
+                $attachmentLowongan->attachment_id
+            );
+        } catch (PDOException $e) {
+            error_log('Get attachment lowongan by ID error: ' . $e->getMessage());
+            throw new Exception('Get attachment lowongan by ID error. Please try again later.');
+        }
+    }
+
+    public function getAttachmentsById(int $lowonganId): array {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM attachment_lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $lowonganId,
+            ]);
+
+            $attachmentLowongans = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $result = [];
+
+            foreach ($attachmentLowongans as $attachmentLowongan) {
+                $r = new AttachmentLowongan(
+                    $attachmentLowongan->lowongan_id,
+                    $attachmentLowongan->file_path,
+                    $attachmentLowongan->attachment_id
+                );
+                $result[] = $r->file_path;
+            }
+
+            return $result;
+        } catch (PDOException $e) {
+            error_log('Get attachment lowongan by ID error: ' . $e->getMessage());
+            throw new Exception('Get attachment lowongan by ID error. Please try again later.');
+        }
+    }
+
+    public function getList(): array {
+        try {
+            $stmt = $this->db->query('
+                SELECT * FROM attachment_lowongan
+            ');
+
+            $attachmentLowongans = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $result = [];
+
+            foreach ($attachmentLowongans as $attachmentLowongan) {
+                $result[] = new AttachmentLowongan(
+                    $attachmentLowongan->lowongan_id,
+                    $attachmentLowongan->file_path,
+                    $attachmentLowongan->attachment_id
+                );
+            }
+
+            return $result;
+        } catch (PDOException $e) {
+            error_log('Get attachment lowongan list error: ' . $e->getMessage());
+            throw new Exception('Get attachment lowongan list error. Please try again later.');
+        }
+    }
 }

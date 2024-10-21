@@ -4,27 +4,23 @@ namespace App\Controller;
 
 use App\Http\Request;
 use App\Http\Response;
-use App\Service\LowonganService;
+use App\Service\AttachmentService;
 use Exception;
 
-class LowonganController {
+class AttachmentController {
     public static function create(Request $req, Response $res): void {
         try {
             $inputJson = file_get_contents('php://input');
             $inputData = json_decode($inputJson, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Invalid JSON input');
-            }
-
-            
-            $lowongan = LowonganService::createLowongan($inputData);
+            $attachment = AttachmentService::createAttachment($inputData);
 
             $res->json([
                 'status' => 'success',
-                'message' => 'Lowongan created successfully.',
-                'data' => $lowongan
+                'message' => 'Attachment created successfully.',
+                'data' => $attachment
             ]);
+
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
@@ -40,15 +36,15 @@ class LowonganController {
             $postData = json_decode($inputJson, true);
 
             if (!isset($id)) {
-                throw new Exception("Lowongan ID is required.");
+                throw new Exception("Attachment ID is required.");
             }
 
-            $updatedLowongan = LowonganService::updateLowongan($id, $postData);
+            $updatedAttachment = AttachmentService::updateAttachment($id, $postData);
 
             $res->json([
                 'status' => 'success',
-                'message' => 'Lowongan updated successfully.',
-                'data' => $updatedLowongan
+                'message' => 'Attachment updated successfully.',
+                'data' => $updatedAttachment
             ]);
         } catch (Exception $e) {
             $res->json([
@@ -63,14 +59,14 @@ class LowonganController {
             $id = $req->getUriParamsValue('id', null);
 
             if (!isset($id)) {
-                throw new Exception("Lowongan ID is required.");
+                throw new Exception("Attachment ID is required.");
             }
 
-            LowonganService::deleteLowongan($id);
+            AttachmentService::deleteAttachment($id);
 
             $res->json([
                 'status' => 'success',
-                'message' => 'Lowongan deleted successfully.'
+                'message' => 'Attachment deleted successfully.'
             ]);
         } catch (Exception $e) {
             $res->json([
@@ -82,30 +78,22 @@ class LowonganController {
 
     public static function getList(Request $req, Response $res): void {
         try {
-            $page = $req->getQueryParam('page', 1);
-            $limit = $req->getQueryParam('limit', 10);
-            $posisi = $req->getQueryParam('posisi', null);
-            $jenisPekerjaan = $req->getQueryParam('jenis_pekerjaan', null);
-            $jenisLokasi = $req->getQueryParam('jenis_lokasi', null);
-            $search = $req->getQueryParam('search', null);
+            $attachments = AttachmentService::getAttachmentList();
 
-            $lowonganList = LowonganService::getLowonganList($page, $limit, $posisi, $jenisPekerjaan, $jenisLokasi, $search);
-            // print_r($lowonganList);
+            // echo json_encode($attachments);
+
             $res->json([
                 'status' => 'success',
-                'message' => 'Lowongan list retrieved successfully.',
-                'data' => $lowonganList
+                'message' => 'Attachment list retrieved successfully.',
+                'data' => $attachments
             ]);
 
             $res->send();
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
+                'message' => $e->getMessage()
             ]);
-
-            $res->send();
-        }
+        }   
     }
 }
