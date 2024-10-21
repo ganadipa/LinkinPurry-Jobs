@@ -8,6 +8,7 @@ use App\Http\Exception\HttpException;
 use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
 use App\Service\LamaranService;
+use App\Util\Enum\UserRoleEnum;
 use \Exception;
 
 class JobController {
@@ -22,7 +23,7 @@ class JobController {
             }
 
             $validatedId = PositiveNumericValidator::validate($id);
-            if ($user == null || $user->role == 'jobseeker') {
+            if ($user == null || $user->role === UserRoleEnum::JOBSEEKER) {
                 $html = JobService::detailsFromJobSeekerPage($validatedId);
             } else {
                 $html = JobService::detailsFromCompanyPage($validatedId);

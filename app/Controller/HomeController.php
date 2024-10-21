@@ -9,16 +9,17 @@ use \PDOException;
 use \App\Util\Enum\UserRoleEnum;
 use \App\Http\Request;
 use \App\Http\Response;
+use \App\Service\HomeService;
 
 class HomeController {
-    public static function home() {
-        $viewPath = dirname(__DIR__) . '/View/HomePage.php';
-        if (file_exists($viewPath)) {
-            require_once $viewPath;
-        } else {
-            echo "View not found";
-        }
-    }
+    // public static function home() {
+    //     $viewPath = dirname(__DIR__) . '/View/HomePage.php';
+    //     if (file_exists($viewPath)) {
+    //         require_once $viewPath;
+    //     } else {
+    //         echo "View not found";
+    //     }
+    // }
 
     public static function showProfile($params) {
         try {
@@ -105,29 +106,12 @@ class HomeController {
         $user = $req->getUser();
 
         if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
-            $html = self::render('HomeJobSeeker', [
-                'css' => ['home/home.css'],
-                'js' => ['home/home.js'],
-                'title' => 'Home Page (Job Seeker)',
-            ]);
+            $html = HomeService::getHomeJobSeeker();
         } else {
-            $html = self::render('HomeCompany', [
-                'css' => ['home/home.css'],
-                'js' => ['home/home.js'],
-                'title' => 'Home Page (Company)',
-            ]);
+            $html = HomeService::getHomeCompany();
         }
         
         $res->setBody($html);
         $res->send();
-    }
-
-    private static function render(string $view, array $vars = []): string {
-        return View::render('Layout', 'Main', array_merge_recursive($vars, 
-            [
-                'content' => View::render('Page', $view, $vars),
-                'css' => ['company/shared.css'],
-            ]
-        ));
     }
 }

@@ -7,8 +7,16 @@ use Core\Repositories;
 
 class JobService {
     public static function detailsFromJobSeekerPage(string $jobId): string {
+        $lowongan = Repositories::$lowongan->getById($jobId);
+        if (!$lowongan) {
+            return '<h1>Job not found</h1>';
+        }
 
-
+        $user = Repositories::$user->getUserProfileById($lowongan->company_id);
+        $detail_company = Repositories::$companyDetail->getCompanyDetailByUserId($lowongan->company_id);
+        $attachment = Repositories::$attachmentLowongan->getAttachmentsById($lowongan->lowongan_id);
+        
+        // print_r($attachment);
         return View::view('Page/Job/Jobseeker', 'Details', [
             'css' => [
                 'job/details.css',
@@ -17,31 +25,27 @@ class JobService {
             'js' => [
                 'job/jobseeker/details.js'
             ],
-            'title' => 'Backend Engineer - Paper.id',
+            'title' => $lowongan->posisi . ' - ' . $user->nama,
             'company' => [
-                'name' => 'Paper.id',
-                'location' => 'Jakarta, Indonesia',
+                'name' => $user->nama,
+                'location' => $detail_company->lokasi,
             ],
             'job' => [
-                'id' => 12,
-                'description' => 'We are looking for a Backend Engineer to join our team. You will be responsible for maintaining the backend of our application and ensuring that it is always up and running. You will also be responsible for developing new features and improving existing ones. The ideal candidate will have experience working with Node.js and MongoDB. Experience with AWS is a plus.',
-                'created' => '2021-08-01',
+                'id' => $lowongan->lowongan_id,
+                'description' => $lowongan->deskripsi,
+                'created' => $lowongan->created_at->format('Y-m-d'),
                 'location' => 'Jakarta, Indonesia',
-                'type' => 'Full-time',
-                'title' => 'Backend Engineer',
-                'images' => [
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                ],
-                'isOpen' => true,
+                'type' => $lowongan->jenis_pekerjaan,
+                'title' => $lowongan->posisi,
+                'images' => $attachment,
+                'isOpen' => $lowongan->is_open,
             ],
             'applied' => true,
             'submission' => [
                 'cv' => 'h',
                 'video' => 'h',
             ],
-            'status' => 'waiting',
+            'status' => 'accepted',
             'numberOfApplicantsMessage' => 'Over 100 applicants',
         ]);
 

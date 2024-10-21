@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use App\Controller\AttachmentController;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\CompanyController;
@@ -129,7 +130,7 @@ class App {
         }
 
         // Client Page Routes
-        // $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+        $this->router->register(RequestMethodEnum::GET, '/attachment', [AttachmentController::class, 'getList']);
 
         // Lowongan routes
         // Route to get a lowongan

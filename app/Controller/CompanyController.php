@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Http\Request;
 use App\Http\Response;
-use App\View\View;
 use App\Service\CompanyService;
 use App\Util\Enum\UserRoleEnum;
 

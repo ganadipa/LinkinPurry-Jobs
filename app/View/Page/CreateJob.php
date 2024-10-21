@@ -2,13 +2,13 @@
     <h1>Review job description</h1>
     <form id="job-post-form">
         <div class="form-group">
-            <label for="job-title">Job title*</label>
+            <label for="job-title">Job title (Position)*</label>
             <input type="text" id="job-title" name="job-title" required>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="company">Company*</label>
             <input type="text" id="company" name="company" required>
-        </div>
+        </div> -->
         <div class="form-group">
             <label for="workplace-type">Workplace type*</label>
             <select id="workplace-type" name="workplace-type" required>
@@ -18,10 +18,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="job-location">Job location*</label>
-            <input type="text" id="job-location" name="job-location" required>
+            <label for="job-type">Job type*</label>
+            <input type="text" id="job-type" name="job-type" required>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="job-type">Job type*</label>
             <select id="job-type" name="job-type" required>
                 <option value="full-time">Full-time</option>
@@ -30,7 +30,7 @@
                 <option value="temporary">Temporary</option>
                 <option value="internship">Internship</option>
             </select>
-        </div>
+        </div> -->
         <div class="form-group">
             <label for="editor">Job Description*</label>
             <div id="editor">

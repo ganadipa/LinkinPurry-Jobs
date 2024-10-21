@@ -6,4 +6,9 @@ use App\Model\AttachmentLowongan;
 interface RAttachmentLowongan {
     public function insert(AttachmentLowongan $attachmentLowongan): AttachmentLowongan;
     public function delete(int $attachmentId): void;
+    public function update(AttachmentLowongan $attachmentLowongan): AttachmentLowongan;
+    public function save(AttachmentLowongan $attachmentLowongan): AttachmentLowongan;
+    public function getById(int $attachmentId): ?AttachmentLowongan;
+    public function getAttachmentsById(int $lowonganId): array;
+    public function getList(): array;
 }
