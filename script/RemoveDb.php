@@ -12,4 +12,21 @@ if (getenv('ENVIRONMENT') !== 'docker') {
 
 // Create the db tables;
 $db = Db::getInstance();
-$db->deleteTables();
+
+// Gets the .sql of ../database/delete.sql
+$sql = file_get_contents(__DIR__ . "/../database/delete.sql");
+
+// Split the SQL into individual statements by semicolons
+$statements = explode(";", $sql);
+
+// Execute each statement separately
+foreach ($statements as $statement) {
+    $statement = trim($statement);
+    if (!empty($statement)) {
+        try {
+            $db->getConnection()->exec($statement);
+        } catch (PDOException $e) {
+            echo "Error executing migration $migration: " . $e->getMessage();
+        }
+    }
+}
