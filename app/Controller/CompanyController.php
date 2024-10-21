@@ -17,7 +17,7 @@ class CompanyController {
             return;
         }
 
-        $html = CompanyService::getCreateJobPage();
+        $html = CompanyService::getCreateJobPage($user);
         $res->setBody($html);
         $res->send();
     }
@@ -30,7 +30,7 @@ class CompanyController {
             return;
         }
 
-        $html = CompanyService::getEditJobPage();
+        $html = CompanyService::getEditJobPage($user);
         $res->setBody($html);
         $res->send();
     }

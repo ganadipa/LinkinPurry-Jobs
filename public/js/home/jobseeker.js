@@ -115,7 +115,12 @@ function loadJobs(isNewSearch = false) {
           });
 
           if (jobs.length < 10) {
-            jobList.appendChild(document.createTextNode("No more jobs found"));
+            const paragraph = document.createElement("p");
+            paragraph.textContent = "No more jobs to load";
+            paragraph.style.color = "red";
+            paragraph.style.textAlign = "center";
+
+            jobList.appendChild(paragraph);
             noMore = true;
           }
 

@@ -5,6 +5,7 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
+use App\Http\Exception\NotFoundException;
 use App\Http\Exception\UnauthorizedException;
 use App\Service\JobService;
 use App\Service\LamaranService;
@@ -19,17 +20,17 @@ class JobController {
         try {
             // Get the needed value
             $user = $req->getUser();
+            
+            
             $id = $req->getUriParamsValue('id', null);
-
-            if (!isset($id)) {
-                throw new Exception ('Job not found');
-            }
-
+            
             $validatedId = PositiveNumericValidator::validate($id);
-            if ($user == null || $user->role === UserRoleEnum::JOBSEEKER) {
-                $html = JobService::detailsFromJobSeekerPage($validatedId);
+
+            // User might be null
+            if ($user == null ||  $user->role->value == 'jobseeker') {
+                $html = JobService::detailsFromJobSeekerPage($validatedId, $user);
             } else {
-                $html = JobService::detailsFromCompanyPage($validatedId);
+                $html = JobService::detailsFromCompanyPage($validatedId, $user);
             }
 
             $res->setBody($html);
@@ -66,6 +67,9 @@ class JobController {
             // Get the needed value
             $id = $req->getUriParamsValue('id', null);
     
+            // Because using the redirect if not logged in middleware, the user will always be not null
+            $user = $req->getUser();
+
             if (!isset($id)) {
                 throw new Exception ('Job not found');
             }
@@ -73,7 +77,7 @@ class JobController {
             // Validate
             $validatedId = PositiveNumericValidator::validate($id);
 
-            $html = JobService::application($id);
+            $html = JobService::application($id, $user);
     
             $res->setBody($html);
             $res->send(); 
@@ -186,7 +190,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedApplicationId = PositiveNumericValidator::validate($applicationId);
 
-            $html = JobService::applicationDetails($validatedJobId, $validatedApplicationId);
+            $html = JobService::applicationDetails($validatedJobId, $validatedApplicationId, $user);
 
             $res->setBody($html);
             $res->send();

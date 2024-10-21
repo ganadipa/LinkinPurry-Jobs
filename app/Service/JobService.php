@@ -1,20 +1,56 @@
 <?php
 
 namespace App\Service;
+
+use App\Model\User;
 use App\View\View;
 use Core\DirectoryAlias;
 use Core\Repositories;
 
 class JobService {
-    public static function detailsFromJobSeekerPage(string $jobId): string {
-        $lowongan = Repositories::$lowongan->getById($jobId);
-        if (!$lowongan) {
-            return '<h1>Job not found</h1>';
+    public static function detailsFromJobSeekerPage(string $jobId, ?User $user): string {
+        $lowonganRepo = Repositories::$lowongan;
+        $companyRepo = Repositories::$companyDetail;
+        $lamaranRepo = Repositories::$lamaran;
+        $userRepo = Repositories::$user;
+        $attachmentsRepo = Repositories::$attachmentLowongan;
+
+
+        // user id might be null
+        $userId = null;
+        if ($user !== null) {
+            $userId = $user->user_id;
         }
 
-        $user = Repositories::$user->getUserProfileById($lowongan->company_id);
-        $detail_company = Repositories::$companyDetail->getCompanyDetailByUserId($lowongan->company_id);
-        $attachment = Repositories::$attachmentLowongan->getAttachmentsById($lowongan->lowongan_id);
+        $lowongan = $lowonganRepo->getById($jobId);
+        $company = $companyRepo->getCompanyDetailByUserId($lowongan->company_id);
+        $userCompany = $userRepo->getUserProfileById($lowongan->company_id);
+
+        // If the user id is null, then lamaran is null
+        $lamaran = null;
+        if ($userId !== null) {
+            $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($userId, $jobId);
+        }
+        $attachments = $attachmentsRepo->getAttachmentsByLowonganId($jobId);
+
+        // Get the number of applicants
+        $applicants = $lamaranRepo->getNumberOfApplicants($jobId);
+
+        $message = '';
+        if ($applicants === 0) {
+            $message = 'No applicants yet';
+        } else if ($applicants === 1) {
+            $message = '1 applicant';
+        } else if ($applicants < 10) {
+            $message = 'Few applicants';
+        } else if ($applicants < 50) {
+            $message = '10 - 50 applicants';
+        } else if ($applicants < 100) {
+            $message = '50 - 100 applicants';
+        } else {
+            $message = 'Over 100 applicants';
+        }
+
         
         // print_r($attachment);
         return View::view('Page/Job/Jobseeker', 'Details', [
@@ -25,33 +61,42 @@ class JobService {
             'js' => [
                 'job/jobseeker/details.js'
             ],
-            'title' => $lowongan->posisi . ' - ' . $user->nama,
+            'title' => $lowongan->posisi . ' - ' . $userCompany->nama,
+            'title' => $lowongan->posisi . ' - ' . $userCompany->nama,
             'company' => [
-                'name' => $user->nama,
-                'location' => $detail_company->lokasi,
+                'name' => $userCompany->nama,
+                'location' => $company->lokasi,
+                'name' => $userCompany->nama,
+                'location' => $company->lokasi,
             ],
             'job' => [
                 'id' => $lowongan->lowongan_id,
                 'description' => $lowongan->deskripsi,
                 'created' => $lowongan->created_at->format('Y-m-d'),
-                'location' => 'Jakarta, Indonesia',
-                'type' => $lowongan->jenis_pekerjaan,
+                'location' => $lowongan->jenis_lokasi->value,
+                'type' => $lowongan->jenis_pekerjaan->value,
                 'title' => $lowongan->posisi,
-                'images' => $attachment,
+                'images' => [
+                    "https://placehold.co/600x400",
+                    "https://placehold.co/600x400",
+                    "https://placehold.co/600x400",
+                ],
                 'isOpen' => $lowongan->is_open,
             ],
-            'applied' => true,
+            'applied' => $lamaran !== null,
             'submission' => [
                 'cv' => 'h',
                 'video' => 'h',
             ],
-            'status' => 'accepted',
-            'numberOfApplicantsMessage' => 'Over 100 applicants',
+            'status' => $lamaran ? $lamaran->status->value : null,
+            'numberOfApplicantsMessage' => $message,
+            'user' => $user,
+
         ]);
 
     }
 
-    public static function detailsFromCompanyPage(string $jobId): string {
+    public static function detailsFromCompanyPage(string $jobId, User $user): string {
         return View::view('Page/Job/Company', 'Details', [
             'css' => [
                 'job/details.css',
@@ -97,10 +142,11 @@ class JobService {
                 ],
             ],
             'numberOfApplicantsMessage' => 'Over 100 applicants',
+            'user' => $user,
         ]);
     }
 
-    public static function applicationDetails(string $jobId, string $applicationId): string {
+    public static function applicationDetails(string $jobId, string $applicationId, User $user): string {
         // In a real application, you would fetch this data from a database
         $applicant = [
             'id' => 1,
@@ -128,11 +174,12 @@ class JobService {
             'applicant' => $applicant,
             'application' => $application,
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
-            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js']
+            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
+            'user' => $user,
         ]);
     }
 
-    public static function application(string $jobId): string {
+    public static function application(string $jobId, User $user): string {
         return View::view('Page/Job/Jobseeker', 'Application', [
             'css' => [
                 'job/application.css',
@@ -141,6 +188,7 @@ class JobService {
                 'job/jobseeker/application.js'
             ],
             'title' => 'Apply for Backend Engineer - Paper.id',
+            'user' => $user,
         ]);
     }
 
@@ -172,7 +220,6 @@ class JobService {
             $company = $companyRepo->getCompanyDetailByUserId($job['company_id']);
             $job['company'] = $user->nama;
             $job['location'] = $company->lokasi;
-
         }
 
 

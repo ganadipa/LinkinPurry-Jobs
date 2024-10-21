@@ -150,11 +150,11 @@ class HomeController {
     
             if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
                 $html = HomeService::getHomeJobSeekerPage(
-                    $q, $jobType, $locationType, $sortOrder
+                    $q, $jobType, $locationType, $sortOrder, $user
                 );
             } else {
                 $html = HomeService::getHomeCompanyPage(
-                    $q, $jobType, $locationType, $sortOrder
+                    $q, $jobType, $locationType, $sortOrder, $user
                 );
             }
             

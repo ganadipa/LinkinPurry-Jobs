@@ -104,7 +104,8 @@ class AuthController {
                 AuthService::registerCompany($user->user_id, $location, $about);
             }
             
-    
+            AuthService::login($emailValid, $passwordValid);
+
             // Then the user is registered
             $res->json([
                 'status' => 'success',
@@ -143,6 +144,14 @@ class AuthController {
 
     public static function logout(Request $req, Response $res): void {
         session_destroy();
+
+        $res->json([
+            'status' => 'success',
+            'message' => 'User logged out successfully',
+            'data' => null
+        ]);
+
+        $res->send();
     }
 
     public static function self(Request $req, Response $res): void {

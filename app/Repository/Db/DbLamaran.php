@@ -155,4 +155,57 @@ class DbLamaran implements RLamaran {
             throw new Exception('Update lamaran error. Please try again later.');
         }
     }
+
+    public function getLamaranByUserIdAndJobId(int $userId, int $jobId): ?Lamaran {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM lamaran
+                WHERE user_id = :user_id
+                AND lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'lowongan_id' => $jobId,
+            ]);
+
+            $row = $stmt->fetch();
+            if (!$row) {
+                return null;
+            }
+
+            return new Lamaran(
+                lamaran_id: (int) $row['lamaran_id'],
+                user_id: (int) $row['user_id'],
+                lowongan_id: (int) $row['lowongan_id'],
+                cv_path: $row['cv_path'],
+                video_path: $row['video_path'],
+                status: StatusLamaranEnum::from($row['status']),
+                status_reason: $row['status_reason'],
+                created_at: $row['created_at'],
+            );
+        } catch (PDOException $e) {
+            error_log('Get lamaran error: ' . $e->getMessage());
+            throw new Exception('Get lamaran error. Please try again later.');
+        }
+    }
+
+    public function getNumberOfApplicants(int $jobId): int
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT COUNT(*) FROM lamaran
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            return (int) $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log('Get number of applicants error: ' . $e->getMessage());
+            throw new Exception('Get number of applicants error. Please try again later.');
+        }
+    }
 }

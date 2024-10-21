@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Service;
+
+use App\Model\User;
 use App\Service;
 use App\Util\Enum\JobTypeEnum;
 use App\Util\Enum\JenisLokasiEnum;
@@ -18,7 +20,7 @@ class HomeService {
     }
 
     public static function getHomeJobSeekerPage(
-        string $q, array $jobType, array $locationType, string $sortOrder
+        string $q, array $jobType, array $locationType, string $sortOrder, ?User $user
     ) {
         $jobtype = [
             'full-time' => in_array(JobTypeEnum::FULL_TIME, $jobType),
@@ -41,17 +43,39 @@ class HomeService {
                 'jobType' => $jobtype,
                 'locationType' => $locationtype,
                 'sortOrder' => $sortOrder,
-            ]
+                
+            ],
+            'user' => $user,
         ]);
     }
 
     public static function getHomeCompanyPage(
-        string $q, array $jobType, array $locationType, string $sortOrder
+        string $q, array $jobType, array $locationType, string $sortOrder, User $user
     ) {
+        $jobtype = [
+            'full-time' => in_array(JobTypeEnum::FULL_TIME, $jobType),
+            'part-time' => in_array(JobTypeEnum::PART_TIME, $jobType),
+            'internship' => in_array(JobTypeEnum::INTERNSHIP, $jobType),
+        ];
+
+        $locationtype = [
+            'on-site' => in_array(JenisLokasiEnum::ON_SITE, $locationType),
+            'hybrid' => in_array(JenisLokasiEnum::HYBRID, $locationType),
+            'remote' => in_array(JenisLokasiEnum::REMOTE, $locationType),
+        ];
+
         return self::render('HomeCompany', [
             'css' => ['home/home.css'],
             'js' => ['home/company.js'],
             'title' => 'Home Page (Company)',
+            'filter' => [
+                'q' => $q,
+                'jobType' => $jobtype,
+                'locationType' => $locationtype,
+                'sortOrder' => $sortOrder,
+                
+            ],
+            'user' => $user,
         ]);
     }
 }

@@ -10,6 +10,7 @@ use App\Controller\JobController;
 use App\Controller\LowonganController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
+use App\Middleware\RedirectIfNotLoggedInMiddleware;
 use App\Middleware\FilesMiddleware;
 use App\Middleware\IMiddleware;
 
@@ -36,7 +37,7 @@ class App {
     public function registerRoutes() {
         // Define the needed middlewares 
         $redirectIfLoggedInMiddleware = new RedirectIfLoggedInMiddleware();
-        // $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
+        $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
         $cvAndVideoMiddleware = new FilesMiddleware(['cv', 'video']);
 
         // Register the routes
@@ -64,7 +65,7 @@ class App {
             ]);
 
             // Logout
-            $this->router->register(RequestMethodEnum::GET, '/api/logout', [AuthController::class, 'logout'], [
+            $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [
             ]);
 
             // Gets the current user
@@ -78,27 +79,22 @@ class App {
 
         // A job routes
         $this->router->register(RequestMethodEnum::GET, '/job/:id', [JobController::class, 'jobdetails'], [
-            // Redirect to /login if not logged in
-            // Not implemented yet
         ]);
 
         {
             $this->router->register(RequestMethodEnum::GET, '/job/:id/apply', [JobController::class, 'jobapplication'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
+                $redirectIfNotLoggedInMiddleware
             ]);
 
             $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
+                $redirectIfNotLoggedInMiddleware,
 
                 // Validate the cv and video
                 $cvAndVideoMiddleware
             ]);
 
             $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
+                $redirectIfLoggedInMiddleware
             ]);
         }
 

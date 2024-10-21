@@ -195,4 +195,23 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
             throw new Exception('Get attachment lowongan list error. Please try again later.');
         }
     }
+
+    public function getAttachmentsByLowonganId(int $lowonganId): array
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM attachment_lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $lowonganId,
+            ]);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Get attachment lowongan error: ' . $e->getMessage());
+            throw new Exception('Get attachment lowongan error. Please try again later.');
+        }
+    }
 }

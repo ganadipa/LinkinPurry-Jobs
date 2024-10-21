@@ -55,7 +55,8 @@ nav {
   height: 52px;
 }
 
-.nav-left, .nav-right {
+.nav-left,
+.nav-right {
   display: flex;
   align-items: center;
 }
@@ -161,4 +162,8 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
+}
+
+#logout {
+  cursor: pointer;
 }

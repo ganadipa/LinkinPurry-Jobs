@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Model\CompanyDetail;
+use App\Model\User;
 use App\View\View;
 use Core\Repositories;
 
@@ -23,17 +24,18 @@ class CompanyService {
         return $companyDetailRepo->update($companyDetail);
     }
 
-    public static function getCreateJobPage() : string {
+    public static function getCreateJobPage(User $user) : string {
         return self::render('CreateJob', [
             'css' => ['company/create-job.css'],
             'js' => ['company/job-create.js'],
             'title' => 'Create Job',
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
-            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js']
+            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
+            'user' => $user,
         ]);
     }
 
-    public static function getEditJobPage() : string {
+    public static function getEditJobPage(User $user) : string {
         $jobData = [
             'title' => 'Frontend Developer',
             'company' => 'TechCorp Inc.',
@@ -50,7 +52,8 @@ class CompanyService {
             'title' => 'Edit Job',
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
             'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
-            'jobData' => $jobData
+            'jobData' => $jobData, 
+            'user' => $user,
         ]);
     }
 

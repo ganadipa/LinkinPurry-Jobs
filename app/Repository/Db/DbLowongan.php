@@ -4,6 +4,7 @@ namespace App\Repository\Db;
 use App\Model\Lowongan;
 use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
+use App\Util\Enum\JobTypeEnum;
 use Error;
 use \PDO;
 use \PDOException;
@@ -89,7 +90,7 @@ class DbLowongan implements RLowongan {
                 'company_id' => $lowongan->company_id,
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
-                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
+                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan->value,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
             ]);
 
@@ -135,7 +136,7 @@ class DbLowongan implements RLowongan {
                 'company_id' => $lowongan->company_id,
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
-                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
+                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan->value,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
                 'lowongan_id' => $lowonganId,
             ]);
@@ -168,7 +169,7 @@ class DbLowongan implements RLowongan {
             $result['company_id'],
             $result['posisi'],
             $result['deskripsi'],
-            $result['jenis_pekerjaan'],
+            JobTypeEnum::from($result['jenis_pekerjaan']),
             JenisLokasiEnum::from($result['jenis_lokasi']),
             new \DateTime($result['created_at']),
             new \DateTime($result['updated_at']),
@@ -297,7 +298,7 @@ class DbLowongan implements RLowongan {
                 $job['company_id'],
                 $job['posisi'],
                 $job['deskripsi'],
-                $job['jenis_pekerjaan'],
+                JobTypeEnum::from($job['jenis_pekerjaan']),
                 JenisLokasiEnum::from($job['jenis_lokasi']),
                 new \DateTime($job['created_at']),
                 new \DateTime($job['updated_at']),
