@@ -10,7 +10,7 @@
             <input type="text" id="company" name="company" required>
         </div> -->
         <div class="form-group">
-            <label for="workplace-type">Workplace type*</label>
+            <label for="workplace-type">Location type*</label>
             <select id="workplace-type" name="workplace-type" required>
                 <option value="on-site">On-site</option>
                 <option value="hybrid">Hybrid</option>
@@ -18,10 +18,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="job-type">Job type*</label>
+            <label for="job-type">Job Location*</label>
             <input type="text" id="job-type" name="job-type" required>
         </div>
-        <!-- <div class="form-group">
+        <div class="form-group">
             <label for="job-type">Job type*</label>
             <select id="job-type" name="job-type" required>
                 <option value="full-time">Full-time</option>
@@ -30,7 +30,7 @@
                 <option value="temporary">Temporary</option>
                 <option value="internship">Internship</option>
             </select>
-        </div> -->
+        </div>
         <div class="form-group">
             <label for="editor">Job Description*</label>
             <div id="editor">

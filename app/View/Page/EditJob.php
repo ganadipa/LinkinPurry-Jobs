@@ -5,12 +5,12 @@
             <label for="job-title">Job title*</label>
             <input type="text" id="job-title" name="job-title" required value="<?php echo htmlspecialchars($jobData['title']); ?>">
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="company">Company*</label>
             <input type="text" id="company" name="company" required value="<?php echo htmlspecialchars($jobData['company']); ?>">
-        </div>
+        </div> -->
         <div class="form-group">
-            <label for="workplace-type">Workplace type*</label>
+            <label for="workplace-type">Location type*</label>
             <select id="workplace-type" name="workplace-type" required>
                 <option value="on-site" <?php echo $jobData['workplaceType'] == 'on-site' ? 'selected' : ''; ?>>On-site</option>
                 <option value="hybrid" <?php echo $jobData['workplaceType'] == 'hybrid' ? 'selected' : ''; ?>>Hybrid</option>
