@@ -72,6 +72,14 @@ class Db {
         $this->lamaran->createTable();
     }
 
+    public function deleteTables() {
+        $this->lamaran->deleteTable();
+        $this->attachmentLowongan->deleteTable();
+        $this->lowongan->deleteTable();
+        $this->companyDetail->deleteTable();
+        $this->user->deleteTable();
+    }
+
     public function getDbAttachmentLowongan(): DbAttachmentLowongan {
         return $this->attachmentLowongan;
     }

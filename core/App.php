@@ -9,9 +9,7 @@ use App\Controller\CompanyController;
 use App\Controller\JobController;
 use App\Controller\LowonganController;
 use App\Util\Enum\RequestMethodEnum;
-use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
-// use App\Middleware\RedirectIfNotLoggedInMiddleware;
 use App\Middleware\FilesMiddleware;
 use App\Middleware\IMiddleware;
 
@@ -42,9 +40,6 @@ class App {
         $cvAndVideoMiddleware = new FilesMiddleware(['cv', 'video']);
 
         // Register the routes
-
-        // Root, for home page
-        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
 
         // Auth Routes (GET)
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [

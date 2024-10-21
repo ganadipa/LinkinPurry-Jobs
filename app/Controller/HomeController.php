@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
-use \App\Repository\Db\Db;
-use \App\Repository\Db\DbUser;
-use \App\View\View;
+use App\Repository\Db\Db;
+use App\Repository\Db\DbUser;
 use \PDOException;
-use \App\Util\Enum\UserRoleEnum;
-use \App\Http\Request;
-use \App\Http\Response;
-use \App\Service\HomeService;
+use App\Util\Enum\UserRoleEnum;
+use App\Http\Request;
+use App\Http\Response;
+use App\Service\HomeService;
+use App\Util\Enum\JobTypeEnum;
+use App\Util\Enum\JenisLokasiEnum;
+use App\Validator\ArrayValidator;
+use Exception;
 
 class HomeController {
     // public static function home() {
@@ -103,15 +106,66 @@ class HomeController {
     // }
 
     public static function showHomePage(Request $req, Response $res): void {
-        $user = $req->getUser();
+        try {
+            $q = $req->getQueryParam('q') ?? '';
+            $jobType = $req->getQueryParam('job-type') ?? ['full-time', 'part-time', 'internship'];
+            $locationType = $req->getQueryParam('location-type') ?? [
+                'on-site', 'hybrid', 'remote'
+            ];
+            $sortOrder = $req->getQueryParam('sort-order') ?? 'desc';
 
-        if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
-            $html = HomeService::getHomeJobSeeker();
-        } else {
-            $html = HomeService::getHomeCompany();
+            // Validate each query parameter
+            $jobType = ArrayValidator::validate($jobType);
+            $locationType = ArrayValidator::validate($locationType);
+
+            foreach ($jobType as $type) {
+                // If not in array then just remove it
+                if (!in_array($type, [JobTypeEnum::FULL_TIME->value, JobTypeEnum::PART_TIME->value, JobTypeEnum::INTERNSHIP->value])) {
+                    // remove
+                    $jobType = array_filter($jobType, function($job) use ($type) {
+                        return $job !== $type;
+                    });
+                }
+            }
+
+            foreach ($locationType as $type) {
+                if (!in_array($type, [JenisLokasiEnum::ON_SITE->value, JenisLokasiEnum::HYBRID->value, JenisLokasiEnum::REMOTE->value])) {
+                    $locationType = array_filter($locationType, function($location) use ($type) {
+                        return $location !== $type;
+                    });
+                }
+            }
+
+            // Make the jobtype and location type as enum
+            $jobType = array_map(function($type) {
+                return JobTypeEnum::from($type);
+            }, $jobType);
+    
+            $locationType = array_map(function($type) {
+                return JenisLokasiEnum::from($type);
+            }, $locationType);
+    
+    
+            $user = $req->getUser();
+    
+            if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
+                $html = HomeService::getHomeJobSeekerPage(
+                    $q, $jobType, $locationType, $sortOrder
+                );
+            } else {
+                $html = HomeService::getHomeCompanyPage(
+                    $q, $jobType, $locationType, $sortOrder
+                );
+            }
+            
+            $res->setBody($html);
+            $res->send();
+        } catch (Exception $e) {
+            $res->setBody('Error: ' . $e->getMessage());
+            $res->send();
         }
-        
-        $res->setBody($html);
-        $res->send();
+
     }
+
+
 }

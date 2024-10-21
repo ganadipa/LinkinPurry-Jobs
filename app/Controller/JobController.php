@@ -10,6 +10,9 @@ use App\Service\JobService;
 use App\Service\LamaranService;
 use App\Util\Enum\UserRoleEnum;
 use \Exception;
+use App\Util\Enum\JobTypeEnum;
+use App\Util\Enum\JenisLokasiEnum;
+use App\Validator\ArrayValidator;
 
 class JobController {
     public static function jobdetails(Request $req, Response $res): void {
@@ -206,14 +209,52 @@ class JobController {
         }
     }
 
-    public static function generateJobs(Request $req, Response $res): void {
+    public static function generateJobs(Request $req, Response $res): void {    
+        $q = $req->getQueryParam('q') ?? '';
+        $jobType = $req->getQueryParam('job-type') ?? ['full-time', 'part-time', 'internship'];
+        $locationType = $req->getQueryParam('location-type') ?? [
+            'on-site', 'hybrid', 'remote'
+        ];
+        $sortOrder = $req->getQueryParam('sort-order') ?? 'desc';
+
+        // Validate each query parameter
+        $jobType = ArrayValidator::validate($jobType);
+        $locationType = ArrayValidator::validate($locationType);
+
+        foreach ($jobType as $type) {
+            // If not in array then just remove it
+            if (!in_array($type, [JobTypeEnum::FULL_TIME->value, JobTypeEnum::PART_TIME->value, JobTypeEnum::INTERNSHIP->value])) {
+                // remove
+                $jobType = array_filter($jobType, function($job) use ($type) {
+                    return $job !== $type;
+                });
+            }
+        }
+
+        foreach ($locationType as $type) {
+            if (!in_array($type, [JenisLokasiEnum::ON_SITE->value, JenisLokasiEnum::HYBRID->value, JenisLokasiEnum::REMOTE->value])) {
+                $locationType = array_filter($locationType, function($location) use ($type) {
+                    return $location !== $type;
+                });
+            }
+        }
+
+        // Make the jobtype and location type as enum
+        $jobType = array_map(function($type) {
+            return JobTypeEnum::from($type);
+        }, $jobType);
+
+        $locationType = array_map(function($type) {
+            return JenisLokasiEnum::from($type);
+        }, $locationType);
+
+
         $page = $req->getQueryParam('page', 1);
         $perPage = 10;
 
-        $jobs = [];
-        for ($i = 0; $i < $perPage; $i++) {
-            $jobs[] = JobService::generateJob(($page - 1) * $perPage + $i + 1);
-        }
+        $jobs = JobService::generateJobs($page, $perPage, 
+            $q, $jobType, $locationType, $sortOrder
+        );
 
         $res->json($jobs);
         $res->send();

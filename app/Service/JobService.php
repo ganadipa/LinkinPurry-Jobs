@@ -144,17 +144,39 @@ class JobService {
         ]);
     }
 
-    public static function generateJob($id) {
-        $titles = ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'UI/UX Designer', 'Product Manager'];
-        $companies = ['TechCorp', 'InnoSoft', 'WebGenius', 'DataDrive', 'CloudNine'];
-        $locations = ['New York, NY', 'San Francisco, CA', 'London, UK', 'Berlin, Germany', 'Tokyo, Japan'];
+    public static function generateJobs(int $page, int $perPage, 
+        string $q, array $jobType, array $locationType, string $sortOrder): array {
     
-        return [
-            'id' => $id,
-            'title' => $titles[array_rand($titles)],
-            'company' => $companies[array_rand($companies)],
-            'location' => $locations[array_rand($locations)],
-            'created' => rand(1, 30) . ' days ago'
-        ];
+        $jobRepo = Repositories::$lowongan;
+        $jobs = $jobRepo->getJobs($page, $perPage, 
+            $q, $jobType, $locationType, $sortOrder);
+
+        
+
+
+        $jobsRet = [];
+        foreach ($jobs as $job) {
+            $jobsRet[] = [
+                'id' => $job->lowongan_id,
+                'title' => $job->posisi,
+                'company_id' => $job->company_id,
+                'created' => $job->created_at->format('Y-m-d')
+            ];
+        }
+
+        // for each job, get the company name by doing a query to the user table
+        $userRepo = Repositories::$user;
+        $companyRepo = Repositories::$companyDetail;
+        foreach ($jobsRet as &$job) {
+            $user = $userRepo->getUserProfileById($job['company_id']);
+            $company = $companyRepo->getCompanyDetailByUserId($job['company_id']);
+            $job['company'] = $user->nama;
+            $job['location'] = $company->lokasi;
+
+        }
+
+
+
+        return $jobsRet;
     }
 }
