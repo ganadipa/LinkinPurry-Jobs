@@ -12,4 +12,9 @@ interface RLowongan {
     public function getJobs(int $page, int $perPage, 
         string $q, array $jobType, array $locationType, string $sortOrder
     ): array;
+    public function getJobsByCompany(int $companyId, int $page, int $perPage, 
+        string $q, array $jobType, array $locationType, string $sortOrder
+    ): array;
+
+    public function getNumberOfJobsPostedByCompany(int $companyId): int;
 }

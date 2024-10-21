@@ -7,6 +7,7 @@ use App\Service;
 use App\Util\Enum\JobTypeEnum;
 use App\Util\Enum\JenisLokasiEnum;
 use App\View\View;
+use Core\Repositories;
 
 class HomeService {
     
@@ -64,10 +65,13 @@ class HomeService {
             'remote' => in_array(JenisLokasiEnum::REMOTE, $locationType),
         ];
 
+        $lowonganRepo = Repositories::$lowongan; 
+
         return self::render('HomeCompany', [
             'css' => ['home/home.css'],
             'js' => ['home/company.js'],
             'title' => 'Home Page (Company)',
+            'numberOfJobs' => $lowonganRepo->getNumberOfJobsPostedByCompany($user->user_id),
             'filter' => [
                 'q' => $q,
                 'jobType' => $jobtype,

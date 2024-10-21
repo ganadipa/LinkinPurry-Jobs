@@ -214,6 +214,8 @@ class JobController {
     }
 
     public static function generateJobs(Request $req, Response $res): void {    
+        $user = $req->getUser();
+
         $q = $req->getQueryParam('q') ?? '';
         $jobType = $req->getQueryParam('job-type') ?? ['full-time', 'part-time', 'internship'];
         $locationType = $req->getQueryParam('location-type') ?? [
@@ -257,7 +259,7 @@ class JobController {
         $perPage = 10;
 
         $jobs = JobService::generateJobs($page, $perPage, 
-            $q, $jobType, $locationType, $sortOrder
+            $q, $jobType, $locationType, $sortOrder, $user
         );
 
         $res->json($jobs);

@@ -206,14 +206,20 @@ class JobService {
     }
 
     public static function generateJobs(int $page, int $perPage, 
-        string $q, array $jobType, array $locationType, string $sortOrder): array {
+        string $q, array $jobType, array $locationType, string $sortOrder, User $user): array {
     
         $jobRepo = Repositories::$lowongan;
-        $jobs = $jobRepo->getJobs($page, $perPage, 
+
+        if ($user === null || $user->role === 'JOBSEEKER') {
+            $jobs = $jobRepo->getJobs($page, $perPage, 
             $q, $jobType, $locationType, $sortOrder);
+        } else {
+            $jobs = $jobRepo->getJobsByCompany($user->user_id, $page, $perPage, 
+            $q, $jobType, $locationType, $sortOrder);
+        }
+
 
         
-
 
         $jobsRet = [];
         foreach ($jobs as $job) {

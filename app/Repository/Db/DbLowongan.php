@@ -266,7 +266,7 @@ class DbLowongan implements RLowongan {
         $allowedSortOrders = ['asc', 'desc'];
         $sortOrder = strtolower($sortOrder);
         if (!in_array($sortOrder, $allowedSortOrders)) {
-            $sortOrder = 'asc'; // Default sort order
+            $sortOrder = 'asc'; 
         }
     
         // Final SQL Query
@@ -309,5 +309,112 @@ class DbLowongan implements RLowongan {
         }
     
         return $jobModels;
+    }
+
+
+    public function getJobsByCompany(int $companyId, int $page, int $perPage
+    , string $q, array $jobType, array $locationType, string $sortOrder
+): array {
+    $offset = ($page - 1) * $perPage;
+    $params = [];
+    $conditions = [];
+
+    // Company Filter
+    $conditions[] = "company_id = :companyId";
+    $params[':companyId'] = $companyId;
+
+    // Search Query
+    if (!empty($q)) {
+        $conditions[] = "(posisi ILIKE :q)";
+        $params[':q'] = '%' . $q . '%';
+    }
+
+    // Job Type Filter
+    if (!empty($jobType)) {
+        $jobTypePlaceholders = [];
+        foreach ($jobType as $index => $type) {
+            $key = ":jobType$index";
+            $jobTypePlaceholders[] = $key;
+            $params[$key] = $type;
+        }
+        $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
+    }
+
+    // Location Type Filter
+    if (!empty($locationType)) {
+        $locationTypePlaceholders = [];
+        foreach ($locationType as $index => $location) {
+            $key = ":locationType$index";
+            $locationTypePlaceholders[] = $key;
+            $params[$key] = $location;
+        }
+        $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
+    }
+
+    // Construct WHERE Clause
+    $where = '';
+    if (!empty($conditions)) {
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+    }
+
+    // Handle Sort Order
+    $allowedSortOrders = ['asc', 'desc'];
+    $sortOrder = strtolower($sortOrder);
+    if (!in_array($sortOrder, $allowedSortOrders)) {
+        $sortOrder = 'asc'; 
+    }
+
+    // Final SQL Query
+    $sql = "
+        SELECT *
+        FROM lowongan
+        $where
+        ORDER BY created_at $sortOrder
+        LIMIT :limit OFFSET :offset
+    ";
+
+    $stmt = $this->db->prepare($sql);
+
+    // Bind Parameters
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    // Execute and Fetch
+    $stmt->execute();
+    $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Map to Lowongan Models
+    $jobModels = [];
+    foreach ($jobs as $job) {
+        $jobModel = new Lowongan(
+            $job['company_id'],
+            $job['posisi'],
+            $job['deskripsi'],
+            JobTypeEnum::from($job['jenis_pekerjaan']),
+            JenisLokasiEnum::from($job['jenis_lokasi']),
+            new \DateTime($job['created_at']),
+            new \DateTime($job['updated_at']),
+            $job['lowongan_id']
+        );
+
+        $jobModels[] = $jobModel;
+    }
+
+    return $jobModels;
+}
+
+    public function getNumberOfJobsPostedByCompany(int $companyId): int {
+        $stmt = $this->db->prepare('
+            SELECT COUNT(*) FROM lowongan WHERE company_id = :company_id
+        ');
+
+        $stmt->execute([
+            'company_id' => $companyId,
+        ]);
+
+        return (int) $stmt->fetchColumn();
     }
 }
