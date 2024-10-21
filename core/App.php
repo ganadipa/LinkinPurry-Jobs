@@ -51,18 +51,19 @@ class App {
             $redirectIfLoggedInMiddleware
         ]);
 
+        // Login
+        $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
+        ]);
+
+        // Register
+        $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
+        ]);
+
         // Api Routes
         {        
 
             // Auth Routes (POST)
 
-            // Login
-            $this->router->register(RequestMethodEnum::POST, '/api/login', [AuthController::class, 'login'], [
-            ]);
-
-            // Register
-            $this->router->register(RequestMethodEnum::POST, '/api/register', [AuthController::class, 'register'], [
-            ]);
 
             // Logout
             $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [

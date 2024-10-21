@@ -1,7 +1,7 @@
 <div class="sign-in-card">
     <h1>Sign in</h1>
 
-    <form id='login-form'>
+    <form id='login-form' method="POST" action='/login' >
         <div class="input-group email-container">
             <input type="email" id="email" name="email" placeholder=" " required>
             <label for="email">Email</label>
