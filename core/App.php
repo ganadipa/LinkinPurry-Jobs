@@ -88,8 +88,6 @@ class App {
 
             $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
                 $redirectIfNotLoggedInMiddleware,
-
-                // Validate the cv and video
                 $cvAndVideoMiddleware
             ]);
 

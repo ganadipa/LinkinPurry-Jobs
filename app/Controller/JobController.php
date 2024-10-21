@@ -120,8 +120,8 @@ class JobController {
             $user_id = $req->getUser()->user_id;
 
     
-            if (!isset($cv) || !isset($video)) {
-                throw new Exception ('CV or Video not found');
+            if (!isset($cv)) {
+                throw new Exception ('CV must be uploaded');
             }
 
             $lamaran_id = LamaranService::applyJob($lowongan_id, $user_id, $cv, $video);

@@ -8,6 +8,7 @@ use App\Util\EnvLoader;
 use App\Http\Request;
 use App\Repository\Db\Db;
 use App\Middleware\AuthMiddleware;
+use App\Repository\Local\LocalFileRepository;
 
 
 // If prefix is /public/index.php, then remove it
@@ -35,6 +36,7 @@ Repositories::$companyDetail = $db->companyDetail;
 Repositories::$lamaran = $db->lamaran;
 Repositories::$lowongan = $db->lowongan;
 Repositories::$user = $db->user;
+Repositories::$file = new LocalFileRepository();
 
 
 // Instantiate the app
