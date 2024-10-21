@@ -206,7 +206,7 @@ class JobService {
     }
 
     public static function generateJobs(int $page, int $perPage, 
-        string $q, array $jobType, array $locationType, string $sortOrder, User $user): array {
+        string $q, array $jobType, array $locationType, string $sortOrder, ?User $user): array {
     
         $jobRepo = Repositories::$lowongan;
 
