@@ -34,7 +34,7 @@ class HomeService {
 
         return self::render('HomeJobSeeker', [
             'css' => ['home/home.css'],
-            'js' => ['home/home.js'],
+            'js' => ['home/jobseeker.js'],
             'title' => 'Home Page (Job Seeker)',
             'filter' => [
                 'q' => $q,
@@ -50,7 +50,7 @@ class HomeService {
     ) {
         return self::render('HomeCompany', [
             'css' => ['home/home.css'],
-            'js' => ['home/home.js'],
+            'js' => ['home/company.js'],
             'title' => 'Home Page (Company)',
         ]);
     }

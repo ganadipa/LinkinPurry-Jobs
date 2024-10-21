@@ -218,6 +218,7 @@ h1 {
 .job-info {
   display: flex;
   gap: 16px;
+  cursor: pointer;
 }
 
 .company-logo {
@@ -345,4 +346,14 @@ h1 {
   100% {
     transform: rotate(360deg);
   }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  font: inherit;
 }
