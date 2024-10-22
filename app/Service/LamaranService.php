@@ -24,7 +24,7 @@ class LamaranService {
                 $cv['tmp_name']
             );
 
-            $videoFile = new File(
+            if ($video !== null) $videoFile = new File(
                 $video['name'],
                 pathinfo($video['name'], PATHINFO_EXTENSION),
                 $video['type'],
@@ -38,17 +38,19 @@ class LamaranService {
 
             $cvRet = $localFileRepo->save($cvFile);
 
-
+            $videoPath = null;
             if (isset($video) && $video['error'] === UPLOAD_ERR_OK) {
                 $videoRet = $localFileRepo->save($videoFile);
+                $videoPath = $videoRet->absolutePath;
             }
+
             
 
             $lamaran = new Lamaran(
                 $user_id,
                 $lowongan_id,
                 $cvRet->absolutePath,
-                $videoRet->absolutePath,
+                $videoPath,
                 StatusLamaranEnum::WAITING,
                 '',
                 new DateTime()

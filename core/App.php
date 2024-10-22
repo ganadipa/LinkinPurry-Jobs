@@ -39,6 +39,7 @@ class App {
         $redirectIfLoggedInMiddleware = new RedirectIfLoggedInMiddleware();
         $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
         $cvAndVideoMiddleware = new FilesMiddleware(['cv', 'video']);
+        $imagesMiddleware = new FilesMiddleware('images');
 
         // Register the routes
 
@@ -135,7 +136,9 @@ class App {
         $this->router->register(RequestMethodEnum::GET, '/lowongan', [LowonganController::class, 'getList']);
         {
             // Route to create a lowongan
-            $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create']);
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create'], [
+                $imagesMiddleware
+            ]);
     
             // Route to update a lowongan
             $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update']);
