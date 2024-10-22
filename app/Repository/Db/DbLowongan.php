@@ -240,7 +240,7 @@ class DbLowongan implements RLowongan {
             foreach ($jobType as $index => $type) {
                 $key = ":jobType$index";
                 $jobTypePlaceholders[] = $key;
-                $params[$key] = $type;
+                $params[$key] = $type->value;
             }
             $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
         }
@@ -251,7 +251,7 @@ class DbLowongan implements RLowongan {
             foreach ($locationType as $index => $location) {
                 $key = ":locationType$index";
                 $locationTypePlaceholders[] = $key;
-                $params[$key] = $location;
+                $params[$key] = $location->value;
             }
             $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
         }
@@ -284,6 +284,7 @@ class DbLowongan implements RLowongan {
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
+
         $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     
@@ -335,7 +336,7 @@ class DbLowongan implements RLowongan {
         foreach ($jobType as $index => $type) {
             $key = ":jobType$index";
             $jobTypePlaceholders[] = $key;
-            $params[$key] = $type;
+            $params[$key] = $type->value;
         }
         $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
     }
@@ -346,7 +347,7 @@ class DbLowongan implements RLowongan {
         foreach ($locationType as $index => $location) {
             $key = ":locationType$index";
             $locationTypePlaceholders[] = $key;
-            $params[$key] = $location;
+            $params[$key] = $location->value;
         }
         $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
     }

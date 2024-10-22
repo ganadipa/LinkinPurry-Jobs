@@ -102,7 +102,7 @@ class App {
             ]);
 
             $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
-                $redirectIfLoggedInMiddleware
+                
             ]);
         }
 
@@ -124,7 +124,7 @@ class App {
             // $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
             // $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
-            $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:id/edit', [CompanyController::class, 'showEditJobPage']); 
             // $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 

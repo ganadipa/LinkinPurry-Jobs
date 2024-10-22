@@ -29,6 +29,8 @@ services:
       - ENVIRONMENT=docker
     networks:
       - internal-network
+    command: 
+      sh -c "chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html && apache2-foreground"
 
 volumes:
   postgres_data:

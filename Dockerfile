@@ -23,7 +23,7 @@ COPY . /var/www/html
 # Create the uploads directory with write permissions for Apache
 RUN mkdir -p /var/www/html/uploads && \
     chown -R www-data:www-data /var/www/html/uploads && \
-    chmod -R 755 /var/www/html/uploads
+    chmod -R 777 /var/www/html/uploads
 
 # Expose port 80
 EXPOSE 80

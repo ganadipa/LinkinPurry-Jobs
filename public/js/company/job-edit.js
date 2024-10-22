@@ -82,6 +82,12 @@ imagePreviewContainer.addEventListener('click', (e) => {
     }
 });
 
+document.getElementsByClassName('cancel-btn')[0].addEventListener('click', function() {
+    var path = window.location.pathname;
+    var parts = path.split('/');
+    window.location.href = '/job/' + parts[parts.length - 2];
+});
+
 document.getElementById('job-post-form').addEventListener('submit', function(e) {
     e.preventDefault();
     

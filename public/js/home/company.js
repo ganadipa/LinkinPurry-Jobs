@@ -49,13 +49,13 @@ function createJobElement(job) {
         <div class="job-actions">
             <button class="more-actions">•••</button>
             <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">
-                    <i data-lucide="edit"></i>
+                <a href="/company/job/${job.id}/edit" class="dropdown-item">
+                    <i data-lucide="edit"></i>q
                     Manage job
                 </a>
-                <a href="#" class="dropdown-item">
+                <a href="/company/job/${job.id}/edit" class="dropdown-item">
                     <i data-lucide="trash-2"></i>
-                    Delete draft
+                    Delete job
                 </a>
             </div>
         </div>
@@ -207,6 +207,7 @@ searchInput.addEventListener("input", debouncedLoadJobs);
 
 document.addEventListener("click", function (event) {
   if (event.target.classList.contains("more-actions")) {
+    event.preventDefault();
     const dropdownMenu = event.target.nextElementSibling;
     dropdownMenu.style.display =
       dropdownMenu.style.display === "block" ? "none" : "block";
