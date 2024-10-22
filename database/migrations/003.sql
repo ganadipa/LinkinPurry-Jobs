@@ -1,0 +1,1 @@
+ALTER TABLE lowongan ALTER COLUMN deskripsi TYPE text;

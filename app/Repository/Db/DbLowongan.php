@@ -97,7 +97,7 @@ class DbLowongan implements RLowongan {
             $lowongan->lowongan_id = (int) $this->db->lastInsertId();
             return $lowongan;
         } catch (PDOException $e) {
-            error_log('Insert lowongan error: ' . $e->getMessage());
+            echo('Insert lowongan error: ' . $e->getMessage());
             throw new Exception('Insert lowongan error. Please try again later.');
         }
     }

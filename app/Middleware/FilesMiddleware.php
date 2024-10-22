@@ -18,7 +18,10 @@ class FilesMiddleware  implements IMiddleware{
             }
         } else {
             assert(is_string($this->names));
-            $size = count($_FILES[$this->names]['name']);
+            $size = 0;
+            if (isset($_FILES[$this->names])) {
+                $size = count($_FILES[$this->names]['name']);
+            }
 
             // Generate the wanted $files format
             $files = [];

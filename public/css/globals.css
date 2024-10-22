@@ -167,3 +167,15 @@ button {
 #logout {
   cursor: pointer;
 }
+
+ol {
+  margin-left: 0; /* Removes any default left margin */
+  padding-left: 0; /* Removes any default left padding */
+  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
+}
+
+ul {
+  margin-left: 0; /* Removes any default left margin */
+  padding-left: 0; /* Removes any default left padding */
+  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
+}

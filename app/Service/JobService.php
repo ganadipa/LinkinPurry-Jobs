@@ -70,6 +70,7 @@ class JobService {
                 'job/details.css',
                 'partials/company-card.css'
             ],
+            'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
             'js' => [
                 'job/jobseeker/details.js'
             ],
@@ -167,6 +168,7 @@ class JobService {
                 'job/details.css',
                 'partials/company-card.css'
             ],
+            'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
             'js' => [
                 'job/company/details.js'
             ],

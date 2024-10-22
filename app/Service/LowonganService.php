@@ -13,14 +13,7 @@ use Exception;
 
 class LowonganService {
     public static function createLowongan(array $inputData): Lowongan {
-        $requiredKeys = ['images', 'company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
-        
-        // Validasi input data
-        foreach ($requiredKeys as $key) {
-            if (!isset($inputData[$key])) {
-                throw new Exception("Missing required field: $key");
-            }
-        }
+    
 
 
         // Buat objek Lowongan baru
@@ -43,6 +36,9 @@ class LowonganService {
         $attachmentLowonganRepo = Repositories::$attachmentLowongan;
         
         $files = [];
+        if (!isset($inputData['images'])) {
+            return $lowonganInserted;
+        }
         foreach ($inputData['images'] as $image) {
             $file = new File(
                 $image['name'],

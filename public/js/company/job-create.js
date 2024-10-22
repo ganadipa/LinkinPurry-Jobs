@@ -134,7 +134,7 @@ function submitJobPosting(companyId) {
   const formData = new FormData();
   formData.append("company_id", companyId);
   formData.append("posisi", document.getElementById("job-title").value);
-  formData.append("deskripsi", quill.root.innerHTML);
+  formData.append("deskripsi", quill.getSemanticHTML());
   formData.append("jenis_pekerjaan", document.getElementById("job-type").value);
   formData.append(
     "jenis_lokasi",

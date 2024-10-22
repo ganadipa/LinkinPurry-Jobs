@@ -45,10 +45,18 @@ use App\View\View;
             <span class=' red-tag blue-tag font-semibold'>
                 <?= $job['isOpen'] ? 'Open' : 'Closed' ?>
             </span>
-        </div>
+        </div>  
 
         <div class="image-carousel">
-            <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
+            <?php
+                if (isset($job['images']) || $job['images'] !== null) {
+                    echo '<div class="carousel-dots" id="carouselDots">';
+                    for ($i = 0; $i < count($job['images']); $i++) {
+                        echo '<span class="carousel-dot" data-index="' . $i . '"></span>';
+                    }
+                    echo '</div>';
+                }
+            ?>
             <button class="carousel-button prev" id="prevButton">
                 <i data-lucide="chevron-left"></i>
             </button>
