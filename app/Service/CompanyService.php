@@ -35,10 +35,20 @@ class CompanyService {
         ]);
     }
 
-    public static function getEditJobPage(User $user) : string {
+    public static function getEditJobPage(User $user, string $jobId) : string {
+        $lowonganRepo = Repositories::$lowongan;
+        $companyDetailRepo = Repositories::$companyDetail;
+
+        $lowongan = $lowonganRepo->getById($jobId);
+        $company_detail = $companyDetailRepo->getCompanyDetailByUserId($user->user_id);
+
+        if (!$lowongan) {
+            return 'Job not found';
+        }
+        
         $jobData = [
-            'title' => 'Frontend Developer',
-            'company' => 'TechCorp Inc.',
+            'title' => $lowongan->posisi . ' at ' . $user->nama,
+            'company' => $user->nama,
             'workplaceType' => 'on-site',
             'location' => 'Makassar, South Sulawesi, Indonesia',
             'jobType' => 'full-time',

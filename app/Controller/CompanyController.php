@@ -24,13 +24,14 @@ class CompanyController {
 
     public static function showEditJobPage(Request $req, Response $res): void {
         $user = $req->getUser();
+        $jobId = (int) $req->getUriParams()['id'];
 
         if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
             echo '404';
             return;
         }
 
-        $html = CompanyService::getEditJobPage($user);
+        $html = CompanyService::getEditJobPage($user, $jobId);
         $res->setBody($html);
         $res->send();
     }

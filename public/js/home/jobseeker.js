@@ -116,7 +116,7 @@ function loadJobs(isNewSearch = false) {
 
           if (jobs.length < 10) {
             const paragraph = document.createElement("p");
-            paragraph.textContent = "No more jobs to load";
+            paragraph.textContent = "No more jobs";
             paragraph.style.color = "red";
             paragraph.style.textAlign = "center";
 

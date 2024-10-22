@@ -14,7 +14,7 @@ use App\View\View;
             <h1 class="job-title" id="jobTitle">
                 <?= $job['title'] ?>
             </h1>
-            <a href="#" class="button edit-button" id="editJobButton">
+            <a href="/company/job/edit/<?= $job['id']?>" class="button edit-button" id="editJobButton">
                 <i data-lucide="file-edit" class="lucide-sm"></i>
                 Edit
             </a>
