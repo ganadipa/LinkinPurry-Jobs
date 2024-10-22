@@ -74,12 +74,9 @@ class JobService {
                 'job/jobseeker/details.js'
             ],
             'title' => $lowongan->posisi . ' - ' . $userCompany->nama,
-            'title' => $lowongan->posisi . ' - ' . $userCompany->nama,
             'company' => [
                 'name' => $userCompany->nama,
-                'location' => $company->lokasi,
-                'name' => $userCompany->nama,
-                'location' => $company->lokasi,
+                'location' => $company->lokasi
             ],
             'job' => [
                 'id' => $lowongan->lowongan_id,

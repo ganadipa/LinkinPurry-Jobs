@@ -32,10 +32,11 @@ function getSelectedCheckboxValues(checkboxGroup) {
 }
 
 function createJobElement(job) {
-  const jobElement = document.createElement("div");
+  const jobElement = document.createElement("a");
+  jobElement.href = `/job/${job.id}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
-        <div class="job-info">
+        <div class="job-info" id='job-${job.id}'>
             <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
             <div>
                 <h3>${job.title}</h3>
@@ -127,7 +128,12 @@ function loadJobs(isNewSearch = false) {
           });
 
           if (jobs.length < 10) {
-            jobList.appendChild(document.createTextNode("No more jobs found"));
+            const paragraph = document.createElement("p");
+            paragraph.textContent = "No more jobs";
+            paragraph.style.color = "red";
+            paragraph.style.textAlign = "center";
+
+            jobList.appendChild(paragraph);
             noMore = true;
           }
 

@@ -417,4 +417,14 @@ class DbLowongan implements RLowongan {
 
         return (int) $stmt->fetchColumn();
     }
+
+    public function getNumberOfJobs(): int {
+        $stmt = $this->db->prepare('
+            SELECT COUNT(*) FROM lowongan
+        ');
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
 }

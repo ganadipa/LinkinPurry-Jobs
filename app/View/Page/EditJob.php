@@ -10,8 +10,8 @@
             <input type="text" id="company" name="company" required value="<?php echo htmlspecialchars($jobData['company']); ?>">
         </div> -->
         <div class="form-group">
-            <label for="workplace-type">Location type*</label>
-            <select id="workplace-type" name="workplace-type" required>
+            <label for="location-type">Location type*</label>
+            <select id="location-type" name="location-type" required>
                 <option value="on-site" <?php echo $jobData['workplaceType'] == 'on-site' ? 'selected' : ''; ?>>On-site</option>
                 <option value="hybrid" <?php echo $jobData['workplaceType'] == 'hybrid' ? 'selected' : ''; ?>>Hybrid</option>
                 <option value="remote" <?php echo $jobData['workplaceType'] == 'remote' ? 'selected' : ''; ?>>Remote</option>

@@ -10,24 +10,24 @@
             <input type="text" id="company" name="company" required>
         </div> -->
         <div class="form-group">
-            <label for="workplace-type">Location type*</label>
-            <select id="workplace-type" name="workplace-type" required>
+            <label for="location-type">Location type*</label>
+            <select id="location-type" name="location-type" required>
                 <option value="on-site">On-site</option>
                 <option value="hybrid">Hybrid</option>
                 <option value="remote">Remote</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="job-type">Job Location*</label>
-            <input type="text" id="job-type" name="job-type" required>
+            <label for="job-location">Job Location*</label>
+            <input type="text" id="job-location" name="job-location" required>
         </div>
         <div class="form-group">
             <label for="job-type">Job type*</label>
             <select id="job-type" name="job-type" required>
                 <option value="full-time">Full-time</option>
                 <option value="part-time">Part-time</option>
-                <option value="contract">Contract</option>
-                <option value="temporary">Temporary</option>
+                <!-- <option value="contract">Contract</option>
+                <option value="temporary">Temporary</option> -->
                 <option value="internship">Internship</option>
             </select>
         </div>
@@ -49,7 +49,9 @@
                 <div id="image-preview-container" class="image-preview-container"></div>
             </div>
         </div>
-        <button type="submit" class="submit-btn">Next</button>
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">Create Job</button>
+        </div>
     </form>
 </section>
 <aside class="right-sidebar">

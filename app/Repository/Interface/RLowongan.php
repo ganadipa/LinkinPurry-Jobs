@@ -17,4 +17,5 @@ interface RLowongan {
     ): array;
 
     public function getNumberOfJobsPostedByCompany(int $companyId): int;
+    public function getNumberOfJobs(): int;
 }

@@ -6,6 +6,7 @@ use App\Model\Lowongan;
 use App\Util\Enum\JenisLokasiEnum;
 use Core\Repositories;
 use App\Repository\Interface\RLowongan;
+use App\Util\Enum\JobTypeEnum;
 use Exception;
 
 class LowonganService {
@@ -24,7 +25,7 @@ class LowonganService {
             $inputData['company_id'],
             $inputData['posisi'],
             $inputData['deskripsi'],
-            $inputData['jenis_pekerjaan'],
+            JobTypeEnum::from($inputData['jenis_pekerjaan']),
             JenisLokasiEnum::from($inputData['jenis_lokasi']),
             new \DateTime(),
             new \DateTime()

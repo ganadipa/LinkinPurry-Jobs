@@ -116,19 +116,33 @@ function submitJobPosting(companyId) {
     console.log('Job Title:', document.getElementById('job-title').value);
     console.log('Description:', quill.root.innerHTML);
     console.log('Job Type:', document.getElementById('job-type').value);
-    console.log('Workplace Type:', document.getElementById('workplace-type').value);
+    console.log('Location Type:', document.getElementById('location-type').value);
+    console.log('Job Location:', document.getElementById('job-location').value);
 
     const formData = {
         company_id: companyId,
         posisi: document.getElementById('job-title').value,
         deskripsi: quill.root.innerHTML,
         jenis_pekerjaan: document.getElementById('job-type').value,
-        jenis_lokasi: document.getElementById('workplace-type').value,
+        jenis_lokasi: document.getElementById('location-type').value,
+        location: document.getElementById('job-location').value,
+        images: files.map(file => file.name)
     };
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/lowongan/create', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                console.log('Success:', response);
+            } else {
+                console.log('Error:', xhr.status, xhr.responseText);
+            }
+        }
+    };
 
     console.log('Sending data:', JSON.stringify(formData));
     xhr.send(JSON.stringify(formData));

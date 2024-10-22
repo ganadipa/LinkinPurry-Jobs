@@ -35,10 +35,13 @@ class HomeService {
             'remote' => in_array(JenisLokasiEnum::REMOTE, $locationType),
         ];
 
+        $lowonganRepo = Repositories::$lowongan;
+
         return self::render('HomeJobSeeker', [
             'css' => ['home/home.css'],
             'js' => ['home/jobseeker.js'],
             'title' => 'Home Page (Job Seeker)',
+            'numberOfJobs' => $lowonganRepo->getNumberOfJobs(),
             'filter' => [
                 'q' => $q,
                 'jobType' => $jobtype,
