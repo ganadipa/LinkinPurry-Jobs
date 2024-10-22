@@ -14,10 +14,12 @@ use App\View\View;
             <h1 class="job-title" id="jobTitle">
                 <?= $job['title'] ?>
             </h1>
-            <a href="/company/job/edit/<?= $job['id']?>" class="button edit-button" id="editJobButton">
-                <i data-lucide="file-edit" class="lucide-sm"></i>
-                Edit
-            </a>
+            <?php 
+                echo '<a href="/company/job/' . $job['id'] . '/edit" class="button edit-button" id="editJobButton">
+                    <i data-lucide="file-edit" class="lucide-sm"></i>
+                    Edit
+                </a>';
+            ?>
         </div>
         <div class="job-details">
             <i data-lucide="briefcase" class='lucide-md mr-icon-sm'></i>
@@ -62,23 +64,27 @@ use App\View\View;
         <div id="applicantList">
             <h2 class="section-title">Applicants</h2>
             <?php 
-            foreach ($applicants as $applicant) {
-                echo '<div class="applicant-card">
-                        <div class="applicant-info">
-                            <h3 class="applicant-name">
-                                <span>' . $applicant['id'] . '.</span> ' . $applicant['name'] . '
-                            </h3>
-                            <div class="status-indicator-company status-' . $applicant['status'] . '">
-                                <i data-lucide="' . ($applicant['status'] === 'waiting' ? 'clock' : ($applicant['status'] === 'accepted' ? 'check-circle' : 'x-circle')) . '"></i>
-                                <span>' . ucfirst($applicant['status']) . '</span>
+            if (empty($applicants)) {
+                echo '<p>No applicants yet</p>';
+            } else {
+                foreach ($applicants as $applicant) {
+                    echo '<div class="applicant-card">
+                            <div class="applicant-info">
+                                <h3 class="applicant-name">
+                                    ' . $applicant['name'] . '
+                                </h3>
+                                <div class="status-indicator-company status-' . $applicant['status'] . '">
+                                    <i data-lucide="' . ($applicant['status'] === 'waiting' ? 'clock' : ($applicant['status'] === 'accepted' ? 'check-circle' : 'x-circle')) . '"></i>
+                                    <span>' . ucfirst($applicant['status']) . '</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="applicant-action">
-                            <a href="/company/job/' . $job['id'] . '/application/' . $applicant['id'] . '" class="button button-secondary">
-                                View Application Details
-                            </a>
-                        </div>
-                    </div>';
+                            <div class="applicant-action">
+                                <a href="/company/job/' . $job['id'] . '/application/' . $applicant['id'] . '" class="button button-secondary">
+                                    View Application Details
+                                </a>
+                            </div>
+                        </div>';
+                }
             }
             ?>
         </div>

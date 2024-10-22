@@ -37,3 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     statusOffer.classList.remove("red-tag");
   }
 });
+
+// Update status of the job offer
+const statusJob = document.querySelector("#jobStatus span");
+const statusButton = document.querySelector("#statusButton");

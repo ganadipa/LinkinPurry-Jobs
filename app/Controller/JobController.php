@@ -8,6 +8,7 @@ use App\Http\Response;
 use App\Validator\PositiveNumericValidator;
 use App\Http\Exception\HttpException;
 use App\Http\Exception\UnauthorizedException;
+use App\Service\CompanyService;
 use App\Service\JobService;
 use App\Service\LamaranService;
 use \Exception;
@@ -181,16 +182,16 @@ class JobController {
             }
 
             $jobId = $req->getUriParamsValue('jobId', null);
-            $applicationId = $req->getUriParamsValue('applicationId', null);
+            $applicantId = $req->getUriParamsValue('applicantId', null);
 
-            if (!isset($jobId) || !isset($applicationId)) {
+            if (!isset($jobId) || !isset($applicantId)) {
                 throw new Exception('Job or application not found');
             }
 
             $validatedJobId = PositiveNumericValidator::validate($jobId);
-            $validatedApplicationId = PositiveNumericValidator::validate($applicationId);
-
-            $html = JobService::applicationDetails($validatedJobId, $validatedApplicationId, $user);
+            $validatedUserId = PositiveNumericValidator::validate($applicantId);
+            
+            $html = JobService::applicationDetails($validatedJobId, $validatedUserId, $user);
 
             $res->setBody($html);
             $res->send();
@@ -282,12 +283,14 @@ class JobController {
                 throw new Exception('Job not found');
             }
 
+            $companyId = CompanyService::getCompanyIdByJobId($jobId);
+
             
             // Validate 
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
-            if ($user->user_id !== $validatedUserId) {
+            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
@@ -336,18 +339,71 @@ class JobController {
                 throw new Exception('Job not found');
             }
 
+            $companyId = CompanyService::getCompanyIdByJobId($jobId);
+
             
             // Validate 
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
-            if ($user->user_id !== $validatedUserId) {
+            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
             $path = JobService::getVideoPath($validatedJobId, $validatedUserId);
 
             $res->video($path);
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+        }
+    }
+
+    public static function updateStatusJob(Request $req, Response $res) {
+        try {
+            $user = $req->getUser();
+            if ($user == null || $user->role == 'jobseeker') {
+                throw new UnauthorizedException('You must login as a company');
+            }
+
+            $jobId = $req->getUriParamsValue('jobId', null);
+            $isOpen = $req->getPost('is_open', null);
+
+            if ($jobId == null || $isOpen == null) {
+                throw new Exception('Job not found');
+            }
+
+            $validatedJobId = PositiveNumericValidator::validate($jobId);
+            $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
+
+            JobService::updateStatusJob($validatedJobId, $validatedIsOpen);
+
+            $res->json([
+                'status' => 'success',
+                'message' => 'Job status updated successfully',
+                'data' => null
+            ]);
+
             $res->send();
         } catch (HttpException $e) {
             // Either its a classified HttpException

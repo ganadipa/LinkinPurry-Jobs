@@ -211,4 +211,38 @@ class DbLamaran implements RLamaran {
             throw new Exception('Get number of applicants error. Please try again later.');
         }
     }
+
+    public function getApplicantsByLowonganId(int $jobId): array
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM lamaran
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            $rows = $stmt->fetchAll();
+            $lamarans = [];
+            foreach ($rows as $row) {
+                $lamarans[] = new Lamaran(
+                    lamaran_id: (int) $row['lamaran_id'],
+                    user_id: (int) $row['user_id'],
+                    lowongan_id: (int) $row['lowongan_id'],
+                    cv_path: $row['cv_path'],
+                    video_path: $row['video_path'],
+                    status: StatusLamaranEnum::from($row['status']),
+                    status_reason: $row['status_reason'],
+                    created_at: new DateTime($row['created_at']),
+                );
+            }
+
+            return $lamarans;
+        } catch (PDOException $e) {
+            error_log('Get applicants error: ' . $e->getMessage());
+            throw new Exception('Get applicants error. Please try again later.');
+        }
+    }
 }

@@ -12,9 +12,9 @@
         <div class="form-group">
             <label for="location-type">Location type*</label>
             <select id="location-type" name="location-type" required>
-                <option value="on-site" <?php echo $jobData['workplaceType'] == 'on-site' ? 'selected' : ''; ?>>On-site</option>
-                <option value="hybrid" <?php echo $jobData['workplaceType'] == 'hybrid' ? 'selected' : ''; ?>>Hybrid</option>
-                <option value="remote" <?php echo $jobData['workplaceType'] == 'remote' ? 'selected' : ''; ?>>Remote</option>
+                <option value="on-site" <?php echo $jobData['locationType'] == 'on-site' ? 'selected' : ''; ?>>On-site</option>
+                <option value="hybrid" <?php echo $jobData['locationType'] == 'hybrid' ? 'selected' : ''; ?>>Hybrid</option>
+                <option value="remote" <?php echo $jobData['locationType'] == 'remote' ? 'selected' : ''; ?>>Remote</option>
             </select>
         </div>
         <div class="form-group">
@@ -26,8 +26,6 @@
             <select id="job-type" name="job-type" required>
                 <option value="full-time" <?php echo $jobData['jobType'] == 'full-time' ? 'selected' : ''; ?>>Full-time</option>
                 <option value="part-time" <?php echo $jobData['jobType'] == 'part-time' ? 'selected' : ''; ?>>Part-time</option>
-                <option value="contract" <?php echo $jobData['jobType'] == 'contract' ? 'selected' : ''; ?>>Contract</option>
-                <option value="temporary" <?php echo $jobData['jobType'] == 'temporary' ? 'selected' : ''; ?>>Temporary</option>
                 <option value="internship" <?php echo $jobData['jobType'] == 'internship' ? 'selected' : ''; ?>>Internship</option>
             </select>
         </div>
@@ -67,7 +65,7 @@
     <div class="info-card">
         <h2><?php echo htmlspecialchars($jobData['title']); ?></h2>
         <p>ITB Fair 2024</p>
-        <p><?php echo htmlspecialchars($jobData['location']); ?> (<?php echo ucfirst($jobData['workplaceType']); ?>)</p>
+        <p><?php echo htmlspecialchars($jobData['location']); ?></p>
         <p>Saved as Draft</p>
     </div>
     <div class="info-card">

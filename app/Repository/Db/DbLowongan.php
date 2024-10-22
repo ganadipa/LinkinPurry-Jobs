@@ -240,7 +240,7 @@ class DbLowongan implements RLowongan {
             foreach ($jobType as $index => $type) {
                 $key = ":jobType$index";
                 $jobTypePlaceholders[] = $key;
-                $params[$key] = $type;
+                $params[$key] = $type->value;
             }
             $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
         }
@@ -251,7 +251,7 @@ class DbLowongan implements RLowongan {
             foreach ($locationType as $index => $location) {
                 $key = ":locationType$index";
                 $locationTypePlaceholders[] = $key;
-                $params[$key] = $location;
+                $params[$key] = $location->value;
             }
             $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
         }
@@ -284,6 +284,7 @@ class DbLowongan implements RLowongan {
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
+
         $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     
@@ -335,7 +336,7 @@ class DbLowongan implements RLowongan {
         foreach ($jobType as $index => $type) {
             $key = ":jobType$index";
             $jobTypePlaceholders[] = $key;
-            $params[$key] = $type;
+            $params[$key] = $type->value;
         }
         $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
     }
@@ -346,7 +347,7 @@ class DbLowongan implements RLowongan {
         foreach ($locationType as $index => $location) {
             $key = ":locationType$index";
             $locationTypePlaceholders[] = $key;
-            $params[$key] = $location;
+            $params[$key] = $location->value;
         }
         $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
     }
@@ -426,5 +427,42 @@ class DbLowongan implements RLowongan {
         $stmt->execute();
 
         return (int) $stmt->fetchColumn();
+    }
+
+    public function getCompanyIdByJobId(int $jobId) : int {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT company_id FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            return (int) $stmt->fetchColumn();
+        } catch(PDOException $e) {
+            error_log('Get company id by job id error: ' . $e->getMessage());
+            throw new Exception('Get company id by job id error. Please try again later.');
+        }
+    }
+
+    public function updateStatusJob(int $jobId, bool $isOpen): void {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lowongan
+                SET is_open = :is_open
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'is_open' => $isOpen,
+                'lowongan_id' => $jobId,
+            ]);
+
+        } catch (PDOException $e) {
+            error_log('Update status job error: ' . $e->getMessage());
+            throw new Exception('Update status job error. Please try again later.');
+        }
     }
 }

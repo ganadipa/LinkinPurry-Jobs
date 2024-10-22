@@ -77,6 +77,15 @@ class LamaranService {
 
 
     }
+
+    public static function updateStatus(int $userId, int $lowonganId, string $status, string $statusReason): void {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($userId, $lowonganId);
+        $lamaran->status = StatusLamaranEnum::from($status);
+        $lamaran->status_reason = $statusReason;
+        $lamaranRepo->update($lamaran);
+    }
+    
 }
 
 

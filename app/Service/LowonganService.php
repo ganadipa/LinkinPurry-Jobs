@@ -82,8 +82,8 @@ class LowonganService {
             $existingLowongan->company_id,
             $postData['posisi'] ?? $existingLowongan->posisi,
             $postData['deskripsi'] ?? $existingLowongan->deskripsi,
-            $postData['jenis_pekerjaan'] ?? $existingLowongan->jenis_pekerjaan->value,
-            JenisLokasiEnum::from($postData['jenis_lokasi'] ?? $existingLowongan->jenis_lokasi->value),
+            JobTypeEnum::from($postData['jenis_pekerjaan'] ?? $existingLowongan->jenis_pekerjaan),
+            JenisLokasiEnum::from($postData['jenis_lokasi'] ?? $existingLowongan->jenis_lokasi),
             $existingLowongan->created_at,
             new \DateTime()  // Set updated_at to current time
         );
