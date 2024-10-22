@@ -22,12 +22,19 @@ class FilesMiddleware  implements IMiddleware{
 
             // Generate the wanted $files format
             $files = [];
-            array_push($files);
+            for ($i = 0; $i < $size; $i++) {
+                $files[$i] = [
+                    'name' => $_FILES[$this->names]['name'][$i],
+                    'type' => $_FILES[$this->names]['type'][$i],
+                    'tmp_name' => $_FILES[$this->names]['tmp_name'][$i],
+                    'error' => $_FILES[$this->names]['error'][$i],
+                    'size' => $_FILES[$this->names]['size'][$i]
+                ];
+            }
 
-            // for ($i = 0; $i < $size; $i++) {
-                
-                // $req->setPostValue($this->names, )
-            // }
+            for ($i = 0; $i < $size; $i++) {
+                $req->setPostValue($this->names, $files);
+            }
         }
 
         return true;

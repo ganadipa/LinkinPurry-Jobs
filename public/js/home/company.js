@@ -50,7 +50,7 @@ function createJobElement(job) {
             <button class="more-actions">•••</button>
             <div class="dropdown-menu">
                 <a href="/company/job/${job.id}/edit" class="dropdown-item">
-                    <i data-lucide="edit"></i>q
+                    <i data-lucide="edit"></i>
                     Manage job
                 </a>
                 <a href="/company/job/${job.id}/edit" class="dropdown-item">

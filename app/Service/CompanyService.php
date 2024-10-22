@@ -25,6 +25,11 @@ class CompanyService {
         return $companyDetailRepo->update($companyDetail);
     }
 
+    public static function getCompanyIdByJobId(int $jobId): int {
+        $lowonganRepo = Repositories::$lowongan;
+        return $lowonganRepo->getCompanyIdByJobId($jobId);
+    }
+
     public static function getCreateJobPage(User $user) : string {
         return self::render('CreateJob', [
             'css' => ['company/create-job.css'],
@@ -69,6 +74,7 @@ class CompanyService {
             'user' => $user,
         ]);
     }
+
 
     private static function render(string $view, array $vars = []): string {
         return View::render('Layout', 'Main', array_merge_recursive($vars, 

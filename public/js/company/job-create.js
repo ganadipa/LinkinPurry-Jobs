@@ -162,7 +162,5 @@ function submitJobPosting(companyId) {
     }
   };
 
-  console.log("Sending data...");
-  console.log(formData);
   xhr.send(formData); // Send the FormData object
 }

@@ -139,11 +139,11 @@ class JobService {
         // Formated applicants
         $formattedApplicants = [];
         foreach ($applicants as $applicant) {
-            $formattedApplicants[] = [
+            array_push($formattedApplicants,  [
                 'id' => $applicant->user_id,
                 'name' => $userRepo->getUserProfileById($applicant->user_id)->nama,
                 'status' => $applicant->status->value,
-            ];
+            ]);
         }
 
         $message = '';
@@ -161,7 +161,6 @@ class JobService {
             $message = 'Over 100 applicants';
         }
 
-        if (!$applicants) echo 'no applicants';
 
         return View::view('Page/Job/Company', 'Details', [
             'css' => [
@@ -196,12 +195,12 @@ class JobService {
         ]);
     }
 
-    public static function applicationDetails(string $jobId, string $applicationId, User $user): string {
+    public static function applicationDetails(string $jobId, string $applicantId, User $user): string {
         $lowonganRepo = Repositories::$lowongan;
         $lamaranRepo = Repositories::$lamaran;
         $applicantRepo = Repositories::$user;
 
-        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($user->user_id, $jobId);
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($applicantId, $jobId);
         if (!$lamaran) {
             return '404';
         } 
@@ -215,12 +214,14 @@ class JobService {
         ];
 
         $application = [
-            'id' => $applicationId,
+            'id' => $applicantId,
             'status' => $lamaran->status->value,
-            'cv_url' => $lamaran->cv_path,
-            'video_url' => $lamaran->video_path,
+            'cv_url' => $lamaran->cv_path ?? '',
+            'video_url' => $lamaran->video_path ?? '',
             'reason' => $lamaran->status_reason ?? '',
         ];
+
+        // print_r($application);
 
         return View::view('Page/Job/Company', 'ApplicationDetails', [
             'css' => [
@@ -304,5 +305,10 @@ class JobService {
         $lamaranRepo = Repositories::$lamaran;
         $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($userId, $jobid);
         return $lamaran->video_path;
+    }
+
+    public static function updateStatusJob(string $jobId, bool $isOpen): void {
+        $jobRepo = Repositories::$lowongan;
+        $jobRepo->updateStatusJob($jobId, $isOpen);
     }
 }

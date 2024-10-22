@@ -93,6 +93,10 @@ class App {
                 $cvAndVideoMiddleware
             ]);
 
+            $this->router->register(RequestMethodEnum::POST, '/job/:id/updateStatus', [JobController::class, 'updateStatusJob'], [
+                
+            ]);
+
             $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/cv', [JobController::class, 'appliedCV'], [
                 
             ]);
@@ -101,7 +105,7 @@ class App {
                 
             ]);
 
-            $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicantId', [JobController::class, 'applicationDetails'], [
                 
             ]);
         }

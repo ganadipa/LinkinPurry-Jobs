@@ -5,17 +5,35 @@ namespace App\Controller;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\LowonganService;
+use App\Validator\NotNullValidator;
 use Exception;
 
 class LowonganController {
     public static function create(Request $req, Response $res): void {
         try {
-            $inputJson = file_get_contents('php://input');
-            $inputData = json_decode($inputJson, true);
+            
+            $images = $req->getPost('images', null);
+            $company_id = $req->getPost('company_id', null);
+            $posisi = $req->getPost('posisi', null);
+            $deskripsi = $req->getPost('deskripsi', null);
+            $jenis_pekerjaan = $req->getPost('jenis_pekerjaan', null);
+            $jenis_lokasi = $req->getPost('jenis_lokasi', null);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Invalid JSON input');
-            }
+            // Validate required fields
+            $validatedCompanyId = NotNullValidator::validate($company_id);
+            $validatedPosisi = NotNullValidator::validate($posisi);
+            $validatedJenisLokasi = NotNullValidator::validate($jenis_lokasi);
+            $validatedJenisPekerjaan = NotNullValidator::validate($jenis_pekerjaan);
+
+
+            $inputData = [
+                'images' => $images,
+                'company_id' => $validatedCompanyId,
+                'posisi' => $validatedPosisi,
+                'deskripsi' => $deskripsi,
+                'jenis_pekerjaan' => $validatedJenisPekerjaan,
+                'jenis_lokasi' => $validatedJenisLokasi
+            ];
 
             
             $lowongan = LowonganService::createLowongan($inputData);
@@ -23,13 +41,20 @@ class LowonganController {
             $res->json([
                 'status' => 'success',
                 'message' => 'Lowongan created successfully.',
-                'data' => $lowongan
+                'data' => [
+                    'lowongan_id' => $lowongan->lowongan_id
+                ]
             ]);
+
+            $res->send();
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'data' => null
             ]);
+
+            $res->send();
         }
     }
 

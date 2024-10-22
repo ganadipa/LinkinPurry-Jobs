@@ -428,4 +428,41 @@ class DbLowongan implements RLowongan {
 
         return (int) $stmt->fetchColumn();
     }
+
+    public function getCompanyIdByJobId(int $jobId) : int {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT company_id FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            return (int) $stmt->fetchColumn();
+        } catch(PDOException $e) {
+            error_log('Get company id by job id error: ' . $e->getMessage());
+            throw new Exception('Get company id by job id error. Please try again later.');
+        }
+    }
+
+    public function updateStatusJob(int $jobId, bool $isOpen): void {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lowongan
+                SET is_open = :is_open
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'is_open' => $isOpen,
+                'lowongan_id' => $jobId,
+            ]);
+
+        } catch (PDOException $e) {
+            error_log('Update status job error: ' . $e->getMessage());
+            throw new Exception('Update status job error. Please try again later.');
+        }
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Model\AttachmentLowongan;
+use App\Model\File;
 use App\Model\Lowongan;
 use App\Util\Enum\JenisLokasiEnum;
 use Core\Repositories;
@@ -11,7 +13,7 @@ use Exception;
 
 class LowonganService {
     public static function createLowongan(array $inputData): Lowongan {
-        $requiredKeys = ['company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
+        $requiredKeys = ['images', 'company_id', 'posisi', 'deskripsi', 'jenis_pekerjaan', 'jenis_lokasi'];
         
         // Validasi input data
         foreach ($requiredKeys as $key) {
@@ -19,6 +21,7 @@ class LowonganService {
                 throw new Exception("Missing required field: $key");
             }
         }
+
 
         // Buat objek Lowongan baru
         $lowongan = new Lowongan(
@@ -33,9 +36,37 @@ class LowonganService {
 
         // Simpan lowongan ke database
         $lowonganRepo = Repositories::$lowongan;
-        $lowonganRepo->insert($lowongan);
+        $lowonganInserted = $lowonganRepo->insert($lowongan);
 
-        return $lowongan;
+
+        $fileRepo = Repositories::$file;
+        $attachmentLowonganRepo = Repositories::$attachmentLowongan;
+        
+        $files = [];
+        foreach ($inputData['images'] as $image) {
+            $file = new File(
+                $image['name'],
+                pathinfo($image['name'], PATHINFO_EXTENSION),
+                $image['type'],
+                (int) $image['size'],
+                $image['tmp_name']
+            );
+            
+            // Simpan gambar ke storage
+            $fileRepo->save($file);
+
+            array_push($files, $file);
+
+            // Insert to attachment_lowongan table
+            $attachmentLowongan = new AttachmentLowongan(
+                $lowonganInserted->lowongan_id,
+                $file->absolutePath
+            );
+
+            $attachmentLowonganRepo->insert($attachmentLowongan);
+        }
+
+        return $lowonganInserted;
     }
 
     public static function updateLowongan(int $id, array $postData): Lowongan {

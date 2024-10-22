@@ -26,20 +26,24 @@
                 if (empty($application['cv_url'])) {
                     echo '<p>No CV uploaded</p>';
                 } else {
-                    echo '<embed src="' . $application['cv_url'] . '" type="application/pdf" width="100%" height="600px" />';
+                    echo '<embed src="/job/'. $jobId . '/apply/' . $application['id'] . '/cv" type="application/pdf" width="100%" height="600px" />';
                 }
             ?>
         </div>
         
-        <?php if (!empty($applicant['video_url'])): ?>
         <div class="attachment video-attachment">
             <h3>Introductory Video</h3>
-            <video width="100%" controls>
-                <source src="<?= $applicant['video_url'] ?>" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <?php
+                if (empty($application['video_url'])) {
+                    echo '<p>No video uploaded</p>';
+                } else {
+                    echo '<video width="100%" controls>
+                            <source src="/job/'. $jobId . '/apply/' . $application['id'] . '/video" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>';
+                }
+            ?>
         </div>
-        <?php endif; ?>
     </div>
     
     <?php if (!empty($application['reason'])): ?>
