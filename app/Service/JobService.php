@@ -207,7 +207,7 @@ class JobService {
     
         $jobRepo = Repositories::$lowongan;
 
-        if ($user === null || $user->role === 'JOBSEEKER') {
+        if ($user === null || $user->role->value === 'jobseeker') {
             $jobs = $jobRepo->getJobs($page, $perPage, 
             $q, $jobType, $locationType, $sortOrder);
         } else {
