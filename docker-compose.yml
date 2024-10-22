@@ -29,6 +29,7 @@ services:
       - ENVIRONMENT=docker
     networks:
       - internal-network
+    command:
 
 volumes:
   postgres_data:

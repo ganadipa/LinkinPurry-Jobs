@@ -6,12 +6,12 @@ use App\Http\Exception\BadRequestException;
 use App\Validator\IValidator;
 use Exception;
 
-class ArrayValidator implements IValidator {
+class NotNullValidator implements IValidator {
     public static function validate(mixed $data): mixed {
-        if (is_array($data)) {
+        if ($data !== null) {
             return $data;
         } else {
-            throw new BadRequestException('Field must be an array.');
+            throw new BadRequestException('Field is required.');
         }
     }
 }
