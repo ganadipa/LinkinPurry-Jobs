@@ -69,6 +69,8 @@ class JobController {
         try {
             // Get the needed value
             $id = $req->getUriParamsValue('id', null);
+            $toast_onload_type = $req->getQueryParam('toast_onload_type', '');
+            $toast_onload_message = $req->getQueryParam('toast_onload_message', '');
     
             // Because using the redirect if not logged in middleware, the user will always be not null
             $user = $req->getUser();
@@ -80,7 +82,9 @@ class JobController {
             // Validate
             $validatedId = PositiveNumericValidator::validate($id);
 
-            $html = JobService::application($id, $user);
+            $html = JobService::application($id, $user, 
+                $toast_onload_type, $toast_onload_message
+            );
     
             $res->setBody($html);
             $res->send(); 
@@ -132,48 +136,12 @@ class JobController {
             $lamaran_id = LamaranService::applyJob($lowongan_id, $user_id, $cv, $video);
     
 
-            $res->json([
-                'status' => 'success',
-                'message' => 'Job applied successfully',
-                'data' => [
-                    'lamaran_id' => $lamaran_id,
-                ]
-            ]);
+            $res->redirect('/job/'.$lowongan_id);
     
             $res->send();
-        } catch (HttpException $e) {
-            // Either its a classified HttpException
-    
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
-            $res->send();
-    
-        } catch (HttpException $e) {
-            // Either its a classified HttpException
-    
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
-            $res->send();
-    
         } catch (Exception $e) {
-            // Or its just an ordinary exception
-    
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
+            $queryParams = '?toast_onload_type=error&toast_onload_message='.($e->getMessage());
+            $res->redirect('/job/'.$lowongan_id.'/apply'.$queryParams);
             $res->send();
         }
     }

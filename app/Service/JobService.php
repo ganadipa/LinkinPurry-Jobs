@@ -254,7 +254,9 @@ class JobService {
         ]);
     }
 
-    public static function application(string $jobId, User $user): string {
+    public static function application(string $jobId, User $user, 
+        $toast_onload_type, $toast_onload_message
+    ): string {
         $job = Repositories::$lowongan->getById($jobId);
         if (!$job) {
             return HomeService::errorPage($user, 'Job not found');
@@ -284,6 +286,10 @@ class JobService {
                 'title' => $job->posisi,
                 'company' => $company->nama,
                 'location' => $companyDetail->lokasi,
+            ],
+            'toast' => [
+                'type' => $toast_onload_type,
+                'message' => $toast_onload_message,
             ],
             'title' => 'Apply for ' . $job->posisi,
             'user' => $user,

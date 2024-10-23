@@ -63,7 +63,22 @@ class Request
         $uri = $exUri[0];
         $params = $exUri[1] ?? [];
 
-        $this->uri = $uri;
+        // If prefix is /public/index.php, then remove it
+        $requestUri = $uri;
+        if (strpos($requestUri, '/public/index.php') === 0) {
+            $requestUri = substr($requestUri, strlen('/public/index.php'));
+        }
+
+        // If there exist consecutive forward slashes, make it one
+        $requestUri = preg_replace('/\/+/', '/', $requestUri);
+
+        // If the request uri ends with a forward slash, remove it
+        if ($requestUri !== '/' && substr($requestUri, -1) === '/') {
+            $requestUri = rtrim($requestUri, '/');
+        }
+        
+
+        $this->uri = $requestUri;
         $this->setQueryParams($params);
     }
 

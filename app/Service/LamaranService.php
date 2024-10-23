@@ -17,7 +17,13 @@ class LamaranService {
 // returns lamaran_id
     public static function applyJob(int $lowongan_id, int $user_id,mixed $cv, mixed $video): int {
 
+
+
         try {
+            if ($cv === null) {
+                throw new BadRequestException('CV is required.');
+            }
+
             $lowonganRepo = Repositories::$lowongan;
             $lowongan = $lowonganRepo->getById($lowongan_id);
 
@@ -53,7 +59,7 @@ class LamaranService {
             );
 
             if ($cv['error'] !== UPLOAD_ERR_OK) {
-                throw new Exception('Error uploading CV.');
+                throw new Exception('Error while uploading CV.');
             }
 
             $cvRet = $localFileRepo->save($cvFile);
@@ -91,7 +97,7 @@ class LamaranService {
                 unlink($videoRet->absolutePath);
             }
 
-            throw new BadRequestException("Error applying job: " . $e->getMessage());
+            throw new BadRequestException($e->getMessage());
         }
 
 
@@ -149,7 +155,7 @@ class LamaranService {
     // get lamaran
     public static function getLamaranHistory(User $user): string {
 
-        
+
         $lamaranRepo = Repositories::$lamaran;
         $lamaranList = $lamaranRepo->getLamaranByUserId($user->user_id);
         return View::view('Page/Job/Jobseeker', 'History', [
