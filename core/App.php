@@ -167,7 +167,7 @@ class App {
 
         // Route for Company Profile
         $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile']);
-        $this->router->register(RequestMethodEnum::GET, '/profile/update', [ProfileController::class, 'updateProfile']);
+        $this->router->register(RequestMethodEnum::POST, '/profile/update', [ProfileController::class, 'updateProfile']);
 
         // Route for Lamaran History
         $this->router->register(RequestMethodEnum::GET, '/jobseeker/history', [LamaranController::class, 'showHistoryPage']);

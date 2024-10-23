@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\ProfileService;
+use Error;
 
 class ProfileController {
 
     // Show profile
     public static function showProfile(Request $req, Response $res): void {
-        error_log("CONTROLLER"); // debug
         $user = $req->getUser();
         
         if ($user === null || $user->role->value !== 'company') {
@@ -33,11 +33,37 @@ class ProfileController {
 
     // Update profile
     public static function updateProfile(Request $req, Response $res): void {
-        $data = $req->getPost();
-        
-        try {
-            ProfileService::updateCompanyProfile($data);
+        $name = $req->getPost('name');
+        $email = $req->getPost('email');
+        $lokasi = $req->getPost('location');
+        $about = $req->getPost('about');
 
+        $user = $req->getUser();
+
+        // debug
+        error_log("NAME: " . $name);
+        error_log("EMAIL: " . $email);
+        error_log("LOKASI: " . $lokasi);
+        error_log("ABOUT: " . $about);
+    
+        if (!$name || !$email || !$lokasi || !$about) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'Incomplete data. Please fill in all fields.'
+            ]);
+            $res->send();
+            return;
+        }
+    
+        try {
+            ProfileService::updateCompanyProfile([
+                'user_id' => $user->user_id,
+                'name' => $name,
+                'email' => $email,
+                'lokasi' => $lokasi,
+                'about' => $about
+            ]);
+    
             $res->json([
                 'status' => 'success',
                 'message' => 'Profile updated successfully.'
@@ -50,5 +76,5 @@ class ProfileController {
             ]);
             $res->send();
         }
-    }
+    }    
 }
