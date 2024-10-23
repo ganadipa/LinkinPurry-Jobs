@@ -386,21 +386,69 @@ class JobController {
                 throw new UnauthorizedException('You must login as a company');
             }
 
-            $jobId = $req->getUriParamsValue('jobId', null);
-            $isOpen = $req->getPost('is_open', null);
+            $jobId = $req->getUriParamsValue('id', null);
 
-            if ($jobId == null || $isOpen == null) {
+            if ($jobId == null) {
                 throw new Exception('Job not found');
             }
 
             $validatedJobId = PositiveNumericValidator::validate($jobId);
-            $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
+            // $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
 
-            JobService::updateStatusJob($validatedJobId, $validatedIsOpen);
+            JobService::updateStatusJob($validatedJobId);
 
             $res->json([
                 'status' => 'success',
                 'message' => 'Job status updated successfully',
+                'data' => null
+            ]);
+
+            $res->send();
+        } catch (HttpException $e) {
+            // Either its a classified HttpException
+    
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+    
+        } catch (Exception $e) {
+            // Or its just an ordinary exception
+    
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+    
+            $res->send();
+        }
+    }
+
+    public static function deleteJob(Request $req, Response $res) {
+        try {
+            $user = $req->getUser();
+            if ($user == null || $user->role == 'jobseeker') {
+                throw new UnauthorizedException('You must login as a company');
+            }
+
+            $jobId = $req->getUriParamsValue('id', null);
+
+            if ($jobId == null) {
+                throw new Exception('Job not found');
+            }
+
+            $validatedJobId = PositiveNumericValidator::validate($jobId);
+
+            JobService::deleteJob($validatedJobId);
+
+            $res->json([
+                'status' => 'success',
+                'message' => 'Job deleted successfully',
                 'data' => null
             ]);
 

@@ -20,4 +20,5 @@ interface RLowongan {
     public function getNumberOfJobs(): int;
     public function getCompanyIdByJobId(int $jobId): int;
     public function updateStatusJob(int $jobId, bool $isOpen): void;
+    public function deleteJob(int $jobId): void;
 }

@@ -309,8 +309,14 @@ class JobService {
         return $lamaran->video_path;
     }
 
-    public static function updateStatusJob(string $jobId, bool $isOpen): void {
+    public static function updateStatusJob(string $jobId): void {
         $jobRepo = Repositories::$lowongan;
-        $jobRepo->updateStatusJob($jobId, $isOpen);
+        $isOpen = $jobRepo->getById($jobId)->is_open;
+        $jobRepo->updateStatusJob($jobId, !$isOpen);
+    }
+
+    public static function deleteJob(string $jobId): void {
+        $jobRepo = Repositories::$lowongan;
+        $jobRepo->deleteJob($jobId);
     }
 }

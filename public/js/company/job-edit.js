@@ -142,8 +142,11 @@ function submitJobPosting(companyId) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                console.log('Success:', response);
+                // var response = JSON.parse(xhr.responseText);
+                console.log('Success:', xhr.status, xhr.responseText);
+
+                // Redirect to job details page
+                window.location.href = '/job/' + response.data.id;
             } else {
                 console.log('Error:', xhr.status, xhr.responseText);
             }

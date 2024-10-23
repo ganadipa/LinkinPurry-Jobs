@@ -111,6 +111,7 @@ function loadJobs(isNewSearch = false) {
           }
 
           jobs.forEach((job) => {
+            console.log(job);
             jobList.appendChild(createJobElement(job));
           });
 
