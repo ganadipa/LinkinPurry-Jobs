@@ -155,4 +155,23 @@ class DbLamaran implements RLamaran {
             throw new Exception('Update lamaran error. Please try again later.');
         }
     }
+
+    public function getLamaranByUserId(int $userId): array {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT l.lamaran_id, l.lowongan_id, l.status, l.created_at, lo.posisi
+                FROM lamaran l
+                JOIN lowongan lo ON l.lowongan_id = lo.lowongan_id
+                WHERE l.user_id = :user_id
+                ORDER BY l.created_at DESC
+            ');
+    
+            $stmt->execute(['user_id' => $userId]);
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Get lamaran by user id error: ' . $e->getMessage());
+            throw new Exception('Get lamaran by user id error. Please try again later.');
+        }
+    }
 }

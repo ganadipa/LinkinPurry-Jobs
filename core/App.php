@@ -8,6 +8,7 @@ use App\Controller\CompanyController;
 use App\Controller\JobController;
 use App\Controller\LowonganController;
 use App\Controller\ProfileController;
+use App\Controller\LamaranController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
@@ -150,7 +151,8 @@ class App {
         $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile']);
         $this->router->register(RequestMethodEnum::GET, '/profile/update', [ProfileController::class, 'updateProfile']);
 
-
+        // Route for Lamaran History
+        $this->router->register(RequestMethodEnum::GET, '/job-seeker/history', [LamaranController::class, 'showHistoryPage']);
     }
 
     // The app handles the request by resolving the route

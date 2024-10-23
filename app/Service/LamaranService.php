@@ -7,6 +7,8 @@ use App\Util\Enum\StatusLamaranEnum;
 use DateTime;
 use Exception;
 use App\Model\Lamaran;
+use App\Model\User;
+use App\View\View;
 
 class LamaranService {
 // returns lamaran_id
@@ -74,6 +76,18 @@ class LamaranService {
         $lamaranRet = $lamaranRepo->save($lamaran);
 
         return $lamaranRet->lamaran_id;
+    }
+
+    // get lamaran
+    public static function getLamaranHistory(User $user): string {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaranList = $lamaranRepo->getLamaranByUserId($user->user_id);
+        return View::view('Page/Job/Jobseeker', 'History', [
+            'css' => ['job/history.css'],
+            'js' => ['job/jobseeker/history.js'],
+            'title' => 'Riwayat Lamaran',
+            'lamaranList' => $lamaranList,
+        ]);
     }
 }
 

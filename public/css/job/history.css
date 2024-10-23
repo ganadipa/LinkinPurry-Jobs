@@ -1,0 +1,19 @@
+.history-container {
+    padding: 20px;
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+}
+
+.history-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.history-item:hover {
+    background-color: #f0f0f0;
+}
