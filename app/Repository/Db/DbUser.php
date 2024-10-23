@@ -308,5 +308,41 @@ class DbUser implements RUser {
             throw new Exception('Remove profile error. Please try again later.');
         }
     }
+
+    public function updateNameEmail(int $userId, string $email, string $nama): void {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT user_id
+                FROM users
+                WHERE user_id = :user_id
+            ');
+            $stmt->execute([
+                'user_id' => $userId,
+            ]);
     
+            $existingUser = $stmt->fetch();
+    
+            if ($existingUser) {
+                $stmt = $this->db->prepare('
+                    UPDATE users
+                    SET email = :email, nama = :nama
+                    WHERE user_id = :user_id
+                ');
+    
+                $stmt->execute([
+                    'email' => $email,
+                    'nama' => $nama,
+                    'user_id' => $userId,
+                ]);
+    
+    
+            } else {
+                throw new Exception('User not found with the provided user_id.');
+            }
+    
+        } catch (PDOException $e) {
+            error_log('Update name and email error: ' . $e->getMessage());
+            throw new Exception('Update name and email error. Please try again later.');
+        }
+    }    
 }

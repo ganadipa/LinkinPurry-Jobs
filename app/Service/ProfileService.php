@@ -9,18 +9,18 @@ use Error;
 class ProfileService {
 
     public static function getCompanyProfilePage(int $userId): string {
-        error_log("HIIII"); // debug
         error_log("USER?? " . $userId); // debug
         $companyDetailRepo = Repositories::$companyDetail;
         $userRepo = Repositories::$user;
 
         $companyDetail = $companyDetailRepo->getCompanyDetailByUserId($userId);
-        error_log("COMPANY DETAIL?? " . print_r($companyDetail)); // debug
+        error_log("COMPANY DETAIL?? " . print_r($companyDetail, true)); // debug
         if (!$companyDetail) {
             throw new \Exception('Company detail not found');
         }
 
         $user = $userRepo->getUserProfileById($userId);
+        error_log("USER:" . print_r($user, true)); // debug
         if (!$user) {
             throw new \Exception('User not found');
         }
@@ -31,16 +31,20 @@ class ProfileService {
             'title' => 'Company Profile - ' . $user->nama,
             'company' => [
                 'name' => $user->nama,
+                'email' => $user->email,
                 'location' => $companyDetail->lokasi,
                 'about' => $companyDetail->about
-            ]
+            ],
+            'companyDetail' => $companyDetail,
+            'user' => $user
         ]);
     }
 
     // Update profile company
     public static function updateCompanyProfile(array $data): void {
-        print_r($data); // debug
+        error_log("UPDATE PROFILE: " . print_r($data, true)); // debug
         $companyDetailRepo = Repositories::$companyDetail;
+        $userRepo = Repositories::$user;
 
         // Update detail company
         $companyDetailRepo->update(new \App\Model\CompanyDetail(
@@ -48,5 +52,8 @@ class ProfileService {
             $data['lokasi'],
             $data['about']
         ));
+
+        // Update user
+        $userRepo->updateNameEmail($data['user_id'], $data['email'], $data['name']);
     }
 }
