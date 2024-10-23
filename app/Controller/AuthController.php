@@ -102,6 +102,19 @@ class AuthController {
     }
 
     public static function logout(Request $req, Response $res): void {
+        // If the user is not logged in, then just return
+        $user = $req->getUser();
+        if ($user === null) {
+            $res->json([
+                'status' => 'error',
+                'message' => 'User not found',
+                'data' => null
+            ]);
+            
+            $res->send();
+            return;
+        }
+
         session_destroy();
 
         $res->json([

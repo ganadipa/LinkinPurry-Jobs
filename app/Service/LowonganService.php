@@ -72,6 +72,13 @@ class LowonganService {
             throw new Exception("Lowongan not found.");
         }
 
+        // If the job is not owned by the company, throw an error
+        if ($existingLowongan->company_id !== $postData['company_id']) {
+            throw new Exception("You are not authorized to update this job.");
+        }
+
+        // OK!  We're good to go.
+
         // Update field lowongan yang ada dengan data baru
         $updatedLowongan = new Lowongan(
             $existingLowongan->company_id,

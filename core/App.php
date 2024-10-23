@@ -47,21 +47,44 @@ class App {
         // Register the routes
 
         // Auth Routes (GET)
+
+        /**
+         * Login page
+         * 
+         * @route /login
+         * @method GET
+         * 
+         * must be redirected if logged in
+         */
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
             $redirectIfLoggedInMiddleware
         ]);
 
+        /**
+         * Register page
+         * 
+         * @route /register
+         * @method GET
+         * 
+         * must be redirected if logged in
+         */
         $this->router->register(RequestMethodEnum::GET, '/register', [AuthController::class, 'registerPage'], [
             $redirectIfLoggedInMiddleware
         ]);
 
-        // Login
+        /**
+         * Login action
+         * 
+         * @route /login
+         * @method POST
+         * 
+         * must be not logged in
+         */
         $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
         ]);
 
         // Register
         $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
-            
         ]);
 
         // Api Routes
@@ -131,7 +154,7 @@ class App {
         // Home Page Routes
         $this->router->register(RequestMethodEnum::GET, '/', [HomeController::class, 'showHomePage']);
         // {
-            // $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'home']);
+        //     $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
         //     $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
         //     $this->router->register(RequestMethodEnum::POST, '/home/add/:id', [HomeController::class, 'addProfile']);
         //     $this->router->register(RequestMethodEnum::DELETE, '/home/remove/:id', [HomeController::class, 'removeProfile']);
@@ -170,7 +193,7 @@ class App {
 
         // Route for Company Profile
         $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile']);
-        $this->router->register(RequestMethodEnum::POST, '/profile/update', [ProfileController::class, 'updateProfile']);
+        $this->router->register(RequestMethodEnum::GET, '/profile/update', [ProfileController::class, 'updateProfile']);
 
         // Route for Lamaran History
         $this->router->register(RequestMethodEnum::GET, '/jobseeker/history', [LamaranController::class, 'showHistoryPage']);

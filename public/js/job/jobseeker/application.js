@@ -37,11 +37,12 @@ function handleFileUpload(
 handleFileUpload("cv-upload", "cv-file-name", "cv-error", 2 * 1024 * 1024, [
   "application/pdf",
 ]);
+
 handleFileUpload(
   "video-upload",
   "video-file-name",
   "video-error",
-  100 * 1024 * 1024
+  250 * 1024 * 1024
 );
 
 // Handle form submission

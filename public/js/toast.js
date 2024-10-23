@@ -63,5 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     "data-toast-onload-message"
   );
 
-  toast(data_toast_onload_type, data_toast_onload_message);
+  if (data_toast_onload_type && data_toast_onload_message)
+    toast(data_toast_onload_type, data_toast_onload_message);
 });

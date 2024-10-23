@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Http\Exception\BadRequestException;
 use App\Model\File;
 use Core\Repositories;
 use App\Util\Enum\StatusLamaranEnum;
@@ -16,6 +17,16 @@ class LamaranService {
     public static function applyJob(int $lowongan_id, int $user_id,mixed $cv, mixed $video): int {
 
         try {
+            $lowonganRepo = Repositories::$lowongan;
+            $lowongan = $lowonganRepo->getById($lowongan_id);
+
+            if ($lowongan === null) {
+                throw new BadRequestException('Job not found.');
+            }
+
+            if (!$lowongan->is_open) {
+                throw new BadRequestException('Job is not open.');
+            }
 
             $localFileRepo = Repositories::$file;
             $cvFile = new File(
@@ -46,7 +57,6 @@ class LamaranService {
                 $videoPath = $videoRet->absolutePath;
             }
 
-            
 
             $lamaran = new Lamaran(
                 $user_id,
@@ -74,7 +84,7 @@ class LamaranService {
                 unlink($videoRet->absolutePath);
             }
 
-            throw new Exception("Error applying job: " . $e->getMessage());
+            throw new BadRequestException("Error applying job: " . $e->getMessage());
         }
 
 

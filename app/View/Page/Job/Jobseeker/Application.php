@@ -3,12 +3,16 @@
 
 <div class="application-container">
     <div class="job-header">
-        <h1 class="job-title">Backend Engineer</h1>
-        <p class="company-name">Paper.id · Jakarta, Indonesia</p>
+        <h1 class="job-title">
+            Apply for <?= $job['title'] ?>
+        </h1>
+        <p class="company-name">
+            at <?= $job['company']. ' · ' .$job['location']?>
+        </p>
     </div>
 
 
-    <form id="application-form" action="/job/<?php echo $jobId; ?>/apply" method="POST" enctype="multipart/form-data">
+    <form id="application-form" action="/job/<?php echo $job['id']; ?>/apply" method="POST" enctype="multipart/form-data">
         <!-- CV Upload Section -->
         <div class="upload-section">
             <input type="file" name="cv" id="cv-upload" accept=".pdf" style="display: none;">
@@ -28,7 +32,7 @@
                 <i data-lucide="video" style="width: 20px; height: 20px; margin-right: 8px;"></i>
                 Upload Video
             </button>
-            <div class="file-info">Video files (max 20 MB)</div>
+            <div class="file-info">Video files (max 250 MB)</div>
             <div id="video-file-name" class="file-name"></div>
             <div id="video-error" class="error-message"></div>
         </div>

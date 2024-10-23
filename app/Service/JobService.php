@@ -243,6 +243,19 @@ class JobService {
     }
 
     public static function application(string $jobId, User $user): string {
+        $job = Repositories::$lowongan->getById($jobId);
+        if (!$job) {
+            return '404';
+        }
+
+        $lamaran = Repositories::$lamaran->getLamaranByUserIdAndJobId($user->user_id, $jobId);
+        if ($lamaran) {
+            return '404';
+        }
+
+        $companyDetail = Repositories::$companyDetail->getCompanyDetailByUserId($job->company_id);
+        $company = Repositories::$user->getUserProfileById($job->company_id);
+
         return View::view('Page/Job/Jobseeker', 'Application', [
             'css' => [
                 'job/application.css',
@@ -250,8 +263,13 @@ class JobService {
             'js' => [
                 'job/jobseeker/application.js'
             ],
-            'jobId' => $jobId,
-            'title' => 'Apply for Backend Engineer - Paper.id',
+            'job' => [
+                'id' => $jobId,
+                'title' => $job->posisi,
+                'company' => $company->nama,
+                'location' => $companyDetail->lokasi,
+            ],
+            'title' => 'Apply for ' . $job->posisi,
             'user' => $user,
         ]);
     }

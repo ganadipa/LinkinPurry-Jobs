@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\Exception\BadRequestException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\LowonganService;
@@ -56,7 +57,15 @@ class LowonganController {
             ]);
 
             $res->send();
-        }
+        } catch (BadRequestException $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+
+            $res->send();
+        } 
     }
 
     public static function update(Request $req, Response $res): void {
