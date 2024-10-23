@@ -37,7 +37,7 @@ function createJobElement(job) {
   jobElement.className = "job-card";
   jobElement.innerHTML = `
         <div class="job-info" id='job-${job.id}'>
-            <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
+            <img src="/public/images/img-placeholder.svg" alt="Company Logo" class="company-logo">
             <div>
                 <h3>${job.title}</h3>
                 <p>${job.company}</p>

@@ -1,11 +1,10 @@
-/* header {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0 24px;
+main {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1128px;
+  margin: 24px auto;
+  gap: 24px;
 }
-
-.nav-right img {
-    filter: invert(0.5);
-} */
 
 .work {
   border-left: 1px solid #e0e0e0;
@@ -17,11 +16,6 @@
   font-size: 14px;
   text-decoration: none;
   margin-left: 12px;
-}
-
-main {
-  margin: 24px auto;
-  gap: 24px;
 }
 
 .left-sidebar,
@@ -242,7 +236,6 @@ h1 {
 .company-logo {
   width: 56px;
   height: 56px;
-  border-radius: 28px;
 }
 
 .job-info h3 {
@@ -382,4 +375,68 @@ a {
   position: -webkit-sticky;
   position: sticky;
   top: 64px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    flex: 1;
+  }
+
+  .main-content {
+    margin-top: 24px;
+  }
+
+  .menu-card {
+    margin-bottom: 16px;
+  }
+
+  .job-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .job-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .company-logo {
+    margin-bottom: 8px;
+  }
+
+  .job-info h3 {
+    font-size: 16px;
+  }
+
+  .job-info p {
+    font-size: 12px;
+  }
+
+  .status {
+    font-size: 10px;
+  }
+
+  .more-actions {
+    font-size: 16px;
+  }
+
+  .dropdown-menu {
+    right: 0;
+  }
+
+  .action-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
 }
