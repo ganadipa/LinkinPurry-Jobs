@@ -116,7 +116,7 @@ class LamaranService {
             throw new Exception('Application not found.');
         }
 
-        if ($lowongan->company_id !== $companyId) {
+        if ($lowongan->company_id != $companyId) {
             throw new ForbiddenException('You are not authorized to accept this application.');
         }
 
@@ -138,7 +138,7 @@ class LamaranService {
             throw new Exception('Application not found.');
         }
 
-        if ($lowongan->company_id !== $companyId) {
+        if ($lowongan->company_id != $companyId) {
             throw new ForbiddenException('You are not authorized to reject this application.');
         }
 
@@ -148,6 +148,8 @@ class LamaranService {
 
     // get lamaran
     public static function getLamaranHistory(User $user): string {
+
+        
         $lamaranRepo = Repositories::$lamaran;
         $lamaranList = $lamaranRepo->getLamaranByUserId($user->user_id);
         return View::view('Page/Job/Jobseeker', 'History', [

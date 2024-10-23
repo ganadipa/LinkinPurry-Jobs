@@ -294,7 +294,7 @@ class JobController {
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
             // If the user is not the jobseeker or the company that posted the job
-            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
+            if ($user->user_id != $validatedUserId && $user->user_id != $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
@@ -350,7 +350,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
-            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
+            if ($user->user_id != $validatedUserId && $user->user_id != $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
@@ -399,6 +399,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             // $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
 
+            
             JobService::updateStatusJob($validatedJobId, $user->user_id);
 
             $res->json([
