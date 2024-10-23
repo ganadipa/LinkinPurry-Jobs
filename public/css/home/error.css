@@ -80,3 +80,26 @@ main {
     color: rgba(0, 0, 0, 0.6);
     text-align: left;
 }
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .error-container {
+        padding: 16px;
+    }
+
+    .error-code {
+        font-size: 100px;
+    }
+
+    .error-message {
+        font-size: 18px;
+    }
+
+    .error-description {
+        font-size: 14px;
+    }
+
+    .home-button {
+        padding: 10px 20px;
+    }
+}

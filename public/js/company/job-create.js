@@ -101,6 +101,11 @@ imagePreviewContainer.addEventListener("click", (e) => {
   }
 });
 
+const cancelButton = document.getElementsByClassName("cancel-btn")[0];
+cancelButton.addEventListener("click", function () {
+  window.location.href = "/";
+});
+
 document
   .getElementById("job-post-form")
   .addEventListener("submit", function (e) {
