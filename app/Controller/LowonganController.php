@@ -6,6 +6,7 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Service\LowonganService;
 use App\Validator\NotNullValidator;
+use App\Validator\PositiveNumericValidator;
 use Exception;
 
 class LowonganController {
@@ -61,25 +62,52 @@ class LowonganController {
     public static function update(Request $req, Response $res): void {
         try {
             $id = $req->getUriParamsValue('id', null);
-            $inputJson = file_get_contents('php://input');
-            $postData = json_decode($inputJson, true);
+            
+            $images = $req->getPost('images', null);
+            $company_id = $req->getPost('company_id', null);
+            $posisi = $req->getPost('posisi', null);
+            $deskripsi = $req->getPost('deskripsi', null);
+            $jenis_pekerjaan = $req->getPost('jenis_pekerjaan', null);
+            $jenis_lokasi = $req->getPost('jenis_lokasi', null);
+
+            // Validate required fields
+            $validatedCompanyId = NotNullValidator::validate($company_id);
+            $validatedPosisi = NotNullValidator::validate($posisi);
+            $validatedJenisLokasi = NotNullValidator::validate($jenis_lokasi);
+            $validatedJenisPekerjaan = NotNullValidator::validate($jenis_pekerjaan);
+            $validatedId = PositiveNumericValidator::validate($id);
 
             if (!isset($id)) {
                 throw new Exception("Lowongan ID is required.");
             }
 
-            $updatedLowongan = LowonganService::updateLowongan($id, $postData);
+            $postData = [
+                'images' => $images,
+                'company_id' => $validatedCompanyId,
+                'posisi' => $validatedPosisi,
+                'deskripsi' => $deskripsi,
+                'jenis_pekerjaan' => $validatedJenisPekerjaan,
+                'jenis_lokasi' => $validatedJenisLokasi
+            ];
+
+            $updatedLowongan = LowonganService::updateLowongan($validatedId, $postData);
 
             $res->json([
                 'status' => 'success',
                 'message' => 'Lowongan updated successfully.',
-                'data' => $updatedLowongan
+                'data' => [
+                    'lowongan_id' => $updatedLowongan->lowongan_id
+                ]
             ]);
+
+            $res->send();
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ]);
+
+            $res->send();
         }
     }
 

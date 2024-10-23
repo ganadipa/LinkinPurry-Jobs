@@ -115,6 +115,7 @@ class LamaranService {
             'js' => ['job/jobseeker/history.js'],
             'title' => 'Riwayat Lamaran',
             'lamaranList' => $lamaranList,
+            'user' => $user,
         ]);
     }
 }

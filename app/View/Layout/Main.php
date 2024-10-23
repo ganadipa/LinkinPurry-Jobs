@@ -47,10 +47,12 @@ use App\View\View;
         }
 
         if (isset($js)) {
-            foreach ($js as $script) {
-                echo "<script src='/public/js/$script' defer type='module'></script>";
+                foreach ($js as $script) {
+                    echo "<script src='/public/js/$script' type='module' defer></script>";
+                }
             }
-        }
+
+
     ?>
 </head>
 <body>
@@ -60,5 +62,7 @@ use App\View\View;
     <main>
     <?= $content ?>
     </main>
+
+
 </body>
 </html>

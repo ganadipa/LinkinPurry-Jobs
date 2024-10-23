@@ -18,10 +18,6 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="job-location">Job Location*</label>
-            <input type="text" id="job-location" name="job-location" required>
-        </div>
-        <div class="form-group">
             <label for="job-type">Job type*</label>
             <select id="job-type" name="job-type" required>
                 <option value="full-time">Full-time</option>

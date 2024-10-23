@@ -58,7 +58,14 @@ use App\View\View;
         </div>
 
         <div class="image-carousel">
-            <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
+            <?php
+            if ($job['images']) {
+                $sz = sizeof($job['images']);
+                for ($i = 0; $i < $sz; $i++) {
+                    echo '<img src="/attachmentlowongan/' . $job['images'][$i]['attachment_id'] . '" alt="Job Image" class="hidden carousel-image"  >';
+                }
+            }
+            ?>
             <button class="carousel-button prev" id="prevButton">
                 <i data-lucide="chevron-left"></i>
             </button>

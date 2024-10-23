@@ -159,7 +159,9 @@ class App {
             ]);
     
             // Route to update a lowongan
-            $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update']);
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update'], [
+                $imagesMiddleware
+            ]);
     
             // Route to delete a lowongan
             $this->router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', [LowonganController::class, 'delete']);
@@ -171,6 +173,7 @@ class App {
 
         // Route for Lamaran History
         $this->router->register(RequestMethodEnum::GET, '/jobseeker/history', [LamaranController::class, 'showHistoryPage']);
+        $this->router->register(RequestMethodEnum::GET, '/attachmentlowongan/:attachmentId', [AttachmentController::class, 'getPublicAttachment']);
     }
 
     // The app handles the request by resolving the route

@@ -34,4 +34,12 @@ class LocalFileRepository implements RFile {
         }
 
     }
+
+    public function delete(string $path): void {
+        try {
+            unlink($path);
+        } catch (Exception $e) {
+            throw new Exception('Error deleting file');
+        }
+    }
 }

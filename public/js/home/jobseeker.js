@@ -164,13 +164,12 @@ function loadJobs(isNewSearch = false) {
     };
 
     xhr.send();
-  }, 1000); // 2000ms (2 seconds) delay before loading the jobs
+  }, 1000);
 }
 
 const debouncedLoadJobs = debounce(() => {
-  page = 1; // Reset page number when search/filter/sort changes
+  page = 1;
 
-  // submit the form
   const submitButton = document.getElementById("apply-filters");
   submitButton.click();
 }, 500);

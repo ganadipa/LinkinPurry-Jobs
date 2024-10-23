@@ -59,4 +59,14 @@ class AttachmentService {
         $attachmentLowonganRepo = Repositories::$attachmentLowongan;
         return $attachmentLowonganRepo->getList();
     }
+
+    public static function getAttachmentPath(int $id): string {
+        $attachmentLowonganRepo = Repositories::$attachmentLowongan;
+        $attachment = $attachmentLowonganRepo->getById($id);
+        if (!$attachment) {
+            throw new Exception("Attachment not found.");
+        }
+
+        return $attachment->file_path;
+    }
 }

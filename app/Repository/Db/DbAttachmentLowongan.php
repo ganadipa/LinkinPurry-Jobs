@@ -130,6 +130,10 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
             ]);
 
             $attachmentLowongan = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if (!$attachmentLowongan) {
+                return null;
+            }
             
             return new AttachmentLowongan(
                 $attachmentLowongan->lowongan_id,
@@ -162,7 +166,7 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
                     $attachmentLowongan->file_path,
                     $attachmentLowongan->attachment_id
                 );
-                $result[] = $r->file_path;
+                $result[] = $r;
             }
 
             return $result;
@@ -212,6 +216,46 @@ class DbAttachmentLowongan implements RAttachmentLowongan {
         } catch (PDOException $e) {
             error_log('Get attachment lowongan error: ' . $e->getMessage());
             throw new Exception('Get attachment lowongan error. Please try again later.');
+        }
+    }
+
+    // Returns array of deleted attachment lowongan
+    public function deleteByLowonganId(int $lowonganId): array
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM attachment_lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $lowonganId,
+            ]);
+
+            // Save before deleting
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ret = [];
+            foreach ($result as $r) {
+                $ret[] = new AttachmentLowongan(
+                    $r['lowongan_id'],
+                    $r['file_path'],
+                    $r['attachment_id']
+                );
+            }
+
+            $stmt = $this->db->prepare('
+                DELETE FROM attachment_lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $lowonganId,
+            ]);
+
+            return $ret;
+        } catch (PDOException $e) {
+            error_log('Delete attachment lowongan error: ' . $e->getMessage());
+            throw new Exception('Delete attachment lowongan error. Please try again later.');
         }
     }
 }

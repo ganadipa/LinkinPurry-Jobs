@@ -10,7 +10,6 @@ class ProfileController {
 
     // Show profile
     public static function showProfile(Request $req, Response $res): void {
-        error_log("CONTROLLER"); // debug
         $user = $req->getUser();
         
         if ($user === null || $user->role->value !== 'company') {

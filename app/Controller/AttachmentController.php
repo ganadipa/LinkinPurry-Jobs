@@ -80,7 +80,6 @@ class AttachmentController {
         try {
             $attachments = AttachmentService::getAttachmentList();
 
-            // echo json_encode($attachments);
 
             $res->json([
                 'status' => 'success',
@@ -95,5 +94,26 @@ class AttachmentController {
                 'message' => $e->getMessage()
             ]);
         }   
+    }
+
+    public static function getPublicAttachment(Request $req, Response $res): void {
+        try {
+            $attachmentId = $req->getUriParamsValue('attachmentId', null);
+
+            if (!isset($attachmentId)) {
+                throw new Exception("Attachment ID is required.");
+            }
+
+            $img = AttachmentService::getAttachmentPath($attachmentId);
+
+            $res->image($img);
+
+            $res->send();
+        } catch (Exception $e) {
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

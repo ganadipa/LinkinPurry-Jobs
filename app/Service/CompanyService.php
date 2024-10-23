@@ -53,15 +53,19 @@ class CompanyService {
         if (!$lowongan) {
             return 'Job not found';
         }
+
+        $attachmentsPath = [];
+        foreach ($attachment as $att) {
+            $attachmentsPath[] = '/attachmentlowongan/' . $att->attachment_id;
+        }
         
         $jobData = [
             'title' => $lowongan->posisi,
             'company' => $user->nama,
             'locationType' => $lowongan->jenis_lokasi,
-            'location' => $company_detail->lokasi,
-            'jobType' => $lowongan->jenis_pekerjaan,
+                'jobType' => $lowongan->jenis_pekerjaan,
             'description' => $lowongan->deskripsi,
-            'attachments' => $attachment,
+            'attachments' => $attachmentsPath,
         ];
 
         return self::render('EditJob', [
