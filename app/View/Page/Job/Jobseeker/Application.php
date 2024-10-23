@@ -4,10 +4,10 @@
 <div class="application-container">
     <div class="job-header">
         <h1 class="job-title">
-            Apply for <?= $job['title'] ?>
+            Apply for <?= htmlspecialchars($job['title']) ?>
         </h1>
         <p class="company-name">
-            at <?= $job['company']. ' · ' .$job['location']?>
+            at <?= htmlspecialchars($job['company']). ' · ' .htmlspecialchars($job['location'])?>
         </p>
     </div>
 
