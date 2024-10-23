@@ -6,16 +6,16 @@ use App\View\View;
     <div class="header">
         <?= View::render('Partial', 'CompanyCard', [
             'company' => [
-                'name' => $company['name'],
-                'location' => $company['location']
+                'name' => htmlspecialchars($company['name']),
+                'location' => htmlspecialchars($company['location'])
             ]   
         ]) ?>
         <div class="job-title-container">
             <h1 class="job-title" id="jobTitle">
-                <?= $job['title'] ?>
+                <?= htmlspecialchars($job['title']) ?>
             </h1>
             <?php 
-                echo '<a href="/company/job/' . $job['id'] . '/edit" class="button edit-button" id="editJobButton">
+                echo '<a href="/company/job/' . htmlspecialchars($job['id']) . '/edit" class="button edit-button" id="editJobButton">
                     <i data-lucide="file-edit" class="lucide-sm mr-icon-sm"></i>
                     Edit
                 </a>';
@@ -24,19 +24,19 @@ use App\View\View;
         <div class="job-details">
             <i data-lucide="briefcase" class='lucide-md mr-icon-sm'></i>
             <span id="jobType">
-                <?= $job['type'] ?>
+                <?= htmlspecialchars($job['type']) ?>
             </span>
         </div>
         <div class="job-details">
             <i data-lucide="map-pin" class='lucide-md mr-icon-sm'></i>
             <span id="jobLocation">
-                <?= $job['location'] ?>
+                <?= htmlspecialchars($job['location']) ?>
             </span>
         </div>
         <div class="job-details">
             <i data-lucide="calendar" class='lucide-md mr-icon-sm'></i>
             <span id="jobCreated">
-                <?= $job['created'] ?>
+                <?= htmlspecialchars($job['created']) ?>
             </span>
         </div>
     </div>
@@ -100,7 +100,7 @@ use App\View\View;
         <div class="job-details">
             <i data-lucide="users" class='mr-icon-md'></i>
             <span>
-                <?= $numberOfApplicantsMessage ?>
+                <?= htmlspecialchars($numberOfApplicantsMessage) ?>
             </span>
         </div>
         <div>

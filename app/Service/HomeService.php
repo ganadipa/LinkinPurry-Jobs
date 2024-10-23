@@ -21,7 +21,8 @@ class HomeService {
     }
 
     public static function getHomeJobSeekerPage(
-        string $q, array $jobType, array $locationType, string $sortOrder, ?User $user
+        string $q, array $jobType, array $locationType, string $sortOrder, ?User $user,
+        string $toast_onload_type, string $toast_onload_message
     ) {
         $jobtype = [
             'full-time' => in_array(JobTypeEnum::FULL_TIME, $jobType),
@@ -50,11 +51,17 @@ class HomeService {
                 
             ],
             'user' => $user,
+            'toast' => [
+                'type' => $toast_onload_type,
+                'message' => $toast_onload_message
+            ]
         ]);
     }
 
     public static function getHomeCompanyPage(
-        string $q, array $jobType, array $locationType, string $sortOrder, User $user
+        string $q, array $jobType, array $locationType, string $sortOrder, User $user,
+        string $toast_onload_type, string $toast_onload_message
+
     ) {
         $jobtype = [
             'full-time' => in_array(JobTypeEnum::FULL_TIME, $jobType),
@@ -83,6 +90,10 @@ class HomeService {
                 
             ],
             'user' => $user,
+            'toast' => [
+                'type' => $toast_onload_type,
+                'message' => $toast_onload_message
+            ]
         ]);
     }
 }

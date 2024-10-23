@@ -5,7 +5,7 @@
             <h2>My items</h2>
         </div>
         <ul>
-            <li class="active">Posted jobs<span class="count">
+            <li class="active">Posted jobs<span class="count" id='count-jobs'>
                 <?= $numberOfJobs ?>
             </span></li>
         </ul>

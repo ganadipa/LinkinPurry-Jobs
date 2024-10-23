@@ -80,9 +80,13 @@ class HomeController {
             ];
             $sortOrder = $req->getQueryParam('sort-order') ?? 'desc';
 
+            $toast_onload_type = $req->getQueryParam('toast_onload_type') ?? '';
+            $toast_onload_message = $req->getQueryParam('toast_onload_message') ?? '';
+
             // Validate each query parameter
             $jobType = ArrayValidator::validate($jobType);
             $locationType = ArrayValidator::validate($locationType);
+
 
             foreach ($jobType as $type) {
                 // If not in array then just remove it
@@ -116,11 +120,13 @@ class HomeController {
     
             if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
                 $html = HomeService::getHomeJobSeekerPage(
-                    $q, $jobType, $locationType, $sortOrder, $user
+                    $q, $jobType, $locationType, $sortOrder, $user,
+                    $toast_onload_type, $toast_onload_message
                 );
             } else {
                 $html = HomeService::getHomeCompanyPage(
-                    $q, $jobType, $locationType, $sortOrder, $user
+                    $q, $jobType, $locationType, $sortOrder, $user,
+                    $toast_onload_type, $toast_onload_message,
                 );
             }
             

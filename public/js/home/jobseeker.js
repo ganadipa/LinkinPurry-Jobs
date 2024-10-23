@@ -1,3 +1,5 @@
+import { escapeHTML } from "../globals.js";
+
 let page = 1;
 let isLoading = false;
 let noMore = false;
@@ -36,13 +38,15 @@ function createJobElement(job) {
   jobElement.href = `/job/${job.id}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
-        <div class="job-info" id='job-${job.id}'>
+        <div class="job-info" id='job-${escapeHTML(job.id)}'>
             <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
             <div>
-                <h3>${job.title}</h3>
-                <p>${job.company}</p>
-                <p>${job.location}</p>
-                <p class="draft-info">Draft • Created ${job.created}</p>
+                <h3>${escapeHTML(job.title)}</h3>
+                <p>${escapeHTML(job.company)}</p>
+                <p>${escapeHTML(job.location)}</p>
+                <p class="draft-info">Draft • Created ${escapeHTML(
+                  job.created
+                )}</p>
                 <a href="#" class="complete-draft">Complete draft</a>
             </div>
         </div>

@@ -1,3 +1,6 @@
+import { escapeHTML } from "../globals.js";
+import { toast } from "../toast.js";
+
 let page = 1;
 let isLoading = false;
 let noMore = false;
@@ -33,33 +36,40 @@ function getSelectedCheckboxValues(checkboxGroup) {
 
 function createJobElement(job) {
   const jobElement = document.createElement("a");
-  jobElement.href = `/job/${job.id}`;
+  jobElement.href = `/job/${escapeHTML(job.id)}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
-        <div class="job-info" id='job-${job.id}'>
-            <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
-            <div>
-                <h3>${job.title}</h3>
-                <p>${job.company}</p>
-                <p>${job.location}</p>
-                <p class="draft-info">Draft • Created ${job.created}</p>
-                <a href="#" class="complete-draft">Complete draft</a>
-            </div>
-        </div>
-        <div class="job-actions">
-            <button class="more-actions">•••</button>
-            <div class="dropdown-menu">
-                <a href="/company/job/${job.id}/edit" class="dropdown-item">
-                    <i data-lucide="edit"></i>
-                    Manage job
-                </a>
-                <a href="/company/job/${job.id}/edit" class="dropdown-item">
-                    <i data-lucide="trash-2"></i>
-                    Delete job
-                </a>
-            </div>
-        </div>
-    `;
+    <div class="job-info" id='job-${escapeHTML(job.id)}'>
+      <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
+      <div>
+        <h3>${escapeHTML(job.title)}</h3>
+        <p>${escapeHTML(job.company)}</p>
+        <p>${escapeHTML(job.location)}</p>
+        <p class="draft-info">Draft • Created ${escapeHTML(job.created)}</p>
+        <a href="#" class="complete-draft">Complete draft</a>
+      </div>
+    </div>
+    <div class="job-actions">
+      <button class="more-actions">•••</button>
+      <div class="dropdown-menu">
+        <a href="/company/job/${escapeHTML(
+          job.id
+        )}/edit" class="dropdown-item update-job">
+          <i data-lucide="edit"></i>
+          Manage job
+        </a>
+        <a href='#' class="dropdown-item delete-job" data-job-id="${escapeHTML(
+          job.id
+        )}">
+          <i data-lucide="trash-2"></i>
+          Delete job
+        </a>
+      </div>
+    </div>
+  `;
+
+  // Gantikan placeholder Lucide icons dengan fungsi lucide.createIcons
+  lucide.createIcons(jobElement);
 
   return jobElement;
 }
@@ -206,15 +216,71 @@ window.addEventListener("scroll", () => {
 searchInput.addEventListener("input", debouncedLoadJobs);
 
 document.addEventListener("click", function (event) {
+  // Menangani klik pada tombol "more-actions"
   if (event.target.classList.contains("more-actions")) {
     event.preventDefault();
+
+    // Menutup semua dropdown kecuali yang diklik
+    const allDropdowns = document.querySelectorAll(".dropdown-menu");
+    allDropdowns.forEach((dropdown) => {
+      if (dropdown !== event.target.nextElementSibling) {
+        dropdown.style.display = "none";
+      }
+    });
+
+    // Toggle dropdown yang diklik
     const dropdownMenu = event.target.nextElementSibling;
     dropdownMenu.style.display =
       dropdownMenu.style.display === "block" ? "none" : "block";
   } else {
+    // Jika klik di luar tombol "more-actions", tutup semua dropdown
     const dropdowns = document.querySelectorAll(".dropdown-menu");
     dropdowns.forEach((dropdown) => {
       dropdown.style.display = "none";
     });
   }
+
+  // Menangani klik pada opsi "Delete Job"
+  const deleteJobElement = event.target.closest(".delete-job");
+  if (deleteJobElement) {
+    event.preventDefault();
+
+    const jobId = deleteJobElement.getAttribute("data-job-id");
+
+    // Template XMLHttpRequest untuk menghapus pekerjaan
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", `/job/${encodeURIComponent(jobId)}`, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Menangani respons dari server
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          toast("success", "Job post is deleted.");
+
+          // remove the jobcard
+          const jobCard = deleteJobElement.closest(".job-card");
+          if (jobCard) {
+            jobCard.remove();
+          }
+
+          // decrement the count-jobs
+          const countJobs = document.getElementById("count-jobs");
+          if (countJobs) {
+            countJobs.textContent = parseInt(countJobs.textContent) - 1;
+          }
+        } else {
+          toast("error", "Failed to delete job post.");
+        }
+      }
+    };
+
+    // Mengirim permintaan
+    xhr.send(JSON.stringify({ id: jobId }));
+
+    // Optional: Tutup dropdown setelah klik
+    deleteJobElement.parentElement.style.display = "none";
+  }
 });
+
+document.addEventListener("DOMContentLoaded", function () {});

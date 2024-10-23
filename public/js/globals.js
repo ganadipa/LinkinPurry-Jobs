@@ -1,3 +1,23 @@
+export function escapeHTML(str) {
+  return str
+    .toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .replace(/\//g, "&#x2F;");
+}
+
+export function redirectToRootWithToast(type, message) {
+  const encodedType = encodeURIComponent(type);
+  const encodedMessage = encodeURIComponent(message);
+
+  const url = `/?toast_onload_type=${encodedType}&toast_onload_message=${encodedMessage}`;
+
+  window.location.href = url;
+}
+
 document.addEventListener("DOMContentLoaded", function (e) {
   const navLogout = document.querySelector("#logout");
 
