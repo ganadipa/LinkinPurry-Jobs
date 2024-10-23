@@ -6,6 +6,7 @@ use App\Model\User;
 use App\View\View;
 use Core\DirectoryAlias;
 use Core\Repositories;
+use Exception;
 
 class JobService {
     public static function detailsFromJobSeekerPage(string $jobId, ?User $user): string {
@@ -99,6 +100,11 @@ class JobService {
                 'video' => $videoUrl,
             ],
             'status' => $lamaran ? $lamaran->status->value : null,
+            'reason' => $lamaran 
+                ? ($lamaran->status->value !== 'waiting' 
+                    ? $lamaran->status_reason 
+                    : 'Wait for approval.') 
+                : '',
             'numberOfApplicantsMessage' => $message,
             'user' => $user,
 

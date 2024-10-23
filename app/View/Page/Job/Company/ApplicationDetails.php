@@ -4,7 +4,7 @@
 
         <!-- Application Status moved to top-right -->
         <div class="application-status">
-            <div class="status-indicator status-<?= $application['status'] ?>">
+            <div class="status-indicator status-<?= $application['status'] ?>" id="statusIndicator">
                 <i data-lucide="<?= $application['status'] === 'waiting' ? 'clock' : ($application['status'] === 'accepted' ? 'check-circle' : 'x-circle') ?>"></i>
                 <span><?= ucfirst($application['status']) ?></span>
             </div>
@@ -46,14 +46,6 @@
         </div>
     </div>
     
-    <?php if (!empty($application['reason'])): ?>
-    <div class="status-reason">
-        <h3>Reason / Follow-up</h3>
-        <div class="rich-text-content">
-            <?= $application['reason'] ?>
-        </div>
-    </div>
-    <?php endif; ?>
     
     <?php if ($application['status'] === 'waiting'): ?>
     <div class="application-action">
@@ -65,8 +57,8 @@
                 <input type="hidden" id="reasonHidden" name="reason">
             </div>
             <div class="form-group approval">
-                <button type="button" class="button button-accept" onclick="setStatus('accepted')">Accept</button>
-                <button type="button" class="button button-reject" onclick="setStatus('rejected')">Reject</button>
+                <button type="button" class="button button-accept" id="acceptButton">Accept</button>
+                <button type="button" class="button button-reject" id="rejectButton">Reject</button>
                 <input type="hidden" id="statusHidden" name="status">
             </div>
         </form>

@@ -86,6 +86,23 @@ class LamaranService {
         $lamaranRepo->update($lamaran);
     }
     
+    public static function acceptApplication(int $jobId, int $applicantId, string $reason): void {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($applicantId, $jobId);
+        $lamaran->status = StatusLamaranEnum::ACCEPTED;
+        $lamaran->status_reason = $reason;
+
+        $lamaranRepo->update($lamaran);
+    }
+
+    public static function rejectApplication(int $jobId, int $applicantId, string $reason): void {
+        $lamaranRepo = Repositories::$lamaran;
+        $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($applicantId, $jobId);
+        $lamaran->status = StatusLamaranEnum::REJECTED;
+
+        $lamaran->status_reason = $reason;
+        $lamaranRepo->update($lamaran);
+    }
 }
 
 

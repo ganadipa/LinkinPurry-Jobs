@@ -7,6 +7,7 @@ use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\CompanyController;
 use App\Controller\JobController;
+use App\Controller\LamaranController;
 use App\Controller\LowonganController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
@@ -18,6 +19,7 @@ use App\Middleware\IMiddleware;
 use App\Util\EnvLoader;
 use App\Http\Request;
 use App\Http\Response;
+use App\Model\Lamaran;
 
 class App {
     private Router $router;
@@ -109,6 +111,14 @@ class App {
             ]);
 
             $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicantId', [JobController::class, 'applicationDetails'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/accept', [LamaranController::class, 'acceptApplication'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/reject', [LamaranController::class, 'rejectApplication'], [
                 
             ]);
         }

@@ -245,4 +245,25 @@ class DbLamaran implements RLamaran {
             throw new Exception('Get applicants error. Please try again later.');
         }
     }
+
+    public function updateStatusApplicant(int $lamaranId, string $status, string $statusReason): void
+    {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lamaran
+                SET status = :status,
+                    status_reason = :status_reason
+                WHERE lamaran_id = :lamaran_id
+            ');
+
+            $stmt->execute([
+                'status' => $status,
+                'status_reason' => $statusReason,
+                'lamaran_id' => $lamaranId,
+            ]);
+        } catch (PDOException $e) {
+            error_log('Update status applicant error: ' . $e->getMessage());
+            throw new Exception('Update status applicant error. Please try again later.');
+        }
+    }
 }
