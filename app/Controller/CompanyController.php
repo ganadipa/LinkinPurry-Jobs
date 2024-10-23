@@ -2,38 +2,70 @@
 
 namespace App\Controller;
 
+use App\Http\Exception\ForbiddenException;
+use App\Http\Exception\HttpException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\CompanyService;
 use App\Util\Enum\UserRoleEnum;
+use Exception;
 
 class CompanyController {
     
     public static function showCreateJobPage(Request $req, Response $res): void {
-        $user = $req->getUser();
-
-        if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
-            echo '404';
-            return;
+        try {
+            $user = $req->getUser();
+            if ($user === null) {
+                $res->redirect('/login');
+                $res->send();
+                return;
+            } 
+    
+    
+            if ($user->role === UserRoleEnum::JOBSEEKER) {
+                throw new ForbiddenException('You are not authorized to create a job.');
+                return;
+            }
+    
+            $html = CompanyService::getCreateJobPage($user);
+            $res->setBody($html);
+            $res->send();
+        } catch (Exception $e) {
+            $res->setBody($e->getMessage());
+            $res->send();
+        } catch (HttpException $e) {
+            $res->setBody($e->getMessage());
+            $res->send();
         }
 
-        $html = CompanyService::getCreateJobPage($user);
-        $res->setBody($html);
-        $res->send();
     }
 
     public static function showEditJobPage(Request $req, Response $res): void {
-        $user = $req->getUser();
-        $jobId = (int) $req->getUriParams()['id'];
+        try {
+            $user = $req->getUser();
+            $jobId = (int) $req->getUriParams()['id'];
+    
+            if ($user === null) {
+                $res->redirect('/login');
+                $res->send();
+                return;
+            }
+    
+            if ($user->role === UserRoleEnum::JOBSEEKER) {
+                throw new ForbiddenException('You are not authorized to edit this job.');
+            }
+    
+            $html = CompanyService::getEditJobPage($user, $jobId);
+            $res->setBody($html);
+            $res->send();
 
-        if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
-            echo '404';
-            return;
+        } catch (Exception $e) {
+            $res->setBody($e->getMessage());
+            $res->send();
+        } catch (HttpException $e) {
+            $res->setBody($e->getMessage());
+            $res->send();
         }
-
-        $html = CompanyService::getEditJobPage($user, $jobId);
-        $res->setBody($html);
-        $res->send();
     }
 
     public static function showProfile(Request $req, Response $res): void {

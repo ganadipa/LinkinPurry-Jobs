@@ -74,7 +74,7 @@ class JobController {
             if (!isset($id)) {
                 throw new Exception ('Job not found');
             }
-    
+
             // Validate
             $validatedId = PositiveNumericValidator::validate($id);
 
@@ -118,13 +118,16 @@ class JobController {
                 throw new UnauthorizedException('You must login first');
             }
 
-            $user_id = $req->getUser()->user_id;
-
-    
             if (!isset($cv)) {
                 throw new Exception ('CV must be uploaded');
             }
 
+            $user = $req->getUser();
+            if ($user->role == 'company') {
+                throw new UnauthorizedException('You must login as a jobseeker');
+            }
+
+            $user_id = $user->user_id;
             $lamaran_id = LamaranService::applyJob($lowongan_id, $user_id, $cv, $video);
     
 
@@ -290,6 +293,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
+            // If the user is not the jobseeker or the company that posted the job
             if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
@@ -395,7 +399,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             // $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
 
-            JobService::updateStatusJob($validatedJobId);
+            JobService::updateStatusJob($validatedJobId, $user->user_id);
 
             $res->json([
                 'status' => 'success',
@@ -444,7 +448,7 @@ class JobController {
 
             $validatedJobId = PositiveNumericValidator::validate($jobId);
 
-            JobService::deleteJob($validatedJobId);
+            JobService::deleteJob($validatedJobId, $user->user_id);
 
             $res->json([
                 'status' => 'success',
@@ -457,6 +461,7 @@ class JobController {
             // Either its a classified HttpException
     
             $res->setStatusCode($e->getStatusCode());
+
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),

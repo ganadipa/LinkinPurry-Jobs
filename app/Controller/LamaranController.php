@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\Exception\ForbiddenException;
 use App\Service\LamaranService;
 use App\Repositories;
 use App\Http\Request;
@@ -13,10 +14,13 @@ use App\Validator\PositiveNumericValidator;
 class LamaranController {
     public static function acceptApplication(Request $req, Response $res): void {
         try {
+            $user = $req->getUser();
+            if ($user === null || $user->role->value !== 'company') {
+                throw new ForbiddenException('You are not authorized to accept this application.');
+            }
+
             $status = $req->getPost('status', null);
             $reason = $req->getPost('reason', null);
-
-            print_r($_POST);
 
             $jobId = $req->getUriParamsValue('jobId', null);
             $applicantId = $req->getUriParamsValue('applicantId', null);
@@ -24,7 +28,7 @@ class LamaranController {
             $jobId = PositiveNumericValidator::validate($jobId);
             $applicantId = PositiveNumericValidator::validate($applicantId);
 
-            LamaranService::acceptApplication($jobId, $applicantId, $reason);
+            LamaranService::acceptApplication($jobId, $applicantId, $reason, $user->user_id);
 
             $res->json([
                 'status' => 'success',
@@ -49,6 +53,11 @@ class LamaranController {
 
     public static function rejectApplication(Request $req, Response $res): void {
         try {
+            $user = $req->getUser();
+            if ($user === null || $user->role->value !== 'company') {
+                throw new ForbiddenException('You are not authorized to reject this application.');
+            }
+
             $status = $req->getPost('status', null);
             $reason = $req->getPost('reason', null);
 
@@ -58,7 +67,7 @@ class LamaranController {
             $jobId = PositiveNumericValidator::validate($jobId);
             $applicantId = PositiveNumericValidator::validate($applicantId);
 
-            LamaranService::rejectApplication($jobId, $applicantId, $reason);
+            LamaranService::rejectApplication($jobId, $applicantId, $reason, $user->user_id);
 
             $res->json([
                 'status' => 'success',
@@ -84,8 +93,9 @@ class LamaranController {
     public static function showHistoryPage(Request $req, Response $res): void {
         $user = $req->getUser();
 
-        if ($user === null || $user->role->value !== 'jobseeker') {
-            echo '404';
+        if ($user === null) {
+            $res->redirect('/login');
+            $res->send();
             return;
         }
 

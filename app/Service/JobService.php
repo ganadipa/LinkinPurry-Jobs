@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Http\Exception\UnauthorizedException;
 use App\Model\User;
 use App\View\View;
 use Core\DirectoryAlias;
@@ -206,6 +207,17 @@ class JobService {
         if (!$lamaran) {
             return '404';
         } 
+
+        $lowongan = $lowonganRepo->getById($jobId);
+        if (!$lowongan) {
+            return '404';
+        }
+
+        if ($lowongan->company_id !== $user->user_id) {
+            throw new UnauthorizedException('You are not authorized to view this page');
+        }
+
+
         $applicant = $applicantRepo->getUserProfileById($lamaran->user_id);
         
         // In a real application, you would fetch this data from a database
@@ -330,14 +342,28 @@ class JobService {
         return $lamaran->video_path;
     }
 
-    public static function updateStatusJob(string $jobId): void {
+    public static function updateStatusJob(string $jobId, string $userId): void {
+        $jobRepo = Repositories::$lowongan;
+        $job = $jobRepo->getById($jobId);
+
+        if ($job->company_id !== $userId) {
+            throw new UnauthorizedException('You are not authorized to update this job');
+        }
+
+
         $jobRepo = Repositories::$lowongan;
         $isOpen = $jobRepo->getById($jobId)->is_open;
         $jobRepo->updateStatusJob($jobId, !$isOpen);
     }
 
-    public static function deleteJob(string $jobId): void {
+    public static function deleteJob(string $jobId, string $userId): void {
         $jobRepo = Repositories::$lowongan;
+
+        $job = $jobRepo->getById($jobId);
+        if ($job->company_id !== $userId) {
+            throw new UnauthorizedException('You are not authorized to delete this job');
+        }
+
         $jobRepo->deleteJob($jobId);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Http\Exception\ForbiddenException;
 use App\Model\AttachmentLowongan;
 use App\Model\File;
 use App\Model\Lowongan;
@@ -74,7 +75,7 @@ class LowonganService {
 
         // If the job is not owned by the company, throw an error
         if ($existingLowongan->company_id !== $postData['company_id']) {
-            throw new Exception("You are not authorized to update this job.");
+            throw new ForbiddenException("You are not authorized to update this job.");
         }
 
         // OK!  We're good to go.
