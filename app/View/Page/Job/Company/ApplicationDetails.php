@@ -4,7 +4,7 @@
 
         <!-- Application Status moved to top-right -->
         <div class="application-status">
-            <div class="status-indicator status-<?= $application['status'] ?>" id="statusIndicator">
+            <div class="status-indicator status-<?= htmlspecialchars($application['status']) ?>" id="statusIndicator">
                 <i data-lucide="<?= $application['status'] === 'waiting' ? 'clock' : ($application['status'] === 'accepted' ? 'check-circle' : 'x-circle') ?>"></i>
                 <span><?= ucfirst($application['status']) ?></span>
             </div>
@@ -13,8 +13,8 @@
 
     <div class="applicant-info">
         <h2>Applicant Information</h2>
-        <p><strong>Name:</strong> <?= $applicant['name'] ?></p>
-        <p><strong>Email:</strong> <?= $applicant['email'] ?></p>
+        <p><strong>Name:</strong> <?= htmlspecialchars($applicant['name']) ?></p>
+        <p><strong>Email:</strong> <?= htmlspecialchars($applicant['email']) ?></p>
     </div>
     
     <div class="application-attachments">
