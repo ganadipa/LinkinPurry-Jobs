@@ -3,6 +3,7 @@
 namespace App\Repository\Db;
 use App\Model\CompanyDetail;
 use App\Repository\Interface\RCompanyDetail;
+use Error;
 use \PDO;
 use \PDOException;
 use \Exception;
@@ -119,6 +120,8 @@ class DbCompanyDetail implements RCompanyDetail {
                 echo $userId;
                 throw new Exception('Company detail not found');
             }
+
+            // error_log("Di db company detail: " . print_r($));
 
             return new CompanyDetail(
                 user_id: $row['user_id'],

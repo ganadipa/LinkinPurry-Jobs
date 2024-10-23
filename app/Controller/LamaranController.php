@@ -80,17 +80,7 @@ class LamaranController {
         }
 
     }
-}
-<?php
 
-namespace App\Controller;
-
-use App\Http\Request;
-use App\Http\Response;
-use App\Service\LamaranService;
-
-class LamaranController {
-    
     public static function showHistoryPage(Request $req, Response $res): void {
         $user = $req->getUser();
 
