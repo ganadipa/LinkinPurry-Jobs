@@ -9,6 +9,7 @@ use App\Controller\CompanyController;
 use App\Controller\JobController;
 use App\Controller\LamaranController;
 use App\Controller\LowonganController;
+use App\Controller\ProfileController;
 use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\RedirectIfLoggedInMiddleware;
 use App\Middleware\RedirectIfNotLoggedInMiddleware;
@@ -163,6 +164,10 @@ class App {
             // Route to delete a lowongan
             $this->router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', [LowonganController::class, 'delete']);
         }
+
+        // Route for Company Profile
+        $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile']);
+        $this->router->register(RequestMethodEnum::GET, '/profile/update', [ProfileController::class, 'updateProfile']);
 
 
     }
