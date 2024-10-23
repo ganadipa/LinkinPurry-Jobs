@@ -6,6 +6,7 @@ use App\Util\Enum\RequestMethodEnum;
 use App\Middleware\IMiddleware;
 use App\Http\Request;
 use App\Http\Response;
+use App\View\View;
 
 class Router {
     private array $routes = [];
@@ -162,7 +163,18 @@ class Router {
         }
 
         // No route found
-        echo "404 - Not Found";
+        echo View::render('Layout', 'Main', array_merge_recursive([
+            'title' => 'Error',
+            'css' => ['home/error.css'], 
+            'user' => $req->getUser(),
+        ],
+        [
+            'content' => View::render('Page', 'Error', [
+                'error' => '404 Not Found',
+                
+            ]),
+            'css' => ['company/shared.css'],
+        ]));
     }
 
     public function call(Request $req, Response $res): void {
