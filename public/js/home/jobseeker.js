@@ -35,6 +35,7 @@ function getSelectedCheckboxValues(checkboxGroup) {
 
 function createJobElement(job) {
   const jobElement = document.createElement("a");
+  const status = job.is_open ? 'Open' : 'Close';
   jobElement.href = `/job/${job.id}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
@@ -48,6 +49,9 @@ function createJobElement(job) {
                   job.created
                 )}</p>
                 <a href="#" class="complete-draft">Complete draft</a>
+            </div>
+            <div class="status-indicator">
+                <div class="status status-${status}">${status}</div>
             </div>
         </div>
     `;
@@ -115,7 +119,6 @@ function loadJobs(isNewSearch = false) {
           }
 
           jobs.forEach((job) => {
-            console.log(job);
             jobList.appendChild(createJobElement(job));
           });
 

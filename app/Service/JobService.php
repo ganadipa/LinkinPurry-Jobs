@@ -296,18 +296,21 @@ class JobService {
                 'id' => $job->lowongan_id,
                 'title' => $job->posisi,
                 'company_id' => $job->company_id,
-                'created' => $job->created_at->format('Y-m-d')
+                'created' => $job->created_at->format('Y-m-d'),
+                'is_open' => $job->is_open
             ];
         }
 
         // for each job, get the company name by doing a query to the user table
         $userRepo = Repositories::$user;
         $companyRepo = Repositories::$companyDetail;
+        $lowonganRepo = Repositories::$lowongan;
         foreach ($jobsRet as &$job) {
             $user = $userRepo->getUserProfileById($job['company_id']);
             $company = $companyRepo->getCompanyDetailByUserId($job['company_id']);
             $job['company'] = $user->nama;
             $job['location'] = $company->lokasi;
+            $job['is_open'] = $lowonganRepo->getById($job['id'])->is_open;
         }
 
 

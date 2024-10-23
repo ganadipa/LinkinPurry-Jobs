@@ -6,6 +6,12 @@
   --text-color: #0a66c2;
   --button-bg-color: #0a66c2;
   --button-text-color: #fff;
+  --linkedin-blue: #0a66c2;
+  --linkedin-light-blue: #e8f3ff;
+  --border-color: #e0e0e0;
+  --background-gray: #f3f2ef;
+  --text-dark: #191919;
+  --text-medium: #666666;
 }
 
 * {
