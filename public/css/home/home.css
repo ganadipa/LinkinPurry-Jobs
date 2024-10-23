@@ -453,4 +453,20 @@ a {
   .secondary-btn {
     width: 100%;
   }
+
+  .primary-btn {
+    padding: 8px 12px;
+  }
+
+  .right-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    margin: 0 12px;
+    margin-left: auto;
+    bottom: 0;
+  }
+
+  .action-card {
+    padding: 4px 24px;
+  }
 }

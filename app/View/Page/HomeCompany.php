@@ -1,3 +1,4 @@
+<!-- Main Content -->
 <aside class="left-sidebar">
     <div class="menu-card" id="my-items">
         <div class="menu-title">
@@ -22,6 +23,7 @@
         </div>
 
         <div class="search-filter">
+            <!-- Job Type Filters -->
             <div class="filter-group">
                 <h3>Job Type</h3>
                 <div class="checkbox-group">
@@ -46,6 +48,7 @@
                 </div>
             </div>
 
+            <!-- Location Type Filters -->
             <div class="filter-group">
                 <h3>Location Type</h3>
                 <div class="checkbox-group">
@@ -70,6 +73,7 @@
                 </div>
             </div>
 
+            <!-- Sort Order Filters -->
             <div class="filter-group">
                 <h3>Sort Order</h3>
                 <div class="radio-group">
@@ -94,14 +98,18 @@
         </div>
     </form>
 </aside>
+
 <section class="main-content">
     <h1>Posted Jobs</h1>
     <div class="loading-animation" id="loading-animation" style="display: none;"></div>
     <div id="job-list"></div>
     <div class="loading-animation" id="loading" style="display: none;"></div>
 </section>
+
 <aside class="right-sidebar">
     <div class="action-card sticky">
-        <a href="/company/job/create" class="primary-btn">Post a job</a>
+        <a href="/company/job/create" class="primary-btn w-full">
+            Post a Job
+        </a>
     </div>
 </aside>

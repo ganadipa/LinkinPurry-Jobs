@@ -41,3 +41,34 @@ document.addEventListener("DOMContentLoaded", function (e) {
     xhr.send();
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const hamburger = document.getElementById("hamburger");
+  const sidenav = document.getElementById("sidenav");
+  const closeBtn = document.getElementById("closebtn");
+  const overlay = document.getElementById("overlay");
+
+  // Function to open the sidenav
+  function openSidenav() {
+    sidenav.style.width = "250px";
+    overlay.style.display = "block";
+  }
+
+  // Function to close the sidenav
+  function closeSidenav() {
+    sidenav.style.width = "0";
+    overlay.style.display = "none";
+  }
+
+  // Event listeners
+  hamburger.addEventListener("click", openSidenav);
+  closeBtn.addEventListener("click", closeSidenav);
+  overlay.addEventListener("click", closeSidenav);
+
+  // Optional: Close sidenav on ESC key press
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeSidenav();
+    }
+  });
+});
