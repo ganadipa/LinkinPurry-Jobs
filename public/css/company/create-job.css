@@ -36,7 +36,7 @@ label {
     color: #191919;
 }
 
-form input[type="text"], select {
+#job-title, select {
     width: 100%;
     height: 40px;
     margin: 10px auto;
@@ -54,7 +54,7 @@ select {
     padding-right: 36px;
 }
 
-form input[type="text"]:focus, select:focus {
+#job-title:focus, select:focus {
     border-color: #0a66c2;
     outline: none;
 }

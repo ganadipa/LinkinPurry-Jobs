@@ -130,7 +130,7 @@ class App {
         // Home Page Routes
         $this->router->register(RequestMethodEnum::GET, '/', [HomeController::class, 'showHomePage']);
         // {
-        //     $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
+            // $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'home']);
         //     $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
         //     $this->router->register(RequestMethodEnum::POST, '/home/add/:id', [HomeController::class, 'addProfile']);
         //     $this->router->register(RequestMethodEnum::DELETE, '/home/remove/:id', [HomeController::class, 'removeProfile']);

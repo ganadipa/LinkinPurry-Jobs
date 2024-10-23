@@ -38,8 +38,8 @@ function createJobElement(job) {
   jobElement.href = `/job/${job.id}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
-        <div class="job-info" id='job-${escapeHTML(job.id)}'>
-            <img src="https://placehold.co/50x50" alt="Company Logo" class="company-logo">
+        <div class="job-info" id='job-${job.id}'>
+            <img src="/public/images/img-placeholder.svg" alt="Company Logo" class="company-logo">
             <div>
                 <h3>${escapeHTML(job.title)}</h3>
                 <p>${escapeHTML(job.company)}</p>
