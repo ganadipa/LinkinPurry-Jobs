@@ -148,6 +148,12 @@ h1 {
   color: #333;
 }
 
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -194,6 +200,18 @@ h1 {
 
 .radio-label:hover {
   color: #0a66c2;
+}
+
+.apply-button {
+  width: 100%;
+  background-color: #0a66c2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .job-card {
