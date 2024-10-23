@@ -84,6 +84,14 @@ class App {
         ]);
 
         // Register
+        /**
+         * Register action
+         * 
+         * @route /register
+         * @method POST
+         * 
+         * must be not logged in
+         */
         $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
         ]);
 
@@ -94,55 +102,171 @@ class App {
 
 
             // Logout
+            /**
+             * Logout action
+             * 
+             * @route /api/logout
+             * @method POST
+             * 
+             * must be logged in
+             */
             $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [
             ]);
 
             // Gets the current user
+            /**
+             * Get the current user
+             * 
+             * @route /api/self
+             * @method GET
+             * 
+             * must be logged in
+             * otherwise will return an error message
+             */
             $this->router->register(RequestMethodEnum::GET, '/api/self', [AuthController::class, 'self'], [
             ]);
 
-            // Get job details
+            /**
+             * Get a list of job
+             * 
+             * @route /api/jobs
+             * @method GET
+             * 
+             * must be logged in
+             * 
+             */
             $this->router->register(RequestMethodEnum::GET, '/api/jobs' , [JobController::class, 'generateJobs'], [
             ]);
         }
 
         // A job routes
+        /**
+         * Get a job details (PAGE)
+         * 
+         * @route /job/:id
+         * 
+         * Can be accessed by anyone
+         */
         $this->router->register(RequestMethodEnum::GET, '/job/:id', [JobController::class, 'jobdetails'], [
+            
         ]);
 
         {
+
+            /**
+             * Delete a job
+             * 
+             * @route /job/:id
+             * 
+             * Must be a company, and the job must be owned by the company
+             */
             $this->router->register(RequestMethodEnum::DELETE, '/job/:id', [JobController::class, 'deleteJob'], [
             ]);
 
+            /**
+             * Apply a job (Page)
+             * 
+             * @route /job/:id/apply
+             * 
+             * Must be a jobseeker and that job must not be applied yet
+             * else if not logged in will be redirected to login page
+             * otherwise 404.
+             */
             $this->router->register(RequestMethodEnum::GET, '/job/:id/apply', [JobController::class, 'jobapplication'], [
                 $redirectIfNotLoggedInMiddleware
             ]);
 
+            /**
+             * Apply a job
+             * 
+             * @route /job/:id/apply
+             * @method POST
+             * 
+             * Must be a jobseeker and that job must not be applied yet
+             * else if not logged in will be redirected to login page
+             * otherwise 404.
+             */
             $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
                 $redirectIfNotLoggedInMiddleware,
                 $cvAndVideoMiddleware
             ]);
 
+            /**
+             * Toggle the status of a job
+             * 
+             * @route /job/:id/togglestatus
+             * @method POST
+             * 
+             * Must be a company and the job must be owned by the company
+             */
             $this->router->register(RequestMethodEnum::POST, '/job/:id/togglestatus', [JobController::class, 'updateStatusJob'], [
                 
             ]);
 
+            /**
+             * Get the applied CV (page)
+             * 
+             * @route /job/:jobId/apply/:userId/cv
+             * @method GET
+             * 
+             * Must be a company and the job must be owned by the company
+             * Or must be a jobseeker and the job must be applied by the jobseeker
+             * Otherwise 404
+             */
             $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/cv', [JobController::class, 'appliedCV'], [
-                
+                $redirectIfNotLoggedInMiddleware
             ]);
 
+            /**
+             * Get the applied video (page)
+             * 
+             * @route /job/:jobId/apply/:userId/video
+             * @method GET
+             * 
+             * Must be a company and the job must be owned by the company
+             * Or must be a jobseeker and the job must be applied by the jobseeker
+             * Otherwise 404
+             */
             $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/video', [JobController::class, 'appliedVideo'], [
-                
+                $redirectIfNotLoggedInMiddleware
             ]);
 
+
+            /**
+             * Get the application details (Page)
+             * 
+             * @route /company/job/:jobId/application/:applicantId
+             * @method GET
+             * 
+             * Must be a company and the job must be owned by the company
+             * Otherwise 404
+             */
             $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicantId', [JobController::class, 'applicationDetails'], [
-                
+                $redirectIfNotLoggedInMiddleware
             ]);
 
+            /**
+             * Accept an application
+             * 
+             * @route /company/job/:jobId/application/:applicantId/accept
+             * @method POST
+             * 
+             * Must be a company and the job must be owned by the company
+             * Otherwise forbidden
+             */
             $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/accept', [LamaranController::class, 'acceptApplication'], [
                 
             ]);
 
+            /**
+             * Reject an application
+             * 
+             * @route /company/job/:jobId/application/:applicantId/reject
+             * @method POST
+             * 
+             * Must be a company and the job must be owned by the company
+             * Otherwise forbidden
+             */
             $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/reject', [LamaranController::class, 'rejectApplication'], [
                 
             ]);
@@ -152,51 +276,140 @@ class App {
 
             
         // Home Page Routes
+        /**
+         * Home Page (Page)
+         * 
+         * @route /
+         * @method GET
+         * 
+         * Can be accessed by anyone
+         */
         $this->router->register(RequestMethodEnum::GET, '/', [HomeController::class, 'showHomePage']);
-        // {
-        //     $this->router->register(RequestMethodEnum::GET, '/home/page', [HomeController::class, 'showHomePage']);
-        //     $this->router->register(RequestMethodEnum::GET, '/home/:id', [HomeController::class, 'showProfile']);
-        //     $this->router->register(RequestMethodEnum::POST, '/home/add/:id', [HomeController::class, 'addProfile']);
-        //     $this->router->register(RequestMethodEnum::DELETE, '/home/remove/:id', [HomeController::class, 'removeProfile']);
-        // }
 
-        // Company Page Routes
-        // $this->router->register(RequestMethodEnum::GET, '/company', [CompanyController::class, 'showCompanyPage']);
         {
-            // $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
-            // $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
-            $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
-            $this->router->register(RequestMethodEnum::GET, '/company/job/:id/edit', [CompanyController::class, 'showEditJobPage']); 
-            // $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
+            /**
+             * Get the form to create a job (Page)
+             * 
+             * @route /company/job/create
+             * @method GET
+             * 
+             * Only company can access this page
+             * If not logged in will be redirected to login page
+             * Otherwise 404
+             */
+            $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage'], [
+                $redirectIfNotLoggedInMiddleware
+            ]);
+
+            /**
+             * Get the form to edit a job (Page)
+             * 
+             * @route /company/job/:id/edit
+             * @method GET
+             * 
+             * Only company can access this page
+             * If not logged in will be redirected to login page
+             * Otherwise 404
+             */
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:id/edit', [CompanyController::class, 'showEditJobPage'], [
+                $redirectIfNotLoggedInMiddleware
+            ]); 
         }
 
-        // Client Page Routes
-        $this->router->register(RequestMethodEnum::GET, '/attachment', [AttachmentController::class, 'getList']);
-
         // Lowongan routes
-        // Route to get a lowongan
-        $this->router->register(RequestMethodEnum::GET, '/lowongan', [LowonganController::class, 'getList']);
         {
             // Route to create a lowongan
+            /**
+             * Create a lowongan
+             * 
+             * @route /lowongan/create
+             * @method POST
+             * 
+             * Only company can access this resource
+             * otherwise forbidden
+             */
             $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create'], [
                 $imagesMiddleware
             ]);
     
             // Route to update a lowongan
+            /**
+             * Update a lowongan
+             * 
+             * @route /lowongan/update/:id
+             * @method POST
+             * 
+             * Only company that owns the lowongan can access this resource
+             * otherwise forbidden
+             */
             $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update'], [
                 $imagesMiddleware
             ]);
     
             // Route to delete a lowongan
+            /**
+             * Delete a lowongan
+             * 
+             * @route /lowongan/delete/:id
+             * @method POST
+             * 
+             * Only company that owns the lowongan can access this resource
+             * otherwise forbidden
+             */
             $this->router->register(RequestMethodEnum::POST, '/lowongan/delete/:id', [LowonganController::class, 'delete']);
         }
 
         // Route for Company Profile
-        $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile']);
-        $this->router->register(RequestMethodEnum::GET, '/profile/update', [ProfileController::class, 'updateProfile']);
+
+        /**
+         * Show the company profile (Page)
+         * 
+         * @route /profile
+         * @method GET
+         * 
+         * Only company can access this page
+         * If not logged in will be redirected to login page
+         * Otherwise 404
+         * 
+         */
+        $this->router->register(RequestMethodEnum::GET, '/profile', [ProfileController::class, 'showProfile'], [
+            $redirectIfNotLoggedInMiddleware
+        ]);
+
+        /**
+         * Update the company profile
+         * 
+         * @route /profile/update
+         * @method POST
+         * 
+         * Only company can access this page
+         * Otherwise forbidden
+         */
+        $this->router->register(RequestMethodEnum::POST, '/profile/update', [ProfileController::class, 'updateProfile']);    
 
         // Route for Lamaran History
-        $this->router->register(RequestMethodEnum::GET, '/jobseeker/history', [LamaranController::class, 'showHistoryPage']);
+        /**
+         * Show the jobseeker history (Page)
+         * 
+         * @route /jobseeker/history
+         * @method GET
+         * 
+         * Only jobseeker can access this page
+         * If not logged in will be redirected to login page
+         * Otherwise 404
+         */
+        $this->router->register(RequestMethodEnum::GET, '/jobseeker/history', [LamaranController::class, 'showHistoryPage'], [
+            $redirectIfNotLoggedInMiddleware
+        ]);
+
+        /**
+         * Get an attachment of a lowongan
+         * 
+         * @route /attachmentlowongan/:attachmentId
+         * @method GET
+         * 
+         * Can be accessed by anyone
+         */
         $this->router->register(RequestMethodEnum::GET, '/attachmentlowongan/:attachmentId', [AttachmentController::class, 'getPublicAttachment']);
     }
 

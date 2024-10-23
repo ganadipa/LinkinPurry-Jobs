@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Http\Exception\BadRequestException;
+use App\Http\Exception\ForbiddenException;
+use App\Http\Exception\UnauthorizedException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\LowonganService;
@@ -13,6 +15,14 @@ use Exception;
 class LowonganController {
     public static function create(Request $req, Response $res): void {
         try {
+            $user = $req->getUser();
+            if ($user === null) {
+                throw new UnauthorizedException('You are not authorized to create a job.');
+            }
+
+            if ($user->role->value !== 'company') {
+                throw new ForbiddenException('You are not authorized to create a job.');
+            }
             
             $images = $req->getPost('images', null);
             $company_id = $req->getPost('company_id', null);
@@ -70,6 +80,15 @@ class LowonganController {
 
     public static function update(Request $req, Response $res): void {
         try {
+            $user = $req->getUser();
+            if ($user === null) {
+                throw new UnauthorizedException('You are not authorized to update a job.');
+            }
+
+            if ($user->role->value !== 'company') {
+                throw new ForbiddenException('You are not authorized to update a job.');
+            }
+
             $id = $req->getUriParamsValue('id', null);
             
             $images = $req->getPost('images', null);

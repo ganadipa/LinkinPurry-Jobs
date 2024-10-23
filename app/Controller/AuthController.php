@@ -55,6 +55,17 @@ class AuthController {
 
     public static function register(Request $req, Response $res): void {
         try {
+            $user = $req->getUser();
+            if ($user !== null) {
+                $res->json([
+                    'status' => 'error',
+                    'message' => 'Cannot register when logged in',
+                    'data' => null
+                ]);
+                $res->send();
+                return;
+            }
+
             $role = $req->getPost('userType', '');
             $name = $req->getPost('name', '');
             $email = $req->getPost('email', '');
