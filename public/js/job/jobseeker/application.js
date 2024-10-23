@@ -1,3 +1,5 @@
+import { toast } from "../../toast.js";
+
 // Initialize Lucide icons
 lucide.createIcons();
 
@@ -22,10 +24,12 @@ function handleFileUpload(
         } MB limit.`;
         input.value = "";
         fileNameElement.textContent = "";
+        toast("error", "File size exceeds limit.");
       } else if (acceptedTypes && !acceptedTypes.includes(file.type)) {
         errorElement.textContent = "Invalid file type.";
         input.value = "";
         fileNameElement.textContent = "";
+        toast("error", "Invalid file type.");
       } else {
         fileNameElement.textContent = file.name;
         errorElement.textContent = "";
@@ -34,7 +38,7 @@ function handleFileUpload(
   });
 }
 
-handleFileUpload("cv-upload", "cv-file-name", "cv-error", 2 * 1024 * 1024, [
+handleFileUpload("cv-upload", "cv-file-name", "cv-error", 20 * 1024 * 1024, [
   "application/pdf",
 ]);
 

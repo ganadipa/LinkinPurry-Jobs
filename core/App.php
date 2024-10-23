@@ -196,7 +196,7 @@ class App {
              * 
              * @route /job/:id/togglestatus
              * @method POST
-             * 
+             *  
              * Must be a company and the job must be owned by the company
              */
             $this->router->register(RequestMethodEnum::POST, '/job/:id/togglestatus', [JobController::class, 'updateStatusJob'], [
