@@ -57,6 +57,7 @@ use App\View\View;
                     echo '</div>';
                 }
             ?>
+            <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
             <button class="carousel-button prev" id="prevButton">
                 <i data-lucide="chevron-left"></i>
             </button>
@@ -105,14 +106,12 @@ use App\View\View;
             </span>
         </div>
         <div>
-        <?php if ($job['isOpen']): ?>
-                <a href="/company/job/<?= $job['id'] ?>/close" class="button button-primary">
-                    Close Vacancy
-                </a>
-            <?php endif; ?>
-            <a href="/company/job/<?= $job['id'] ?>/delete" class="button button-danger">
+            <button class="button button-primary" id="statusButton">
+                <?= $job['isOpen'] ? 'Close Vacancy' : 'Open Vacancy' ?>
+            </button>
+            <button class="button button-danger" id="deleteButton">
                 Delete Vacancy
-            </a>
+            </button>
             <!-- <button class="button button-secondary">
                 <i data-lucide="bookmark"></i>
                 Save

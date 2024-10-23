@@ -156,6 +156,9 @@ function submitJobPosting(companyId) {
       if (xhr.status === 200) {
         var response = JSON.parse(xhr.responseText);
         console.log("Success:", response);
+
+        // Reload
+        window.location.href = "/";
       } else {
         console.log("Error:", xhr.status, xhr.responseText);
       }

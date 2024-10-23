@@ -173,7 +173,8 @@ class DbLowongan implements RLowongan {
             JenisLokasiEnum::from($result['jenis_lokasi']),
             new \DateTime($result['created_at']),
             new \DateTime($result['updated_at']),
-            $result['lowongan_id']
+            $result['lowongan_id'],
+            $result['is_open']
         );
     }
 
@@ -456,13 +457,29 @@ class DbLowongan implements RLowongan {
             ');
 
             $stmt->execute([
-                'is_open' => $isOpen,
+                'is_open' => $isOpen ? 'TRUE' : 'FALSE',
                 'lowongan_id' => $jobId,
             ]);
 
         } catch (PDOException $e) {
-            error_log('Update status job error: ' . $e->getMessage());
+            echo 'Update status job error: ' . $e->getMessage();
             throw new Exception('Update status job error. Please try again later.');
+        }
+    }
+
+    public function deleteJob(int $jobId): void {
+        try {
+            $stmt = $this->db->prepare('
+                DELETE FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+        } catch (PDOException $e) {
+            echo 'Delete job error: ' . $e->getMessage();
+            throw new Exception('Delete job error. Please try again later.');
         }
     }
 }

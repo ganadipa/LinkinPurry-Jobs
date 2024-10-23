@@ -84,6 +84,9 @@ class App {
         ]);
 
         {
+            $this->router->register(RequestMethodEnum::DELETE, '/job/:id', [JobController::class, 'deleteJob'], [
+            ]);
+
             $this->router->register(RequestMethodEnum::GET, '/job/:id/apply', [JobController::class, 'jobapplication'], [
                 $redirectIfNotLoggedInMiddleware
             ]);
@@ -93,7 +96,7 @@ class App {
                 $cvAndVideoMiddleware
             ]);
 
-            $this->router->register(RequestMethodEnum::POST, '/job/:id/updateStatus', [JobController::class, 'updateStatusJob'], [
+            $this->router->register(RequestMethodEnum::POST, '/job/:id/togglestatus', [JobController::class, 'updateStatusJob'], [
                 
             ]);
 
