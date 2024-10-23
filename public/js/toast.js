@@ -20,7 +20,7 @@ export function toast(type, message) {
         <i class="toast-icon" data-lucide="${iconName}"></i>
         <div class="toast-content">
             <div class="toast-title">${capitalizeFirstLetter(type)}</div>
-            <div class="toast-message">${message}</div>
+            <div class="toast-message">${decodeURIComponent(message)}</div>
         </div>
     `;
 
@@ -53,3 +53,15 @@ function getIconName(type) {
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const toastContainer = document.getElementById("toast-container");
+  const data_toast_onload_type = toastContainer.getAttribute(
+    "data-toast-onload-type"
+  );
+  const data_toast_onload_message = toastContainer.getAttribute(
+    "data-toast-onload-message"
+  );
+
+  toast(data_toast_onload_type, data_toast_onload_message);
+});

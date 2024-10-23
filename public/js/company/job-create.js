@@ -1,11 +1,22 @@
+import { redirectToRootWithToast } from "../globals.js";
+import { toast } from "../toast.js";
+
 // Initialize Quill editor
 const quill = new Quill("#editor", {
   theme: "snow",
 });
 
-// Initialize lucide icons
 document.addEventListener("DOMContentLoaded", function () {
   lucide.createIcons();
+
+  // Client side validation for job title
+  const jobTitle = document.getElementById("job-title");
+  jobTitle.addEventListener("focusout", function () {
+    const title = this.value;
+    if (title.length === 0) {
+      toast("error", "Job title cannot be empty");
+    }
+  });
 });
 
 const dragDropArea = document.getElementById("drag-drop-area");
@@ -155,8 +166,12 @@ function submitJobPosting(companyId) {
         var response = JSON.parse(xhr.responseText);
         console.log("Success:", response);
 
-        // Reload
-        window.location.href = "/";
+        // Go to root (/) with:
+        // 1. toast_onload_type = 'success'
+        // 2. toast_onload_message = "
+        //
+
+        redirectToRootWithToast("success", "Job is posted!");
       } else {
         console.log("Error:", xhr.status, xhr.responseText);
       }

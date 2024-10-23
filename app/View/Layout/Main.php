@@ -38,6 +38,7 @@ use App\View\View;
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/public/js/globals.js" defer type="module"></script>
+    <script src="/public/js/toast.js" defer type="module"></script>
 
     <?php
         if (isset($css)) {
@@ -54,11 +55,20 @@ use App\View\View;
 
 
     ?>
+
+    <link rel='stylesheet' href="/public/css/toast.css">    
+
 </head>
 <body>
     <?= View::render('Partial', 'Navbar', [
         'user' => $user
     ]) ?>
+    <div id="toast-container" 
+    data-toast-onload-type= <?= $toast['type'] ?? '' ?>
+    data-toast-onload-message = <?= $toast['message'] ?? '' ?>
+    
+    ></div>
+
     <main>
     <?= $content ?>
     </main>

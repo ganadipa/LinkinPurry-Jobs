@@ -6,29 +6,29 @@ use App\View\View;
     <div class="header">
         <?= View::render('Partial', 'CompanyCard', [
             'company' => [
-                'name' => $company['name'],
-                'location' => $company['location']
+                'name' => htmlspecialchars($company['name']),
+                'location' => htmlspecialchars($company['location'])
             ]   
         ]) ?>
         <h1 class="job-title" id="jobTitle">
-            <?= $job['title'] ?>
+            <?= htmlspecialchars($job['title']) ?>
         </h1>
         <div class="job-details">
             <i data-lucide="briefcase" class='lucide-md mr-icon-sm'></i>
             <span id="jobType">
-                <?= $job['type'] ?>
+                <?= htmlspecialchars($job['type']) ?>
             </span>
         </div>
         <div class="job-details">
             <i data-lucide="map-pin" class='lucide-md mr-icon-sm'></i>
             <span id="jobLocation">
-                <?= $job['location'] ?>
+                <?= htmlspecialchars($job['location']) ?>
             </span>
         </div>
         <div class="job-details">
             <i data-lucide="calendar" class='lucide-md mr-icon-sm'></i>
             <span id="jobCreated">
-                <?= $job['created'] ?>
+                <?= htmlspecialchars($job['created']) ?>
             </span>
         </div>
     </div>
@@ -94,7 +94,7 @@ use App\View\View;
         <?php
             if ($job['isOpen'] && !$applied) {
                 echo '
-                <a href="/job/' . $job['id'] . '/apply" class="button button-primary" id="applyButton">
+                <a href="/job/' . htmlspecialchars($job['id']) . '/apply" class="button button-primary" id="applyButton">
                     <i data-lucide="send" class="lucide-sm mr-icon-sm"></i>
                     Apply
                 </a>';
@@ -103,7 +103,7 @@ use App\View\View;
             if ($applied) {
                 if ($submission['cv']) {
                     echo '
-                    <a href = "'.$submission['cv'].'" class="button button-secondary">
+                    <a href = "'.htmlspecialchars($submission['cv']).'" class="button button-secondary">
                         <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
                         CV
                     </a>';
@@ -111,7 +111,7 @@ use App\View\View;
 
                 if ($submission['video']) {
                     echo '
-                    <a href = "'.$submission['video'].'" class="button button-secondary">
+                    <a href = "'.htmlspecialchars($submission['video']).'" class="button button-secondary">
                         <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
                         Video
                     </a>';

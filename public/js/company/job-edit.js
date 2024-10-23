@@ -1,3 +1,6 @@
+import { redirectToRootWithToast } from "../globals.js";
+import { toast } from "../toast.js";
+
 // Initialize Quill editor
 const quill = new Quill("#editor", {
   theme: "snow",
@@ -82,23 +85,18 @@ function submitJobPosting(companyId) {
   });
 
   const xhr = new XMLHttpRequest();
-  // url will be /company/job/102/edit
-  // the 102 is the job id
 
   const jobId = window.location.pathname.split("/")[3];
   xhr.open("POST", "/lowongan/update/" + jobId, true);
 
-  // No need to set 'Content-Type' as it will be automatically set to 'multipart/form-data' when using FormData
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         var response = JSON.parse(xhr.responseText);
-        console.log("Success:", response);
 
-        // Reload
-        // window.location.href = "/";
+        redirectToRootWithToast("success", "Job is updated!");
       } else {
-        console.log("Error:", xhr.status, xhr.responseText);
+        toast("error", "Failed to update job post.");
       }
     }
   };
