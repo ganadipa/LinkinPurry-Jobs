@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Http\Exception\ForbiddenException;
 use App\Http\Exception\HttpException;
 use App\Service\LamaranService;
+use App\Service\HomeService;
 use App\Repositories;
 use App\Http\Request;
 use App\Http\Response;
@@ -112,13 +113,10 @@ class LamaranController {
             $res->setBody($html);
             $res->send();
         } catch (HttpException $e) {
-            $res->setBody($e->getMessage());
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         } catch (\Exception $e) {
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
     }

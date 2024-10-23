@@ -12,6 +12,7 @@ use App\Http\Exception\UnauthorizedException;
 use App\Service\CompanyService;
 use App\Service\JobService;
 use App\Service\LamaranService;
+use App\Service\HomeService;
 use \Exception;
 use App\Util\Enum\JobTypeEnum;
 use App\Util\Enum\JenisLokasiEnum;
@@ -85,25 +86,14 @@ class JobController {
             $res->send(); 
         } catch (HttpException $e) {
             // Either its a classified HttpException
-    
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
+            
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
     
         } catch (Exception $e) {
             // Or its just an ordinary exception
     
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
     }
@@ -211,19 +201,10 @@ class JobController {
             $res->send();
 
         } catch (HttpException $e) {
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         } catch (Exception $e) {
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
     }
@@ -305,7 +286,7 @@ class JobController {
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
             // If the user is not the jobseeker or the company that posted the job
-            if ($user->user_id != $validatedUserId && $user->user_id != $companyId) {
+            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
@@ -361,7 +342,7 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             $validatedUserId = PositiveNumericValidator::validate($userId);
             
-            if ($user->user_id != $validatedUserId && $user->user_id != $companyId) {
+            if ($user->user_id !== $validatedUserId && $user->user_id !== $companyId) {
                 throw new ForbiddenException('You are not allowed to access this resource');
             }
 
@@ -410,7 +391,6 @@ class JobController {
             $validatedJobId = PositiveNumericValidator::validate($jobId);
             // $validatedIsOpen = filter_var($isOpen, FILTER_VALIDATE_BOOLEAN);
 
-            
             JobService::updateStatusJob($validatedJobId, $user->user_id);
 
             $res->json([

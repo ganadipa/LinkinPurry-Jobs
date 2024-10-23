@@ -133,7 +133,7 @@ class HomeController {
             $res->setBody($html);
             $res->send();
         } catch (Exception $e) {
-            $res->setBody('Error: ' . $e->getMessage());
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
 
