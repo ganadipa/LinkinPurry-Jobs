@@ -119,10 +119,6 @@ use App\View\View;
                 
             }
             ?>
-            <!-- <button class="button button-secondary">
-                <i data-lucide="bookmark"></i>
-                Save
-            </button> -->
         </div>
     </div>
 </div>

@@ -330,6 +330,7 @@ h1 {
 .primary-btn,
 .secondary-btn {
   width: 100%;
+  max-width: 200px;
   padding: 10px 32px;
   border: none;
   border-radius: 16px;

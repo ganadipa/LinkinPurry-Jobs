@@ -1,5 +1,6 @@
 .container {
-  width: 780px;
+  width: 100%;
+  max-width: 780px;
   margin: 20px auto;
   background-color: #fff;
   border-radius: 8px;
@@ -290,4 +291,244 @@
 .button-secondary {
   font-size: 14px;
   padding: 8px 16px;
+}
+
+@media screen and (max-width: 1024px) {
+  .container {
+      margin: 16px auto;
+  }
+  
+  .header {
+      padding: 20px;
+  }
+  
+  .content {
+      padding: 20px;
+  }
+  
+  .carousel-image {
+      height: 250px;
+  }
+}
+
+/* Tablets and large phones (< 768px) */
+@media screen and (max-width: 768px) {
+  .container {
+      margin: 12px auto;
+  }
+  
+  .header {
+      padding: 16px;
+  }
+  
+  .content {
+      padding: 16px;
+  }
+  
+  .job-title {
+      font-size: 20px;
+  }
+  
+  .company-name {
+      font-size: 16px;
+  }
+  
+  .company-logo {
+      width: 60px;
+      height: 60px;
+  }
+  
+  .carousel-image {
+      height: 200px;
+  }
+  
+  .button {
+      padding: 8px 16px;
+      font-size: 14px;
+  }
+  
+  .section-title {
+      font-size: 18px;
+      margin: 20px 0 12px 0;
+  }
+  
+  .job-title-container {
+      flex-wrap: wrap;
+      gap: 12px;
+  }
+  
+  .edit-button {
+      padding: 8px 12px;
+      font-size: 14px;
+  }
+
+  .status-indicator {
+      padding: 8px 16px;
+      font-size: 14px;
+  }
+}
+
+/* Mobile phones (< 480px) */
+@media screen and (max-width: 480px) {
+  .container {
+      margin: 8px auto;
+  }
+  
+  .header {
+      padding: 12px;
+  }
+  
+  .content {
+      padding: 12px;
+  }
+  
+  /* Adjust job title container for mobile */
+  .job-title-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+  }
+  
+  .job-title {
+      font-size: 18px;
+      margin-bottom: 4px;
+  }
+  
+  /* Adjust applicant cards for mobile */
+  .applicant-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+  }
+  
+  .applicant-info {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+  }
+  
+  .applicant-name {
+      margin: 0 0 8px 0;
+  }
+  
+  .applicant-action {
+      margin-left: 0;
+      width: 100%;
+  }
+  
+  .applicant-action .button {
+      width: 100%;
+      justify-content: center;
+  }
+  
+  /* Adjust sticky footer for mobile */
+  .sticky-apply {
+      padding: 12px;
+      flex-direction: column;
+      gap: 12px;
+  }
+  
+  .sticky-apply .job-details {
+      justify-content: center;
+      width: 100%;
+  }
+  
+  .sticky-apply > div:last-child {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 8px;
+  }
+  
+  .sticky-apply .button {
+      width: 100%;
+      margin: 0;
+      justify-content: center;
+  }
+  
+  /* Adjust status indicators */
+  .status-indicator-company {
+      padding: 4px 8px;
+      font-size: 12px;
+  }
+  
+  /* Adjust carousel */
+  .carousel-image {
+      height: 180px;
+  }
+  
+  .carousel-button {
+      width: 32px;
+      height: 32px;
+  }
+
+  .button-secondary {
+      width: 100%;
+      max-width: 90%;
+  }
+
+  .status-indicator {
+      padding: 6px 12px;
+      font-size: 12px;
+  }
+}
+
+/* Very small devices (< 320px) */
+@media screen and (max-width: 320px) {
+  .container {
+      margin: 4px auto;
+  }
+  
+  .header {
+      padding: 10px;
+  }
+  
+  .content {
+      padding: 10px;
+  }
+  
+  .job-title {
+      font-size: 16px;
+  }
+  
+  .company-logo {
+      width: 50px;
+      height: 50px;
+  }
+  
+  .carousel-image {
+      height: 150px;
+  }
+  
+  .blue-tag,
+  .red-tag {
+      padding: 6px 12px;
+      font-size: 12px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .container {
+      box-shadow: none;
+      margin: 0;
+      width: 100%;
+  }
+  
+  .sticky-apply,
+  .carousel-button,
+  .edit-button {
+      display: none;
+  }
+  
+  .content {
+      padding: 0;
+  }
+  
+  .header {
+      padding: 0;
+      margin-bottom: 20px;
+  }
 }

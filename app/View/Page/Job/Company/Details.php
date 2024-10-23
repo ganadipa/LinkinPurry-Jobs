@@ -103,7 +103,7 @@ use App\View\View;
                 <?= htmlspecialchars($numberOfApplicantsMessage) ?>
             </span>
         </div>
-        <div>
+        <div class="wrap">
             <button class="button button-primary" id="statusButton">
                 <?= $job['isOpen'] ? 'Close Vacancy' : 'Open Vacancy' ?>
             </button>
