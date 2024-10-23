@@ -148,6 +148,8 @@ class LamaranService {
 
     // get lamaran
     public static function getLamaranHistory(User $user): string {
+
+        
         $lamaranRepo = Repositories::$lamaran;
         $lamaranList = $lamaranRepo->getLamaranByUserId($user->user_id);
         return View::view('Page/Job/Jobseeker', 'History', [

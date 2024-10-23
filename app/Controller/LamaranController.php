@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Http\Exception\ForbiddenException;
+use App\Http\Exception\HttpException;
 use App\Service\LamaranService;
 use App\Repositories;
 use App\Http\Request;
@@ -99,9 +100,19 @@ class LamaranController {
             return;
         }
 
+
+
         try {
+            if ($user->role->value !== 'jobseeker') {
+                throw new ForbiddenException('You are not authorized to view this page.');
+                return;
+            }
+
             $html = LamaranService::getLamaranHistory($user);
             $res->setBody($html);
+            $res->send();
+        } catch (HttpException $e) {
+            $res->setBody($e->getMessage());
             $res->send();
         } catch (\Exception $e) {
             $res->json([
