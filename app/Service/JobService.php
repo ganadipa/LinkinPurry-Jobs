@@ -205,16 +205,16 @@ class JobService {
 
         $lamaran = $lamaranRepo->getLamaranByUserIdAndJobId($applicantId, $jobId);
         if (!$lamaran) {
-            return '404';
+            return HomeService::errorPage($user, 'Application not found');
         } 
 
         $lowongan = $lowonganRepo->getById($jobId);
         if (!$lowongan) {
-            return '404';
+            return HomeService::errorPage($user, 'Job not found');
         }
 
         if ($lowongan->company_id != $user->user_id) {
-            throw new UnauthorizedException('You are not authorized to view this page');
+            return HomeService::errorPage($user, 'You are not authorized to view this page');
         }
 
 
@@ -257,12 +257,16 @@ class JobService {
     public static function application(string $jobId, User $user): string {
         $job = Repositories::$lowongan->getById($jobId);
         if (!$job) {
-            return '404';
+            return HomeService::errorPage($user, 'Job not found');
         }
 
+        if ($job->is_open === false) {
+            return HomeService::errorPage($user, 'Job is closed');
+        }
+        
         $lamaran = Repositories::$lamaran->getLamaranByUserIdAndJobId($user->user_id, $jobId);
         if ($lamaran) {
-            return '404';
+            return HomeService::errorPage($user, 'You have already applied for this job');
         }
 
         $companyDetail = Repositories::$companyDetail->getCompanyDetailByUserId($job->company_id);

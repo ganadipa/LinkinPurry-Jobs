@@ -15,14 +15,15 @@ class ProfileService {
 
         $companyDetail = $companyDetailRepo->getCompanyDetailByUserId($userId);
         error_log("COMPANY DETAIL?? " . print_r($companyDetail, true)); // debug
+        $user = $userRepo->getUserProfileById($userId);
         if (!$companyDetail) {
-            throw new \Exception('Company detail not found');
+            return HomeService::errorPage($user, 'Company detail not found');
         }
 
         $user = $userRepo->getUserProfileById($userId);
         error_log("USER:" . print_r($user, true)); // debug
         if (!$user) {
-            throw new \Exception('User not found');
+            return HomeService::errorPage($user, 'User not found');
         }
 
         return View::view('Page/Job/Company', 'Profile', [

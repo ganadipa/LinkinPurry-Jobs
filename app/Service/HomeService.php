@@ -96,4 +96,13 @@ class HomeService {
             ]
         ]);
     }
+
+    public static function errorPage(?User $user, string $error): string {
+        return self::render('Error', [
+            'title' => 'Error',
+            'css' => ['home/error.css'],
+            'error' => $error,
+            'user' => $user
+        ]);
+    }
 }

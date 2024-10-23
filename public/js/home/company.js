@@ -46,7 +46,6 @@ function createJobElement(job) {
         <p>${escapeHTML(job.company)}</p>
         <p>${escapeHTML(job.location)}</p>
         <p class="draft-info">Draft • Created ${escapeHTML(job.created)}</p>
-        <a href="#" class="complete-draft">Complete draft</a>
       </div>
     </div>
     <div class="job-actions">

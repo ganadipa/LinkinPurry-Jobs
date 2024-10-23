@@ -7,6 +7,7 @@ use App\Http\Exception\HttpException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\CompanyService;
+use App\Service\HomeService;
 use App\Util\Enum\UserRoleEnum;
 use Exception;
 
@@ -30,11 +31,14 @@ class CompanyController {
             $html = CompanyService::getCreateJobPage($user);
             $res->setBody($html);
             $res->send();
+        } catch (ForbiddenException $e) {
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
+            $res->send();
         } catch (Exception $e) {
-            $res->setBody($e->getMessage());
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         } catch (HttpException $e) {
-            $res->setBody($e->getMessage());
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
 
@@ -52,18 +56,21 @@ class CompanyController {
             }
     
             if ($user->role === UserRoleEnum::JOBSEEKER) {
-                throw new ForbiddenException('You are not authorized to edit this job.');
+                throw new ForbiddenException('You are not authorized to edit a job.');
+                return;
             }
     
             $html = CompanyService::getEditJobPage($user, $jobId);
             $res->setBody($html);
             $res->send();
-
-        } catch (Exception $e) {
-            $res->setBody($e->getMessage());
-            $res->send();
+        } catch (ForbiddenException $e) {
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
+            $res->send(); 
         } catch (HttpException $e) {
-            $res->setBody($e->getMessage());
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
+            $res->send();
+        } catch (Exception $e) {
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
     }

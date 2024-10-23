@@ -6,6 +6,7 @@ use App\Http\Exception\ForbiddenException;
 use App\Http\Request;
 use App\Http\Response;
 use App\Service\ProfileService;
+use App\Service\HomeService;
 use Error;
 
 class ProfileController {
@@ -29,11 +30,11 @@ class ProfileController {
             $html = ProfileService::getCompanyProfilePage($user->user_id);
             $res->setBody($html);
             $res->send();
+        } catch (ForbiddenException $e) {
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
+            $res->send();
         } catch (\Exception $e) {
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));
             $res->send();
         }
     }

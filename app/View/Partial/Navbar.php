@@ -1,7 +1,7 @@
 <header>
     <nav>
         <div class="nav-left">
-            <img src="/public/images/linkedin.png" alt="LinkedIn" class="logo">
+            <a href="/" alt=""><img src="/public/images/linkedin.png" alt="LinkedIn" class="logo"></a>
             <form class="search-bar" method="GET" action="/">
                 <img src="/public/images/search.png" alt="Search Icon" class="search-icon">
                 <input type="text" placeholder="Search" class="search-input" name='q'>
