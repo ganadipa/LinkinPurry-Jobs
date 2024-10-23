@@ -155,7 +155,7 @@ class LamaranService {
         return View::view('Page/Job/Jobseeker', 'History', [
             'css' => ['job/history.css'],
             'js' => ['job/jobseeker/history.js'],
-            'title' => 'Riwayat Lamaran',
+            'title' => 'Application History',
             'lamaranList' => $lamaranList,
             'user' => $user
         ]);

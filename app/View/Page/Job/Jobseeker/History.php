@@ -1,9 +1,9 @@
 <div class="history-container">
-    <h1>Riwayat Lamaran Saya</h1>
+    <h1>My Application History</h1>
     <?php if (empty($lamaranList)): ?>
         <div class="empty-state">
             <i data-lucide="briefcase" class="empty-icon"></i>
-            <p>Belum ada lamaran</p>
+            <p>No Application yet.</p>
         </div>
     <?php else: ?>
         <ul class="history-list">
