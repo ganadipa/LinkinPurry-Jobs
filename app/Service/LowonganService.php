@@ -74,7 +74,7 @@ class LowonganService {
         }
 
         // If the job is not owned by the company, throw an error
-        if ($existingLowongan->company_id !== $postData['company_id']) {
+        if ($existingLowongan->company_id != $postData['company_id']) {
             throw new ForbiddenException("You are not authorized to update this job.");
         }
 

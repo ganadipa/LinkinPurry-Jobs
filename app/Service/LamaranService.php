@@ -116,7 +116,7 @@ class LamaranService {
             throw new Exception('Application not found.');
         }
 
-        if ($lowongan->company_id !== $companyId) {
+        if ($lowongan->company_id != $companyId) {
             throw new ForbiddenException('You are not authorized to accept this application.');
         }
 
@@ -138,7 +138,7 @@ class LamaranService {
             throw new Exception('Application not found.');
         }
 
-        if ($lowongan->company_id !== $companyId) {
+        if ($lowongan->company_id != $companyId) {
             throw new ForbiddenException('You are not authorized to reject this application.');
         }
 

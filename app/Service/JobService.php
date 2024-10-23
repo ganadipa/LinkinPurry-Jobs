@@ -213,7 +213,7 @@ class JobService {
             return '404';
         }
 
-        if ($lowongan->company_id !== $user->user_id) {
+        if ($lowongan->company_id != $user->user_id) {
             throw new UnauthorizedException('You are not authorized to view this page');
         }
 
@@ -346,7 +346,7 @@ class JobService {
         $jobRepo = Repositories::$lowongan;
         $job = $jobRepo->getById($jobId);
 
-        if ($job->company_id !== $userId) {
+        if ($job->company_id !=  $userId) {
             throw new UnauthorizedException('You are not authorized to update this job');
         }
 
@@ -360,7 +360,7 @@ class JobService {
         $jobRepo = Repositories::$lowongan;
 
         $job = $jobRepo->getById($jobId);
-        if ($job->company_id !== $userId) {
+        if ($job->company_id != $userId) {
             throw new UnauthorizedException('You are not authorized to delete this job');
         }
 
