@@ -44,10 +44,11 @@ use App\View\View;
     <script src="/public/js/toast.js" type="module" defer ></script>
 </head>
 <body>
+    <?= View::render('Partial', 'Navbar', [
+            'user' => null
+        ]) ?>
     <div id="toast-container"></div>
-    <nav class="navbar">
-        <div class="logo font-extrabold">LinkinPurry</div>
-    </nav>
+    
     <main>
 
     <?= $content ?>

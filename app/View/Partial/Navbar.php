@@ -46,7 +46,7 @@
             } else if ($user->role->value === 'company') {
                 echo '<a href="/profile">Profile</a>';
             }
-            echo '<a href="/logout">Logout</a>';
+            echo '<a id="logout-sm">Logout</a> ';
         }
     ?>
 </div>

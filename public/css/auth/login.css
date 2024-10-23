@@ -4,7 +4,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 352px;
-  margin-top: 2rem;
+  margin: auto 0;
 }
 h1 {
   font-size: 32px;
@@ -113,4 +113,88 @@ h1 {
   padding: 4px 8px;
   border-radius: 12px;
   transition: background-color 0.3s ease;
+}
+
+.wrapper {
+  margin: auto 0;
+}
+
+@media (max-width: 768px) {
+  .sign-in-card {
+    padding: 20px;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .input-group input {
+    padding: 10px;
+  }
+
+  .input-group label {
+    font-size: 14px;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    font-size: 10px;
+  }
+
+  .show-password {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
+  .sign-in-button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .join-now a {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sign-in-card {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .input-group input {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .input-group label {
+    font-size: 12px;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    font-size: 10px;
+  }
+
+  .show-password {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .sign-in-button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .join-now a {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
 }
