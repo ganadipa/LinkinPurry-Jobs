@@ -16,7 +16,7 @@ use App\View\View;
             </h1>
             <?php 
                 echo '<a href="/company/job/' . $job['id'] . '/edit" class="button edit-button" id="editJobButton">
-                    <i data-lucide="file-edit" class="lucide-sm"></i>
+                    <i data-lucide="file-edit" class="lucide-sm mr-icon-sm"></i>
                     Edit
                 </a>';
             ?>
@@ -49,15 +49,13 @@ use App\View\View;
 
         <div class="image-carousel">
             <?php
-                if (isset($job['images']) || $job['images'] !== null) {
-                    echo '<div class="carousel-dots" id="carouselDots">';
-                    for ($i = 0; $i < count($job['images']); $i++) {
-                        echo '<span class="carousel-dot" data-index="' . $i . '"></span>';
-                    }
-                    echo '</div>';
+            if ($job['images']) {
+                $sz = sizeof($job['images']);
+                for ($i = 0; $i < $sz; $i++) {
+                    echo '<img src="/attachmentlowongan/' . $job['images'][$i]['attachment_id'] . '" alt="Job Image" class="hidden carousel-image"  >';
                 }
+            }
             ?>
-            <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
             <button class="carousel-button prev" id="prevButton">
                 <i data-lucide="chevron-left"></i>
             </button>

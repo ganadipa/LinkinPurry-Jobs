@@ -34,6 +34,8 @@ class JobService {
         }
         $attachments = $attachmentsRepo->getAttachmentsByLowonganId($jobId);
 
+
+
         // Get the number of applicants
         $applicantsNumber = $lamaranRepo->getNumberOfApplicants($jobId);
 
@@ -87,11 +89,7 @@ class JobService {
                 'location' => $lowongan->jenis_lokasi->value,
                 'type' => $lowongan->jenis_pekerjaan->value,
                 'title' => $lowongan->posisi,
-                'images' => [
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                ],
+                'images' => $attachments,
                 'isOpen' => $lowongan->is_open,
             ],
             'applied' => $lamaran !== null,
@@ -190,11 +188,7 @@ class JobService {
                 'location' => $lowongan->jenis_lokasi->value,
                 'type' => $lowongan->jenis_pekerjaan->value,
                 'title' => $lowongan->posisi,
-                'images' => [
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                    "https://placehold.co/600x400",
-                ],
+                'images' => $attachments,
                 'isOpen' => $lowongan->is_open,
             ],
             'applicants' => $formattedApplicants,

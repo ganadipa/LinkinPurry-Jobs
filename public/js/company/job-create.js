@@ -129,7 +129,6 @@ function submitJobPosting(companyId) {
   console.log("Description:", quill.root.innerHTML);
   console.log("Job Type:", document.getElementById("job-type").value);
   console.log("Location Type:", document.getElementById("location-type").value);
-  console.log("Job Location:", document.getElementById("job-location").value);
 
   const formData = new FormData();
   formData.append("company_id", companyId);
@@ -140,7 +139,6 @@ function submitJobPosting(companyId) {
     "jenis_lokasi",
     document.getElementById("location-type").value
   );
-  formData.append("location", document.getElementById("job-location").value);
 
   // Append the files
   files.forEach((file, index) => {

@@ -104,6 +104,15 @@ class Response
         return $this;
     }
 
+    public function image(string $path) {
+        // Set the Content-Type header
+        $this->addHeader('Content-Type', 'image/jpeg');
+
+        // Set the body
+        $this->setBody(file_get_contents($path));
+        return $this;
+    }
+
 
 
     public function send(): void
@@ -121,4 +130,5 @@ class Response
             echo $this->body;
         }
     }
+
 }

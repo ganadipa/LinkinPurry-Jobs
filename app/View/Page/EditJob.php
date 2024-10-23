@@ -18,10 +18,6 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="job-location">Job location*</label>
-            <input type="text" id="job-location" name="job-location" required value="<?php echo htmlspecialchars($jobData['location']); ?>">
-        </div>
-        <div class="form-group">
             <label for="job-type">Job type*</label>
             <select id="job-type" name="job-type" required>
                 <option value="full-time" <?php echo $jobData['jobType'] == 'full-time' ? 'selected' : ''; ?>>Full-time</option>
@@ -64,8 +60,10 @@
 <aside class="right-sidebar">
     <div class="info-card">
         <h2><?php echo htmlspecialchars($jobData['title']); ?></h2>
-        <p>ITB Fair 2024</p>
-        <p><?php echo htmlspecialchars($jobData['location']); ?></p>
+        <p><?php
+            echo htmlspecialchars($jobData['company']);
+        ?>
+        </p>
         <p>Saved as Draft</p>
     </div>
     <div class="info-card">

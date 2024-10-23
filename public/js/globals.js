@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function (e) {
   const navLogout = document.querySelector("#logout");
 
+  if (!navLogout) {
+    return;
+  }
   // xmlhttprequest
   navLogout.addEventListener("click", function (e) {
     const xhr = new XMLHttpRequest();

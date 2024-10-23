@@ -61,9 +61,6 @@ function createJobElement(job) {
         </div>
     `;
 
-  // Replace the placeholder elements with Lucide icons
-  lucide.createIcons(jobElement);
-
   return jobElement;
 }
 
@@ -126,6 +123,9 @@ function loadJobs(isNewSearch = false) {
           jobs.forEach((job) => {
             jobList.appendChild(createJobElement(job));
           });
+
+          // Replace the placeholder elements with Lucide icons
+          lucide.createIcons();
 
           if (jobs.length < 10) {
             const paragraph = document.createElement("p");

@@ -13,8 +13,6 @@ use Exception;
 
 class LowonganService {
     public static function createLowongan(array $inputData): Lowongan {
-    
-
 
         // Buat objek Lowongan baru
         $lowongan = new Lowongan(
@@ -65,10 +63,11 @@ class LowonganService {
         return $lowonganInserted;
     }
 
-    public static function updateLowongan(int $id, array $postData): Lowongan {
+    public static function updateLowongan(int $jobId, array $postData): Lowongan {
         // Ambil lowongan yang ada berdasarkan ID dari database
         $lowonganRepo = Repositories::$lowongan;
-        $existingLowongan = $lowonganRepo->getById($id);
+        $existingLowongan = $lowonganRepo->getById($jobId);
+
         if (!$existingLowongan) {
             throw new Exception("Lowongan not found.");
         }
@@ -81,10 +80,56 @@ class LowonganService {
             JobTypeEnum::from($postData['jenis_pekerjaan'] ?? $existingLowongan->jenis_pekerjaan),
             JenisLokasiEnum::from($postData['jenis_lokasi'] ?? $existingLowongan->jenis_lokasi),
             $existingLowongan->created_at,
-            new \DateTime()  // Set updated_at to current time
+            new \DateTime() ,
+            $existingLowongan->lowongan_id,
+            $existingLowongan->is_open
         );
 
-        $lowonganRepo->update($id, $updatedLowongan);
+        $lowonganRepo->update($jobId, $updatedLowongan);
+
+
+        // Then if images is empty, we're done.
+        if (!isset($postData['images']) || count($postData['images']) === 0) {
+            return $updatedLowongan;
+        }
+
+
+        // Otherwise, we have to channge the attchments of this job to the new ones.
+        $fileRepo = Repositories::$file;
+        $attachmentLowonganRepo = Repositories::$attachmentLowongan;
+
+        // Delete all existing attachments
+        $attachments = $attachmentLowonganRepo->deleteByLowonganId($jobId);
+
+        // Also delete the files from storage
+        foreach ($attachments as $attachment) {
+            $fileRepo->delete($attachment->file_path);
+        }
+
+        // Insert the new attachments
+        $files = [];
+        foreach ($postData['images'] as $image) {
+            $file = new File(
+                $image['name'],
+                pathinfo($image['name'], PATHINFO_EXTENSION),
+                $image['type'],
+                (int) $image['size'],
+                $image['tmp_name']
+            );
+            
+            // Simpan gambar ke storage
+            $fileRepo->save($file);
+
+            array_push($files, $file);
+
+            // Insert to attachment_lowongan table
+            $attachmentLowongan = new AttachmentLowongan(
+                $jobId,
+                $file->absolutePath
+            );
+
+            $attachmentLowonganRepo->insert($attachmentLowongan);
+        }
 
         return $updatedLowongan;
     }

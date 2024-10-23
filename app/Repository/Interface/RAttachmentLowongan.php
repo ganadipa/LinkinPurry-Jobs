@@ -12,4 +12,5 @@ interface RAttachmentLowongan {
     public function getAttachmentsById(int $lowonganId): array;
     public function getList(): array;
     public function getAttachmentsByLowonganId(int $lowonganId): array;
+    public function deleteByLowonganId(int $lowonganId): array;
 }
