@@ -70,6 +70,11 @@ use App\View\View;
         <p id="jobDescription">
             <?= $job['description'] ?>
         </p>
+        <h2 class="section-title">Reason<h2>
+        <p id="jobDescription">
+            <?= $reason ?>
+        </p>
+        
     </div>
     <div class="sticky-apply">
         <div class="job-details">

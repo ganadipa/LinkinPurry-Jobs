@@ -11,4 +11,5 @@ interface RLamaran {
     public function getLamaranByUserIdAndJobId(int $userId, int $jobId): ?Lamaran;
     public function getNumberOfApplicants(int $jobId): int;
     public function getApplicantsByLowonganId(int $jobId): array;
+    public function updateStatusApplicant(int $lamaranId, string $status, string $statusReason): void;
 }
