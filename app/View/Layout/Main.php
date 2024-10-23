@@ -37,6 +37,7 @@ use App\View\View;
     ?>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/public/js/globals.js" defer type="module"></script>
 
     <?php
         if (isset($css)) {
@@ -53,7 +54,9 @@ use App\View\View;
     ?>
 </head>
 <body>
-    <?= View::render('Partial', 'Navbar', []) ?>
+    <?= View::render('Partial', 'Navbar', [
+        'user' => $user
+    ]) ?>
     <main>
     <?= $content ?>
     </main>

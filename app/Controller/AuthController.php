@@ -35,40 +35,19 @@ class AuthController {
             $emailValid = EmailValidator::validate($req->getPost('email', ''));
             $passwordValid = PasswordValidator::validate($req->getPost('password', ''));
 
-
             // Get the valid user
             $user = AuthService::login($emailValid, $passwordValid);
 
-            $res->json([
-                'status' => 'success',
-                'message' => 'User logged in successfully',
-                'data' => [
-                    'user_id' => $user->user_id,
-                    'role' => $user->role,
-                    'name' => $user->nama,
-                    'email' => $user->email,
-                ]
-            ]);
-
+            // Then the user is logged in
+            $res->redirect('/');
             $res->send();
         } catch (HttpException $e) {
             // Either its a HttpException
-
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
+            $res->redirect('/login?type=error&message=' . $e->getMessage());
             $res->send();
         } catch (Exception $e) {
             // Or its just no valid user
-
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
+            $res->redirect('/login?type=error&message=' . $e->getMessage());
             $res->send();
         }
 
@@ -104,37 +83,18 @@ class AuthController {
                 AuthService::registerCompany($user->user_id, $location, $about);
             }
             
-    
+            AuthService::login($emailValid, $passwordValid);
+
             // Then the user is registered
-            $res->json([
-                'status' => 'success',
-                'message' => 'User registered successfully',
-                'data' => [
-                    'user_id' => $user->user_id,
-                ]
-            ]);
-    
+            $res->redirect('/');
             $res->send();
         } catch (HttpException $e) {
             // Either its a classified HttpException
-
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-
+            $res->redirect('/register?type=error&message=' . $e->getMessage());
             $res->send();
         } catch (Exception $e) {
-            // Or its just an ordinary exception
-
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-
+            // Or its just an ordinary exception    
+            $res->redirect('/register?type=error&message=' . $e->getMessage());
             $res->send();
         }
 
@@ -143,6 +103,14 @@ class AuthController {
 
     public static function logout(Request $req, Response $res): void {
         session_destroy();
+
+        $res->json([
+            'status' => 'success',
+            'message' => 'User logged out successfully',
+            'data' => null
+        ]);
+
+        $res->send();
     }
 
     public static function self(Request $req, Response $res): void {

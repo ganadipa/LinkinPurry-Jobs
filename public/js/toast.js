@@ -5,6 +5,17 @@ export function toast(type, message) {
 
   const iconName = getIconName(type);
 
+  // prevent XSS, convert special characters to HTML entities
+  message = message
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  type = type
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
   toast.innerHTML = `
         <i class="toast-icon" data-lucide="${iconName}"></i>
         <div class="toast-content">

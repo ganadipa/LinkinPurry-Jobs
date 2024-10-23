@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Http\Request;
 use App\Http\Response;
-use App\View\View;
 use App\Service\CompanyService;
 use App\Util\Enum\UserRoleEnum;
 
@@ -18,20 +17,21 @@ class CompanyController {
             return;
         }
 
-        $html = CompanyService::getCreateJobPage();
+        $html = CompanyService::getCreateJobPage($user);
         $res->setBody($html);
         $res->send();
     }
 
     public static function showEditJobPage(Request $req, Response $res): void {
         $user = $req->getUser();
+        $jobId = (int) $req->getUriParams()['id'];
 
         if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
             echo '404';
             return;
         }
 
-        $html = CompanyService::getEditJobPage();
+        $html = CompanyService::getEditJobPage($user, $jobId);
         $res->setBody($html);
         $res->send();
     }

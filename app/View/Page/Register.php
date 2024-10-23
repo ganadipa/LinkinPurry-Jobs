@@ -1,6 +1,6 @@
 <div class="container">
     <h1>Registration</h1>
-    <form id="registrationForm">
+    <form id="registrationForm" method="POST" action="/register">
         <div class="step active" id="step1">
             <div class="form-group">
                 <label for="userType">Register as:</label>

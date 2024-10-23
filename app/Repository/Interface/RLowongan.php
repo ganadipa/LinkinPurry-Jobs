@@ -9,4 +9,16 @@ interface RLowongan {
     public function update(int $lowonganId, Lowongan $lowongan): Lowongan;
     public function getById(int $lowonganId): Lowongan;
     public function getList(int $page, int $limit, ?string $posisi, ?string $jenisPekerjaan, ?string $jenisLokasi, ?string $search): array;
+    public function getJobs(int $page, int $perPage, 
+        string $q, array $jobType, array $locationType, string $sortOrder
+    ): array;
+    public function getJobsByCompany(int $companyId, int $page, int $perPage, 
+        string $q, array $jobType, array $locationType, string $sortOrder
+    ): array;
+
+    public function getNumberOfJobsPostedByCompany(int $companyId): int;
+    public function getNumberOfJobs(): int;
+    public function getCompanyIdByJobId(int $jobId): int;
+    public function updateStatusJob(int $jobId, bool $isOpen): void;
+    public function deleteJob(int $jobId): void;
 }

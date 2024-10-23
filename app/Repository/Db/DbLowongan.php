@@ -4,6 +4,7 @@ namespace App\Repository\Db;
 use App\Model\Lowongan;
 use App\Repository\Interface\RLowongan;
 use App\Util\Enum\JenisLokasiEnum;
+use App\Util\Enum\JobTypeEnum;
 use Error;
 use \PDO;
 use \PDOException;
@@ -89,14 +90,14 @@ class DbLowongan implements RLowongan {
                 'company_id' => $lowongan->company_id,
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
-                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
+                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan->value,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
             ]);
 
             $lowongan->lowongan_id = (int) $this->db->lastInsertId();
             return $lowongan;
         } catch (PDOException $e) {
-            error_log('Insert lowongan error: ' . $e->getMessage());
+            echo('Insert lowongan error: ' . $e->getMessage());
             throw new Exception('Insert lowongan error. Please try again later.');
         }
     }
@@ -135,7 +136,7 @@ class DbLowongan implements RLowongan {
                 'company_id' => $lowongan->company_id,
                 'posisi' => $lowongan->posisi,
                 'deskripsi' => $lowongan->deskripsi,
-                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan,
+                'jenis_pekerjaan' => $lowongan->jenis_pekerjaan->value,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
                 'lowongan_id' => $lowonganId,
             ]);
@@ -168,11 +169,12 @@ class DbLowongan implements RLowongan {
             $result['company_id'],
             $result['posisi'],
             $result['deskripsi'],
-            $result['jenis_pekerjaan'],
+            JobTypeEnum::from($result['jenis_pekerjaan']),
             JenisLokasiEnum::from($result['jenis_lokasi']),
             new \DateTime($result['created_at']),
             new \DateTime($result['updated_at']),
-            $result['lowongan_id']
+            $result['lowongan_id'],
+            $result['is_open']
         );
     }
 
@@ -219,4 +221,265 @@ class DbLowongan implements RLowongan {
             throw new Exception('Failed to retrieve lowongan list.');
         }
     }    
+
+    public function getJobs(int $page, int $perPage
+        , string $q, array $jobType, array $locationType, string $sortOrder
+    ): array {
+        $offset = ($page - 1) * $perPage;
+        $params = [];
+        $conditions = [];
+    
+        // Search Query
+        if (!empty($q)) {
+            $conditions[] = "(posisi ILIKE :q)";
+            $params[':q'] = '%' . $q . '%';
+        }
+    
+        // Job Type Filter
+        if (!empty($jobType)) {
+            $jobTypePlaceholders = [];
+            foreach ($jobType as $index => $type) {
+                $key = ":jobType$index";
+                $jobTypePlaceholders[] = $key;
+                $params[$key] = $type->value;
+            }
+            $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
+        }
+    
+        // Location Type Filter
+        if (!empty($locationType)) {
+            $locationTypePlaceholders = [];
+            foreach ($locationType as $index => $location) {
+                $key = ":locationType$index";
+                $locationTypePlaceholders[] = $key;
+                $params[$key] = $location->value;
+            }
+            $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
+        }
+    
+        // Construct WHERE Clause
+        $where = '';
+        if (!empty($conditions)) {
+            $where = 'WHERE ' . implode(' AND ', $conditions);
+        }
+    
+        // Handle Sort Order
+        $allowedSortOrders = ['asc', 'desc'];
+        $sortOrder = strtolower($sortOrder);
+        if (!in_array($sortOrder, $allowedSortOrders)) {
+            $sortOrder = 'asc'; 
+        }
+    
+        // Final SQL Query
+        $sql = "
+            SELECT *
+            FROM lowongan
+            $where
+            ORDER BY created_at $sortOrder
+            LIMIT :limit OFFSET :offset
+        ";
+    
+        $stmt = $this->db->prepare($sql);
+    
+        // Bind Parameters
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    
+        // Execute and Fetch
+        $stmt->execute();
+        $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Map to Lowongan Models
+        $jobModels = [];
+        foreach ($jobs as $job) {
+            $jobModel = new Lowongan(
+                $job['company_id'],
+                $job['posisi'],
+                $job['deskripsi'],
+                JobTypeEnum::from($job['jenis_pekerjaan']),
+                JenisLokasiEnum::from($job['jenis_lokasi']),
+                new \DateTime($job['created_at']),
+                new \DateTime($job['updated_at']),
+                $job['lowongan_id']
+            );
+    
+            $jobModels[] = $jobModel;
+        }
+    
+        return $jobModels;
+    }
+
+
+    public function getJobsByCompany(int $companyId, int $page, int $perPage
+    , string $q, array $jobType, array $locationType, string $sortOrder
+): array {
+    $offset = ($page - 1) * $perPage;
+    $params = [];
+    $conditions = [];
+
+    // Company Filter
+    $conditions[] = "company_id = :companyId";
+    $params[':companyId'] = $companyId;
+
+    // Search Query
+    if (!empty($q)) {
+        $conditions[] = "(posisi ILIKE :q)";
+        $params[':q'] = '%' . $q . '%';
+    }
+
+    // Job Type Filter
+    if (!empty($jobType)) {
+        $jobTypePlaceholders = [];
+        foreach ($jobType as $index => $type) {
+            $key = ":jobType$index";
+            $jobTypePlaceholders[] = $key;
+            $params[$key] = $type->value;
+        }
+        $conditions[] = "jenis_pekerjaan IN (" . implode(', ', $jobTypePlaceholders) . ")";
+    }
+
+    // Location Type Filter
+    if (!empty($locationType)) {
+        $locationTypePlaceholders = [];
+        foreach ($locationType as $index => $location) {
+            $key = ":locationType$index";
+            $locationTypePlaceholders[] = $key;
+            $params[$key] = $location->value;
+        }
+        $conditions[] = "jenis_lokasi IN (" . implode(', ', $locationTypePlaceholders) . ")";
+    }
+
+    // Construct WHERE Clause
+    $where = '';
+    if (!empty($conditions)) {
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+    }
+
+    // Handle Sort Order
+    $allowedSortOrders = ['asc', 'desc'];
+    $sortOrder = strtolower($sortOrder);
+    if (!in_array($sortOrder, $allowedSortOrders)) {
+        $sortOrder = 'asc'; 
+    }
+
+    // Final SQL Query
+    $sql = "
+        SELECT *
+        FROM lowongan
+        $where
+        ORDER BY created_at $sortOrder
+        LIMIT :limit OFFSET :offset
+    ";
+
+    $stmt = $this->db->prepare($sql);
+
+    // Bind Parameters
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    // Execute and Fetch
+    $stmt->execute();
+    $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Map to Lowongan Models
+    $jobModels = [];
+    foreach ($jobs as $job) {
+        $jobModel = new Lowongan(
+            $job['company_id'],
+            $job['posisi'],
+            $job['deskripsi'],
+            JobTypeEnum::from($job['jenis_pekerjaan']),
+            JenisLokasiEnum::from($job['jenis_lokasi']),
+            new \DateTime($job['created_at']),
+            new \DateTime($job['updated_at']),
+            $job['lowongan_id']
+        );
+
+        $jobModels[] = $jobModel;
+    }
+
+    return $jobModels;
+}
+
+    public function getNumberOfJobsPostedByCompany(int $companyId): int {
+        $stmt = $this->db->prepare('
+            SELECT COUNT(*) FROM lowongan WHERE company_id = :company_id
+        ');
+
+        $stmt->execute([
+            'company_id' => $companyId,
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getNumberOfJobs(): int {
+        $stmt = $this->db->prepare('
+            SELECT COUNT(*) FROM lowongan
+        ');
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getCompanyIdByJobId(int $jobId) : int {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT company_id FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            return (int) $stmt->fetchColumn();
+        } catch(PDOException $e) {
+            error_log('Get company id by job id error: ' . $e->getMessage());
+            throw new Exception('Get company id by job id error. Please try again later.');
+        }
+    }
+
+    public function updateStatusJob(int $jobId, bool $isOpen): void {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lowongan
+                SET is_open = :is_open
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'is_open' => $isOpen ? 'TRUE' : 'FALSE',
+                'lowongan_id' => $jobId,
+            ]);
+
+        } catch (PDOException $e) {
+            echo 'Update status job error: ' . $e->getMessage();
+            throw new Exception('Update status job error. Please try again later.');
+        }
+    }
+
+    public function deleteJob(int $jobId): void {
+        try {
+            $stmt = $this->db->prepare('
+                DELETE FROM lowongan
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+        } catch (PDOException $e) {
+            echo 'Delete job error: ' . $e->getMessage();
+            throw new Exception('Delete job error. Please try again later.');
+        }
+    }
 }

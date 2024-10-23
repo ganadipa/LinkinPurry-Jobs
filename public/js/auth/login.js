@@ -6,6 +6,14 @@ function validateEmail(email) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get("message");
+  const type = urlParams.get("type");
+
+  if (message && type) {
+    toast(type, message);
+  }
+
   // Toggle password visibility
   const showPassword = document.querySelector(".show-password");
   showPassword.addEventListener("click", function () {
@@ -17,40 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
       passwordInput.type = "password";
       this.textContent = "Show";
     }
-  });
-
-  // For form submission
-  const loginForm = document.getElementById("login-form");
-  loginForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const formData = new FormData(this);
-    const submitButton = this.querySelector("button[type=submit]");
-    submitButton.disabled = true;
-    submitButton.textContent = "Loading...";
-
-    const responseContainer = document.getElementById("response-container");
-
-    fetch("/api/login", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          window.location.href = "/";
-          responseContainer.classList.add("hidden");
-        } else {
-          submitButton.disabled = false;
-          submitButton.textContent = "Sign in";
-
-          // Display error message
-          responseContainer.innerText = `${data.message}`;
-          responseContainer.classList.remove("hidden");
-
-          // Display toast
-          toast("error", data.message);
-        }
-      });
   });
 
   // For client side validation (on focusout)P

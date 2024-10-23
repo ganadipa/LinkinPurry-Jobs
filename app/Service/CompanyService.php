@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Model\CompanyDetail;
+use App\Model\User;
+use App\Util\Enum\JenisLokasiEnum;
 use App\View\View;
 use Core\Repositories;
 
@@ -23,36 +25,56 @@ class CompanyService {
         return $companyDetailRepo->update($companyDetail);
     }
 
-    public static function getCreateJobPage() : string {
+    public static function getCompanyIdByJobId(int $jobId): int {
+        $lowonganRepo = Repositories::$lowongan;
+        return $lowonganRepo->getCompanyIdByJobId($jobId);
+    }
+
+    public static function getCreateJobPage(User $user) : string {
         return self::render('CreateJob', [
             'css' => ['company/create-job.css'],
             'js' => ['company/job-create.js'],
             'title' => 'Create Job',
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
-            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js']
+            'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
+            'user' => $user,
         ]);
     }
 
-    public static function getEditJobPage() : string {
+    public static function getEditJobPage(User $user, string $jobId) : string {
+        $lowonganRepo = Repositories::$lowongan;
+        $companyDetailRepo = Repositories::$companyDetail;
+        $attachmentRepo = Repositories::$attachmentLowongan;
+
+        $lowongan = $lowonganRepo->getById($jobId);
+        $company_detail = $companyDetailRepo->getCompanyDetailByUserId($user->user_id);
+        $attachment = $attachmentRepo->getAttachmentsById($lowongan->lowongan_id);
+
+        if (!$lowongan) {
+            return 'Job not found';
+        }
+        
         $jobData = [
-            'title' => 'Frontend Developer',
-            'company' => 'TechCorp Inc.',
-            'workplaceType' => 'on-site',
-            'location' => 'Makassar, South Sulawesi, Indonesia',
-            'jobType' => 'full-time',
-            'description' => '<p>Ini Headernya</p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Ini Satu</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Dua</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>TIga</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>List</li><li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>Haha</li></ol><p><u>Italic</u></p><p>Bold</p>',
-            'attachments' => ['https://placehold.co/40x40', 'https://placehold.co/50x50']
+            'title' => $lowongan->posisi,
+            'company' => $user->nama,
+            'locationType' => $lowongan->jenis_lokasi,
+            'location' => $company_detail->lokasi,
+            'jobType' => $lowongan->jenis_pekerjaan,
+            'description' => $lowongan->deskripsi,
+            'attachments' => $attachment,
         ];
 
         return self::render('EditJob', [
             'css' => ['company/create-job.css'],
             'js' => ['company/job-edit.js'],
-            'title' => 'Edit Job',
+            'title' => $lowongan->posisi . ' at ' . $user->nama,
             'ext_css' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css'],
             'ext_js' => ['https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js'],
-            'jobData' => $jobData
+            'jobData' => $jobData, 
+            'user' => $user,
         ]);
     }
+
 
     private static function render(string $view, array $vars = []): string {
         return View::render('Layout', 'Main', array_merge_recursive($vars, 

@@ -4,7 +4,7 @@
 
         <!-- Application Status moved to top-right -->
         <div class="application-status">
-            <div class="status-indicator status-<?= $application['status'] ?>">
+            <div class="status-indicator status-<?= $application['status'] ?>" id="statusIndicator">
                 <i data-lucide="<?= $application['status'] === 'waiting' ? 'clock' : ($application['status'] === 'accepted' ? 'check-circle' : 'x-circle') ?>"></i>
                 <span><?= ucfirst($application['status']) ?></span>
             </div>
@@ -26,30 +26,26 @@
                 if (empty($application['cv_url'])) {
                     echo '<p>No CV uploaded</p>';
                 } else {
-                    echo '<embed src="' . $application['cv_url'] . '" type="application/pdf" width="100%" height="600px" />';
+                    echo '<embed src="/job/'. $jobId . '/apply/' . $application['id'] . '/cv" type="application/pdf" width="100%" height="600px" />';
                 }
             ?>
         </div>
         
-        <?php if (!empty($applicant['video_url'])): ?>
         <div class="attachment video-attachment">
             <h3>Introductory Video</h3>
-            <video width="100%" controls>
-                <source src="<?= $applicant['video_url'] ?>" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <?php
+                if (empty($application['video_url'])) {
+                    echo '<p>No video uploaded</p>';
+                } else {
+                    echo '<video width="100%" controls>
+                            <source src="/job/'. $jobId . '/apply/' . $application['id'] . '/video" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>';
+                }
+            ?>
         </div>
-        <?php endif; ?>
     </div>
     
-    <?php if (!empty($application['reason'])): ?>
-    <div class="status-reason">
-        <h3>Reason / Follow-up</h3>
-        <div class="rich-text-content">
-            <?= $application['reason'] ?>
-        </div>
-    </div>
-    <?php endif; ?>
     
     <?php if ($application['status'] === 'waiting'): ?>
     <div class="application-action">
@@ -61,8 +57,8 @@
                 <input type="hidden" id="reasonHidden" name="reason">
             </div>
             <div class="form-group approval">
-                <button type="button" class="button button-accept" onclick="setStatus('accepted')">Accept</button>
-                <button type="button" class="button button-reject" onclick="setStatus('rejected')">Reject</button>
+                <button type="button" class="button button-accept" id="acceptButton">Accept</button>
+                <button type="button" class="button button-reject" id="rejectButton">Reject</button>
                 <input type="hidden" id="statusHidden" name="status">
             </div>
         </form>

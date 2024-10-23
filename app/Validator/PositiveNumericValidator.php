@@ -13,7 +13,7 @@ class PositiveNumericValidator implements IValidator {
 
         // id must be greater than 0
         if ($data > 0) {
-            return $data;
+            return (int) $data;
         }
 
         throw new BadRequestException("Job id must be greater than 0.");

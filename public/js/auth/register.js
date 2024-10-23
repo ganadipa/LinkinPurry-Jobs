@@ -83,6 +83,14 @@ function isValidEmail(email) {
 window.isValidEmail = isValidEmail;
 
 document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get("message");
+  const type = urlParams.get("type");
+
+  if (message && type) {
+    toast(type, message);
+  }
+
   const form = document.getElementById("registrationForm");
   const userTypeSelect = document.getElementById("userType");
   const companyDetails = document.getElementById("companyDetails");
@@ -95,36 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       companyDetails.style.display = "none";
       nameLabel.textContent = "Name:";
-    }
-  });
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (validateStep(2)) {
-      const formData = new FormData(this);
-      const submitButton = this.querySelector("button[type=submit]");
-      submitButton.disabled = true;
-      submitButton.textContent = "Loading...";
-
-      fetch("/api/register", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            toast("success", data.message);
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 1000);
-          } else {
-            submitButton.disabled = false;
-            submitButton.textContent = "Agree & Join";
-
-            // Display toast
-            toast("error", data.message);
-          }
-        });
     }
   });
 

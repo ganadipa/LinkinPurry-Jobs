@@ -70,6 +70,11 @@ use App\View\View;
         <p id="jobDescription">
             <?= $job['description'] ?>
         </p>
+        <h2 class="section-title">Reason<h2>
+        <p id="jobDescription">
+            <?= $reason ?>
+        </p>
+        
     </div>
     <div class="sticky-apply">
         <div class="job-details">
@@ -91,7 +96,7 @@ use App\View\View;
             if ($applied) {
                 if ($submission['cv']) {
                     echo '
-                    <a href = "#" class="button button-secondary">
+                    <a href = "'.$submission['cv'].'" class="button button-secondary">
                         <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
                         CV
                     </a>';
@@ -99,7 +104,7 @@ use App\View\View;
 
                 if ($submission['video']) {
                     echo '
-                    <a href = "#" class="button button-secondary">
+                    <a href = "'.$submission['video'].'" class="button button-secondary">
                         <i data-lucide="check" class="lucide-sm mr-icon-sm"></i>
                         Video
                     </a>';

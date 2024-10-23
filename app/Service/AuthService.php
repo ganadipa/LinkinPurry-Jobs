@@ -19,7 +19,7 @@ class AuthService {
         // if user not found
         if (isset($user)) {
             if (!password_verify($password, $user->password)) {
-                throw new Exception('Password is incorrect');
+                throw new Exception('Password or email is incorrect');
             }
 
             $_SESSION['id'] = $user->user_id;
@@ -27,7 +27,7 @@ class AuthService {
         }
 
         // No valid user
-        throw new Exception('User not found');
+        throw new Exception('Password or email is incorrect');
     }
 
     public static function registerUser(string $role, string $name, string $email, string $password): User {

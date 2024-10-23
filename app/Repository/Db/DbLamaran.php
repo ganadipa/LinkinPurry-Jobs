@@ -7,6 +7,7 @@ use App\Util\Enum\StatusLamaranEnum;
 use \PDO;
 use \PDOException;
 use \Exception;
+use DateTime;
 
 
 class DbLamaran implements RLamaran {
@@ -98,6 +99,8 @@ class DbLamaran implements RLamaran {
             ]);
 
             $lamaran->lamaran_id = (int) $this->db->lastInsertId();
+            
+
             return $lamaran;
         } catch (PDOException $e) {
             error_log('Insert lamaran error: ' . $e->getMessage());
@@ -153,6 +156,114 @@ class DbLamaran implements RLamaran {
         } catch (PDOException $e) {
             error_log('Update lamaran error: ' . $e->getMessage());
             throw new Exception('Update lamaran error. Please try again later.');
+        }
+    }
+
+    public function getLamaranByUserIdAndJobId(int $userId, int $jobId): ?Lamaran {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM lamaran
+                WHERE user_id = :user_id
+                AND lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'user_id' => $userId,
+                'lowongan_id' => $jobId,
+            ]);
+
+            $row = $stmt->fetch();
+            if (!$row) {
+                return null;
+            }
+
+            return new Lamaran(
+                lamaran_id: (int) $row['lamaran_id'],
+                user_id: (int) $row['user_id'],
+                lowongan_id: (int) $row['lowongan_id'],
+                cv_path: $row['cv_path'],
+                video_path: $row['video_path'],
+                status: StatusLamaranEnum::from($row['status']),
+                status_reason: $row['status_reason'],
+                created_at: new DateTime($row['created_at']),
+            );
+        } catch (PDOException $e) {
+            error_log('Get lamaran error: ' . $e->getMessage());
+            throw new Exception('Get lamaran error. Please try again later.');
+        }
+    }
+
+    public function getNumberOfApplicants(int $jobId): int
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT COUNT(*) FROM lamaran
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            return (int) $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log('Get number of applicants error: ' . $e->getMessage());
+            throw new Exception('Get number of applicants error. Please try again later.');
+        }
+    }
+
+    public function getApplicantsByLowonganId(int $jobId): array
+    {
+        try {
+            $stmt = $this->db->prepare('
+                SELECT * FROM lamaran
+                WHERE lowongan_id = :lowongan_id
+            ');
+
+            $stmt->execute([
+                'lowongan_id' => $jobId,
+            ]);
+
+            $rows = $stmt->fetchAll();
+            $lamarans = [];
+            foreach ($rows as $row) {
+                $lamarans[] = new Lamaran(
+                    lamaran_id: (int) $row['lamaran_id'],
+                    user_id: (int) $row['user_id'],
+                    lowongan_id: (int) $row['lowongan_id'],
+                    cv_path: $row['cv_path'],
+                    video_path: $row['video_path'],
+                    status: StatusLamaranEnum::from($row['status']),
+                    status_reason: $row['status_reason'],
+                    created_at: new DateTime($row['created_at']),
+                );
+            }
+
+            return $lamarans;
+        } catch (PDOException $e) {
+            error_log('Get applicants error: ' . $e->getMessage());
+            throw new Exception('Get applicants error. Please try again later.');
+        }
+    }
+
+    public function updateStatusApplicant(int $lamaranId, string $status, string $statusReason): void
+    {
+        try {
+            $stmt = $this->db->prepare('
+                UPDATE lamaran
+                SET status = :status,
+                    status_reason = :status_reason
+                WHERE lamaran_id = :lamaran_id
+            ');
+
+            $stmt->execute([
+                'status' => $status,
+                'status_reason' => $statusReason,
+                'lamaran_id' => $lamaranId,
+            ]);
+        } catch (PDOException $e) {
+            error_log('Update status applicant error: ' . $e->getMessage());
+            throw new Exception('Update status applicant error. Please try again later.');
         }
     }
 

@@ -83,6 +83,29 @@ class Response
         return $this;
     }
 
+    public function pdf(string $path) {
+        // Set the Content-Type header
+        $this->addHeader('Content-Type', 'application/pdf');
+
+        // Set the Content-Disposition header
+        $this->addHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"');
+
+        // Set the body
+        $this->setBody(file_get_contents($path));
+        return $this;
+    }
+
+    public function video(string $path) {
+        // Set the Content-Type header
+        $this->addHeader('Content-Type', 'video/mp4');
+
+        // Set the body
+        $this->setBody(file_get_contents($path));
+        return $this;
+    }
+
+
+
     public function send(): void
     {
         // Set status code

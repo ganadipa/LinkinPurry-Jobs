@@ -7,7 +7,6 @@
         <p class="company-name">Paper.id · Jakarta, Indonesia</p>
     </div>
 
-    <?php  $jobId = 12; ?>
 
     <form id="application-form" action="/job/<?php echo $jobId; ?>/apply" method="POST" enctype="multipart/form-data">
         <!-- CV Upload Section -->

@@ -82,15 +82,77 @@ imagePreviewContainer.addEventListener('click', (e) => {
     }
 });
 
+document.getElementsByClassName('cancel-btn')[0].addEventListener('click', function() {
+    var path = window.location.pathname;
+    var parts = path.split('/');
+    window.location.href = '/job/' + parts[parts.length - 2];
+});
+
 document.getElementById('job-post-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Here you would normally send the form data to your server
-    console.log('Form submitted');
-    console.log('Job Title:', document.getElementById('job-title').value);
-    console.log('Company:', document.getElementById('company').value);
-    console.log('Workplace Type:', document.getElementById('workplace-type').value);
-    console.log('Job Location:', document.getElementById('job-location').value);
-    console.log('Job Type:', document.getElementById('job-type').value);
-    console.log('Description:', quill.root.innerHTML);
-    console.log('Created At:', new Date().toISOString().split('T')[0]);
+    
+    // First, fetch the company_id
+    const xhrSelf = new XMLHttpRequest();
+    xhrSelf.open('GET', '/api/self', true);
+    
+    xhrSelf.onload = function() {
+        if (xhrSelf.status >= 200 && xhrSelf.status < 300) {
+            const response = JSON.parse(xhrSelf.responseText);
+            if (response.status === 'success' && response.data.role === 'company') {
+                // Now that we have the company_id, proceed with job posting
+                submitJobPosting(response.data.user_id);
+            } else {
+                alert('Error: Unable to fetch company information or user is not a company.');
+            }
+        } else {
+            console.error('Request failed: ' + xhrSelf.statusText);
+            alert('An error occurred while fetching company information.');
+        }
+    };
+    
+    xhrSelf.onerror = function() {
+        console.error('Request failed');
+        alert('An error occurred while fetching company information.');
+    };
+    
+    xhrSelf.send();
 });
+
+function submitJobPosting(companyId) {
+    console.log('Job Title:', document.getElementById('job-title').value);
+    console.log('Description:', quill.root.innerHTML);
+    console.log('Job Type:', document.getElementById('job-type').value);
+    console.log('Location Type:', document.getElementById('location-type').value);
+    console.log('Job Location:', document.getElementById('job-location').value);
+
+    const formData = {
+        company_id: companyId,
+        posisi: document.getElementById('job-title').value,
+        deskripsi: quill.root.innerHTML,
+        jenis_pekerjaan: document.getElementById('job-type').value,
+        jenis_lokasi: document.getElementById('location-type').value,
+        location: document.getElementById('job-location').value,
+        images: files.map(file => file.name)
+    };
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/lowongan/update/' + companyId, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // var response = JSON.parse(xhr.responseText);
+                console.log('Success:', xhr.status, xhr.responseText);
+
+                // Redirect to job details page
+                window.location.href = '/job/' + response.data.id;
+            } else {
+                console.log('Error:', xhr.status, xhr.responseText);
+            }
+        }
+    };
+
+    console.log('Sending data:', JSON.stringify(formData));
+    xhr.send(JSON.stringify(formData));
+}

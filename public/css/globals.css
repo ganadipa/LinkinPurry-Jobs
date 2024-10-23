@@ -55,7 +55,8 @@ nav {
   height: 52px;
 }
 
-.nav-left, .nav-right {
+.nav-left,
+.nav-right {
   display: flex;
   align-items: center;
 }
@@ -161,4 +162,20 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
+}
+
+#logout {
+  cursor: pointer;
+}
+
+ol {
+  margin-left: 0; /* Removes any default left margin */
+  padding-left: 0; /* Removes any default left padding */
+  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
+}
+
+ul {
+  margin-left: 0; /* Removes any default left margin */
+  padding-left: 0; /* Removes any default left padding */
+  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
 }

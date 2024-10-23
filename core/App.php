@@ -2,17 +2,18 @@
 
 namespace Core;
 
+use App\Controller\AttachmentController;
 use App\Controller\AuthController;
 use App\Controller\HomeController;
 use App\Controller\CompanyController;
 use App\Controller\JobController;
+use App\Controller\LamaranController;
 use App\Controller\LowonganController;
 use App\Controller\ProfileController;
 use App\Controller\LamaranController;
 use App\Util\Enum\RequestMethodEnum;
-use App\Repository\IRepository;
 use App\Middleware\RedirectIfLoggedInMiddleware;
-// use App\Middleware\RedirectIfNotLoggedInMiddleware;
+use App\Middleware\RedirectIfNotLoggedInMiddleware;
 use App\Middleware\FilesMiddleware;
 use App\Middleware\IMiddleware;
 
@@ -20,6 +21,7 @@ use App\Middleware\IMiddleware;
 use App\Util\EnvLoader;
 use App\Http\Request;
 use App\Http\Response;
+use App\Model\Lamaran;
 
 class App {
     private Router $router;
@@ -39,13 +41,11 @@ class App {
     public function registerRoutes() {
         // Define the needed middlewares 
         $redirectIfLoggedInMiddleware = new RedirectIfLoggedInMiddleware();
-        // $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
+        $redirectIfNotLoggedInMiddleware = new RedirectIfNotLoggedInMiddleware();
         $cvAndVideoMiddleware = new FilesMiddleware(['cv', 'video']);
+        $imagesMiddleware = new FilesMiddleware('images');
 
         // Register the routes
-
-        // Root, for home page
-        $this->router->register(RequestMethodEnum::GET, '/', [AuthController::class, 'currentUserInfo']);
 
         // Auth Routes (GET)
         $this->router->register(RequestMethodEnum::GET, '/login', [AuthController::class, 'loginPage'], [
@@ -56,21 +56,22 @@ class App {
             $redirectIfLoggedInMiddleware
         ]);
 
+        // Login
+        $this->router->register(RequestMethodEnum::POST, '/login', [AuthController::class, 'login'], [
+        ]);
+
+        // Register
+        $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
+        ]);
+
         // Api Routes
         {        
 
             // Auth Routes (POST)
 
-            // Login
-            $this->router->register(RequestMethodEnum::POST, '/api/login', [AuthController::class, 'login'], [
-            ]);
-
-            // Register
-            $this->router->register(RequestMethodEnum::POST, '/api/register', [AuthController::class, 'register'], [
-            ]);
 
             // Logout
-            $this->router->register(RequestMethodEnum::GET, '/api/logout', [AuthController::class, 'logout'], [
+            $this->router->register(RequestMethodEnum::POST, '/api/logout', [AuthController::class, 'logout'], [
             ]);
 
             // Gets the current user
@@ -84,27 +85,43 @@ class App {
 
         // A job routes
         $this->router->register(RequestMethodEnum::GET, '/job/:id', [JobController::class, 'jobdetails'], [
-            // Redirect to /login if not logged in
-            // Not implemented yet
         ]);
 
         {
+            $this->router->register(RequestMethodEnum::DELETE, '/job/:id', [JobController::class, 'deleteJob'], [
+            ]);
+
             $this->router->register(RequestMethodEnum::GET, '/job/:id/apply', [JobController::class, 'jobapplication'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
+                $redirectIfNotLoggedInMiddleware
             ]);
 
             $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
-
-                // Validate the cv and video
+                $redirectIfNotLoggedInMiddleware,
                 $cvAndVideoMiddleware
             ]);
 
-            $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicationId', [JobController::class, 'applicationDetails'], [
-                // Redirect to /login if not logged in
-                // Not implemented yet
+            $this->router->register(RequestMethodEnum::POST, '/job/:id/togglestatus', [JobController::class, 'updateStatusJob'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/cv', [JobController::class, 'appliedCV'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::GET, '/job/:jobId/apply/:userId/video', [JobController::class, 'appliedVideo'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:jobId/application/:applicantId', [JobController::class, 'applicationDetails'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/accept', [LamaranController::class, 'acceptApplication'], [
+                
+            ]);
+
+            $this->router->register(RequestMethodEnum::POST, '/company/job/:jobId/application/:applicantId/reject', [LamaranController::class, 'rejectApplication'], [
+                
             ]);
         }
 
@@ -126,19 +143,21 @@ class App {
             // $this->router->register(RequestMethodEnum::GET, '/company/:id', [CompanyController::class, 'showProfile']);
             // $this->router->register(RequestMethodEnum::GET, '/company/job', [CompanyController::class, 'showJobPage']);
             $this->router->register(RequestMethodEnum::GET, '/company/job/create', [CompanyController::class, 'showCreateJobPage']);
-            $this->router->register(RequestMethodEnum::GET, '/company/job/edit/:id', [CompanyController::class, 'showEditJobPage']); 
+            $this->router->register(RequestMethodEnum::GET, '/company/job/:id/edit', [CompanyController::class, 'showEditJobPage']); 
             // $this->router->register(RequestMethodEnum::POST, '/company/update', [CompanyController::class, 'updateProfile']);
         }
 
         // Client Page Routes
-        // $this->router->register(RequestMethodEnum::GET, '/client', [HomeController::class, 'clientPage']);
+        $this->router->register(RequestMethodEnum::GET, '/attachment', [AttachmentController::class, 'getList']);
 
         // Lowongan routes
         // Route to get a lowongan
         $this->router->register(RequestMethodEnum::GET, '/lowongan', [LowonganController::class, 'getList']);
         {
             // Route to create a lowongan
-            $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create']);
+            $this->router->register(RequestMethodEnum::POST, '/lowongan/create', [LowonganController::class, 'create'], [
+                $imagesMiddleware
+            ]);
     
             // Route to update a lowongan
             $this->router->register(RequestMethodEnum::POST, '/lowongan/update/:id', [LowonganController::class, 'update']);

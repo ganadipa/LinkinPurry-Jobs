@@ -14,4 +14,6 @@ class CompanyDetail {
         $this->lokasi = $lokasi;
         $this->about = $about;
     }
+
+    
 }

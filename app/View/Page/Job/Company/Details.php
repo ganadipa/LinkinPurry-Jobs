@@ -14,10 +14,12 @@ use App\View\View;
             <h1 class="job-title" id="jobTitle">
                 <?= $job['title'] ?>
             </h1>
-            <a href="#" class="button edit-button" id="editJobButton">
-                <i data-lucide="file-edit" class="lucide-sm"></i>
-                Edit
-            </a>
+            <?php 
+                echo '<a href="/company/job/' . $job['id'] . '/edit" class="button edit-button" id="editJobButton">
+                    <i data-lucide="file-edit" class="lucide-sm"></i>
+                    Edit
+                </a>';
+            ?>
         </div>
         <div class="job-details">
             <i data-lucide="briefcase" class='lucide-md mr-icon-sm'></i>
@@ -43,9 +45,18 @@ use App\View\View;
             <span class=' red-tag blue-tag font-semibold'>
                 <?= $job['isOpen'] ? 'Open' : 'Closed' ?>
             </span>
-        </div>
+        </div>  
 
         <div class="image-carousel">
+            <?php
+                if (isset($job['images']) || $job['images'] !== null) {
+                    echo '<div class="carousel-dots" id="carouselDots">';
+                    for ($i = 0; $i < count($job['images']); $i++) {
+                        echo '<span class="carousel-dot" data-index="' . $i . '"></span>';
+                    }
+                    echo '</div>';
+                }
+            ?>
             <img src="" alt="Job Image" class="carousel-image" id="carouselImage">
             <button class="carousel-button prev" id="prevButton">
                 <i data-lucide="chevron-left"></i>
@@ -62,23 +73,27 @@ use App\View\View;
         <div id="applicantList">
             <h2 class="section-title">Applicants</h2>
             <?php 
-            foreach ($applicants as $applicant) {
-                echo '<div class="applicant-card">
-                        <div class="applicant-info">
-                            <h3 class="applicant-name">
-                                <span>' . $applicant['id'] . '.</span> ' . $applicant['name'] . '
-                            </h3>
-                            <div class="status-indicator-company status-' . $applicant['status'] . '">
-                                <i data-lucide="' . ($applicant['status'] === 'waiting' ? 'clock' : ($applicant['status'] === 'accepted' ? 'check-circle' : 'x-circle')) . '"></i>
-                                <span>' . ucfirst($applicant['status']) . '</span>
+            if (empty($applicants)) {
+                echo '<p>No applicants yet</p>';
+            } else {
+                foreach ($applicants as $applicant) {
+                    echo '<div class="applicant-card">
+                            <div class="applicant-info">
+                                <h3 class="applicant-name">
+                                    ' . $applicant['name'] . '
+                                </h3>
+                                <div class="status-indicator-company status-' . $applicant['status'] . '">
+                                    <i data-lucide="' . ($applicant['status'] === 'waiting' ? 'clock' : ($applicant['status'] === 'accepted' ? 'check-circle' : 'x-circle')) . '"></i>
+                                    <span>' . ucfirst($applicant['status']) . '</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="applicant-action">
-                            <a href="/company/job/' . $job['id'] . '/application/' . $applicant['id'] . '" class="button button-secondary">
-                                View Application Details
-                            </a>
-                        </div>
-                    </div>';
+                            <div class="applicant-action">
+                                <a href="/company/job/' . $job['id'] . '/application/' . $applicant['id'] . '" class="button button-secondary">
+                                    View Application Details
+                                </a>
+                            </div>
+                        </div>';
+                }
             }
             ?>
         </div>
@@ -91,14 +106,12 @@ use App\View\View;
             </span>
         </div>
         <div>
-        <?php if ($job['isOpen']): ?>
-                <a href="/company/job/<?= $job['id'] ?>/close" class="button button-primary">
-                    Close Vacancy
-                </a>
-            <?php endif; ?>
-            <a href="/company/job/<?= $job['id'] ?>/delete" class="button button-danger">
+            <button class="button button-primary" id="statusButton">
+                <?= $job['isOpen'] ? 'Close Vacancy' : 'Open Vacancy' ?>
+            </button>
+            <button class="button button-danger" id="deleteButton">
                 Delete Vacancy
-            </a>
+            </button>
             <!-- <button class="button button-secondary">
                 <i data-lucide="bookmark"></i>
                 Save
