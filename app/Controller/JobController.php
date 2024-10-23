@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\Exception\BadRequestException;
 use App\Http\Exception\ForbiddenException;
 use App\Http\Request;
 use App\Http\Response;
@@ -114,12 +115,22 @@ class JobController {
             $video = $req->getPost('video', null);
             $lowongan_id = $req->getUriParamsValue('id', null);
 
+            
             if ($req->getUser() == null) {
                 throw new UnauthorizedException('You must login first');
             }
-
+            
             if (!isset($cv)) {
                 throw new Exception ('CV must be uploaded');
+            }
+
+            // Server side validation
+            if ((int) $cv['size'] > 2 * 1024 * 1024) {
+                throw new BadRequestException('CV size must be less than 2MB');
+            }
+
+            if ($video !== null && (int) $video['size'] > 250 * 1024 * 1024) {
+                throw new BadRequestException('Video size must be less than 250MB');
             }
 
             $user = $req->getUser();
