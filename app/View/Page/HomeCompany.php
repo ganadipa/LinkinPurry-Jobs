@@ -2,7 +2,7 @@
     <div class="menu-card" id="my-items">
         <div class="menu-title">
             <img src="/public/images/bookmark.png" alt="My Jobs">
-            <h2>My items</h2>
+            <h2>Jobs Information</h2>
         </div>
         <ul>
             <li class="active">Posted jobs<span class="count" id='count-jobs'>

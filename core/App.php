@@ -61,6 +61,7 @@ class App {
 
         // Register
         $this->router->register(RequestMethodEnum::POST, '/register', [AuthController::class, 'register'], [
+            
         ]);
 
         // Api Routes
