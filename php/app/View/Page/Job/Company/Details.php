@@ -68,10 +68,10 @@ use App\View\View;
                 }
             }
             ?>
-            <button class="carousel-button prev" id="prevButton">
+            <button class="carousel-button prev" id="prevButton" name="prev">
                 <i data-lucide="chevron-left"></i>
             </button>
-            <button class="carousel-button next" id="nextButton">
+            <button class="carousel-button next" id="nextButton" name="next">
                 <i data-lucide="chevron-right"></i>
             </button>
         </div>

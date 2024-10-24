@@ -42,7 +42,7 @@ function createJobElement(job) {
     <div class="job-info" id='job-${escapeHTML(job.id)}'>
       <img src="/public/images/img-placeholder.svg" alt="Company Logo" class="company-logo">
       <div>
-        <h3>${escapeHTML(job.title)}</h3>
+        <h1>${escapeHTML(job.title)}</h3>
         <p>${escapeHTML(job.company)}</p>
         <p>${escapeHTML(job.location)}</p>
         <p class="draft-info">Draft • Created ${new Date(
