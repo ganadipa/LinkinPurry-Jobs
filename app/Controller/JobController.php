@@ -267,13 +267,7 @@ class JobController {
         } catch (HttpException $e) {
             // Either its a classified HttpException
     
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));    
             $res->send();
     
         } catch (Exception $e) {
@@ -323,13 +317,7 @@ class JobController {
         } catch (HttpException $e) {
             // Either its a classified HttpException
     
-            $res->setStatusCode($e->getStatusCode());
-            $res->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'data' => null
-            ]);
-    
+            $res->setBody(HomeService::errorPage($user, $e->getMessage()));    
             $res->send();
     
         } catch (Exception $e) {
