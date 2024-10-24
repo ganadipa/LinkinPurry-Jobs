@@ -35,8 +35,21 @@ class AuthController {
             $emailValid = EmailValidator::validate($req->getPost('email', ''));
             $passwordValid = PasswordValidator::validate($req->getPost('password', ''));
 
+            // if its too long (> 50 chars) 
+            if (strlen($emailValid) > 50) {
+                throw new BadRequestException('Email must be not more than 50 characters');
+            }
+
+            if (strlen($passwordValid) > 50) {
+                throw new BadRequestException('Password must be not more than 50 characters');
+            }
+
+
+            
             // Get the valid user
             $user = AuthService::login($emailValid, $passwordValid);
+
+
 
             // Then the user is logged in
             $res->redirect('/');
@@ -77,6 +90,31 @@ class AuthController {
             $passwordValid = PasswordValidator::validate($password);
             $nameValid = $name;
             $roleValid = UserRoleValidator::validate($role);
+
+            if (strlen($emailValid) > 50) {
+                throw new BadRequestException('Email must be not more than 50 characters');
+            }
+
+            if (strlen($passwordValid) > 50) {
+                throw new BadRequestException('Password must be not more than 50 characters');
+            }
+
+            if (strlen($nameValid) > 50) {
+                throw new BadRequestException('Name must be not more than 50 characters');
+            }
+
+            if ($roleValid == 'company') {
+                $location = $req->getPost('location', '');
+                $about = $req->getPost('about', '');
+
+                if (strlen($location) > 100) {
+                    throw new BadRequestException('Location must be not more than 100 characters');
+                }
+
+                if (strlen($about) > 250) {
+                    throw new BadRequestException('About must be not more than 250 characters');
+                }
+            }
     
             // Check if the password and confirm password are the same
             if ($passwordValid !== $confirmPassword) {

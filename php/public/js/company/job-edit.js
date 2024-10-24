@@ -95,7 +95,7 @@ function submitJobPosting(companyId) {
       if (xhr.status === 200) {
         redirectToRootWithToast("success", "Job is updated!");
       } else {
-        toast("error", "Failed: " + response.message);
+        toast("error", "Failed: maybe some of the fields are too long?");
       }
     }
   };
@@ -156,19 +156,18 @@ document
         if (response.status === "success" && response.data.role === "company") {
           submitJobPosting(response.data.user_id);
         } else {
-          alert(
-            "Error: Unable to fetch company information or user is not a company."
+          toast(
+            "error",
+            "Unable to fetch company information or user is not a company."
           );
         }
       } else {
-        console.error("Request failed: " + xhrSelf.statusText);
-        alert("An error occurred while fetching company information.");
+        toast("error", "An error occurred while fetching company information.");
       }
     };
 
     xhrSelf.onerror = function () {
-      console.error("Request failed");
-      alert("An error occurred while fetching company information.");
+      toast("error", "An error occurred while fetching company information.");
     };
 
     xhrSelf.send();

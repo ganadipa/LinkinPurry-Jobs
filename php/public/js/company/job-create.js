@@ -122,19 +122,19 @@ document
           // Now that we have the company_id, proceed with job posting
           submitJobPosting(response.data.user_id);
         } else {
-          alert(
-            "Error: Unable to fetch company information or user is not a company."
+          toast(
+            "error",
+            "Unable to fetch company information or user is not a company."
           );
         }
       } else {
         console.error("Request failed: " + xhrSelf.statusText);
-        alert("An error occurred while fetching company information.");
+        toast("error", "An error occurred while fetching company information.");
       }
     };
 
     xhrSelf.onerror = function () {
-      console.error("Request failed");
-      alert("An error occurred while fetching company information.");
+      toast("error", "An error occurred while fetching company information.");
     };
 
     xhrSelf.send();

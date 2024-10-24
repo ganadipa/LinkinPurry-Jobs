@@ -1,0 +1,1 @@
+ALTER TABLE lamaran ALTER COLUMN status_reason TYPE text;
