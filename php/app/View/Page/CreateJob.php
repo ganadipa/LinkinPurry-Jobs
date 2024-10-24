@@ -1,6 +1,6 @@
 <div class="container">
     <section class="main-content">
-        <h1>Review job description</h1>
+        <h1>Create Job</h1>
         <form id="job-post-form">
             <div class="form-group">
                 <label for="job-title">Job title (Position)*</label>
