@@ -10,7 +10,6 @@ use App\Repository\Db\Db;
 use App\Middleware\AuthMiddleware;
 use App\Repository\Local\LocalFileRepository;
 
-
 // If the environment is not docker, then env is not automatically loaded
 if ($_ENV['ENVIRONMENT'] !== 'docker') {
     EnvLoader::load(__DIR__ . "/../.env");

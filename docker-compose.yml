@@ -1,11 +1,11 @@
 services:
   # PostgreSQL service for local development
-  postgres-docker:
+  postgres-docker-php:
     image: postgres:13
     ports:
       - "5433:5432"
     env_file:
-      - .env.docker
+      - php/.env.docker
     environment:
       - ENVIRONMENT=docker
     volumes:
@@ -14,23 +14,22 @@ services:
       - internal-network
 
   # PHP Application service for local development
-  app-docker:
-    build: .
+  app-docker-php:
+    build: php/.
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www/html
-      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./php:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
     depends_on:
-      - postgres-docker
+      - postgres-docker-php
     env_file:
-      - .env.docker
+      - php/.env.docker
     environment:
       - ENVIRONMENT=docker
     networks:
       - internal-network
-    command: 
-      sh -c "chown -R www-data:www-data /var/www/html/uploads && chmod -R 755 /var/www/html/uploads && apache2-foreground"
+    command: sh -c "chown -R www-data:www-data /var/www/html/uploads && chmod -R 755 /var/www/html/uploads && apache2-foreground"
 
 volumes:
   postgres_data:
