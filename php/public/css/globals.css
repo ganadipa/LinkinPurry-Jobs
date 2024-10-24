@@ -198,7 +198,7 @@ nav {
 
 @media only screen and (max-width: 1024px) {
   #back-button {
-    left: 24px !important;
+    left: 10px !important;
   }
 }
 
@@ -288,7 +288,7 @@ ul {
 #back-button {
   position: fixed;
   top: 8%;
-  left: 25%;
+  left: 20%;
   padding: 8px;
   background-color: transparent;
   color: var(--primary-color);

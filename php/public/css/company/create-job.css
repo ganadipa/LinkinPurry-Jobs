@@ -1,7 +1,7 @@
 /* Styles for both CreateJob and EditJob pages */
 .container {
     display: flex;
-    width: 100%;
+    width: 90%;
     max-width: 1128px;
     margin: 0 auto;
 }
