@@ -9,3 +9,9 @@ server:
 
 down:
 	$(down)
+
+seed:
+	php script/RunSeed.php
+
+migration:
+	php script/RunMigrations.php

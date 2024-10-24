@@ -15,7 +15,7 @@ $db = Db::getInstance();
 $conn = $db->getConnection();
 
 // Get the first parameter;
-$param = $argv[1];
+$param = $argv[1] ?? 0;
 
 
 // Get all the files inside the ../database/migrations folder;

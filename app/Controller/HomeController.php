@@ -82,6 +82,7 @@ class HomeController {
 
             $toast_onload_type = $req->getQueryParam('toast_onload_type') ?? '';
             $toast_onload_message = $req->getQueryParam('toast_onload_message') ?? '';
+            $toast_time = $req->getQueryParam('toast_time') ?? '';
 
             // Validate each query parameter
             $jobType = ArrayValidator::validate($jobType);
@@ -121,12 +122,12 @@ class HomeController {
             if ($user === null || $user->role === UserRoleEnum::JOBSEEKER) {
                 $html = HomeService::getHomeJobSeekerPage(
                     $q, $jobType, $locationType, $sortOrder, $user,
-                    $toast_onload_type, $toast_onload_message
+                    $toast_onload_type, $toast_onload_message, $toast_time
                 );
             } else {
                 $html = HomeService::getHomeCompanyPage(
                     $q, $jobType, $locationType, $sortOrder, $user,
-                    $toast_onload_type, $toast_onload_message,
+                    $toast_onload_type, $toast_onload_message, $toast_time
                 );
             }
             

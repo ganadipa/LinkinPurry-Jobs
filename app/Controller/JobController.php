@@ -71,6 +71,8 @@ class JobController {
             $id = $req->getUriParamsValue('id', null);
             $toast_onload_type = $req->getQueryParam('toast_onload_type', '');
             $toast_onload_message = $req->getQueryParam('toast_onload_message', '');
+            $toast_time = $req->getQueryParam('toast_time', '');
+
     
             // Because using the redirect if not logged in middleware, the user will always be not null
             $user = $req->getUser();
@@ -83,7 +85,7 @@ class JobController {
             $validatedId = PositiveNumericValidator::validate($id);
 
             $html = JobService::application($id, $user, 
-                $toast_onload_type, $toast_onload_message
+                $toast_onload_type, $toast_onload_message, $toast_time
             );
     
             $res->setBody($html);
@@ -140,7 +142,7 @@ class JobController {
     
             $res->send();
         } catch (Exception $e) {
-            $queryParams = '?toast_onload_type=error&toast_onload_message='.($e->getMessage());
+            $queryParams = '?toast_onload_type=error&toast_onload_message='.($e->getMessage()).'&toast_time='.time();
             $res->redirect('/job/'.$lowongan_id.'/apply'.$queryParams);
             $res->send();
         }

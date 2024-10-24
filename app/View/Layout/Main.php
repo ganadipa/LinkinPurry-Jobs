@@ -66,7 +66,8 @@ use App\View\View;
     <div id="toast-container" 
     data-toast-onload-type= <?= $toast['type'] ?? '' ?>
     data-toast-onload-message = <?= $toast['message'] ?? '' ?>
-    
+
+    data-toast-time = <?= $toast['time'] ?? ''?>
     ></div>
 
     <main>

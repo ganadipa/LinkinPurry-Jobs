@@ -13,7 +13,9 @@ export function redirectToRootWithToast(type, message) {
   const encodedType = encodeURIComponent(type);
   const encodedMessage = encodeURIComponent(message);
 
-  const url = `/?toast_onload_type=${encodedType}&toast_onload_message=${encodedMessage}`;
+  const url = `/?toast_onload_type=${encodedType}&toast_onload_message=${encodedMessage}&toast_time=${
+    Date.now() / 1000
+  }`;
 
   window.location.href = url;
 }
@@ -88,7 +90,8 @@ document.addEventListener("DOMContentLoaded", function (e) {
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
         if (response.status === "success") {
-          location.reload();
+          // Location reload but remove the query string (remove the before stack url before)
+          window.location.href = window.location.href.split("?")[0];
         }
       }
     };

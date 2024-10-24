@@ -62,7 +62,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const data_toast_onload_message = toastContainer.getAttribute(
     "data-toast-onload-message"
   );
+  const data_toast_time = toastContainer.getAttribute("data-toast-time");
+  // if data toast time not integer, then set it to null
+  if (data_toast_time && isNaN(parseInt(data_toast_time))) {
+    data_toast_time = null;
+  }
 
-  if (data_toast_onload_type && data_toast_onload_message)
+  if (
+    !data_toast_time ||
+    !data_toast_onload_type ||
+    !data_toast_onload_message
+  ) {
+    return;
+  }
+
+  // data toast time current time in second
+  // if 1s has passed since data toast time, then show the toast
+  // remember, in seconds
+  if (Math.floor(Date.now() / 1000) - data_toast_time <= 1) {
     toast(data_toast_onload_type, data_toast_onload_message);
+  }
 });

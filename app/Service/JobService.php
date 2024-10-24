@@ -255,7 +255,7 @@ class JobService {
     }
 
     public static function application(string $jobId, User $user, 
-        $toast_onload_type, $toast_onload_message
+        $toast_onload_type, $toast_onload_message, $toast_time
     ): string {
         $job = Repositories::$lowongan->getById($jobId);
         if (!$job) {
@@ -290,6 +290,7 @@ class JobService {
             'toast' => [
                 'type' => $toast_onload_type,
                 'message' => $toast_onload_message,
+                'time' => $toast_time,
             ],
             'title' => 'Apply for ' . $job->posisi,
             'user' => $user,
