@@ -112,6 +112,58 @@ Now, the linkinpurry web app is ready! at http://localhost:8080
 
 # Screenshots of the Application
 
+**Login Page**
+   ![Login Page](images/LoginPage.png)
+
+**Register Page**
+   ![Register Page](images/RegisterPage.png)
+
+**Not Logged In**
+   ![Not Logged In](images/NotLoggedIn.png)
+
+## As Company
+
+1. **Company Home**
+   ![Company Home](images/CompanyHome.png)
+
+2. **Company Profile**
+   ![Company Profile](images/CompanyProfile.png)
+
+3. **Edit Company Profile**
+   ![Edit Company Profile](images/CompanyEditProfile.png)
+
+4. **Post a Job**
+   ![Post a Job](images/CompanyPostJob.png)
+
+5. **Edit Job**
+   ![Edit Job](images/CompanyEditJob.png)
+
+6. **Job Detail (Company View)**
+   ![Job Detail](images/CompanyJobDetail.png)
+
+7. **Job Detail 2 (Company View)**
+   ![Job Detail 2](images/CompanyJobDetail2.png)
+
+8. **Application Detail (Company View)**
+   ![Application Detail](images/CompanyAppDetail.png)
+
+## As Job Seeker
+
+1. **Home**
+   ![Home](images/JSHome.png)
+
+2. **Job Detail (Job Seeker View)**
+   ![Job Detail](images/JSJobDetail.png)
+
+3. **Apply for Job**
+   ![Apply for Job](images/JSApply.png)
+
+4. **After Apply**
+   ![After Apply](images/JSAfterApply.png)
+
+5. **Application History**
+   ![Application History](images/JSHistory.png)
+
 # Task Distribution
 
 We made a great team! one task is not purely done alone
@@ -124,10 +176,10 @@ We made a great team! one task is not purely done alone
 2. Login: 13522066
 3. Register: 13522066
 4. Home: 13522066, 13522072
-5. Tambah Lowongan: 13522066, 13522072
-6. Detail Lowongan: 13522066, 13522072
+5. Tambah Lowongan: 13522066, 13522072, 13522096
+6. Detail Lowongan: 13522066, 13522072, 13522096
 7. Detail Lamaran: 13522072
-8. Edit Lowongan: 13522066, 13522072
+8. Edit Lowongan: 13522066, 13522072, 13522096
 9. Lamaran: 13522066
 10. Riwayat: 13522072, 13522096
 11. Profil: 13522072, 13522096
