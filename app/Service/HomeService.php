@@ -101,7 +101,7 @@ class HomeService {
 
     public static function errorPage(?User $user, string $error): string {
         return self::render('Error', [
-            'title' => 'Error',
+            'title' => '404 - Not Found',
             'css' => ['home/error.css'],
             'error' => $error,
             'user' => $user

@@ -154,7 +154,7 @@ class DbLowongan implements RLowongan {
         }
     }    
 
-    public function getById(int $lowonganId): Lowongan {
+    public function getById(int $lowonganId): ?Lowongan {
         $sql = "SELECT * FROM lowongan WHERE lowongan_id = :lowongan_id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':lowongan_id' => $lowonganId]);

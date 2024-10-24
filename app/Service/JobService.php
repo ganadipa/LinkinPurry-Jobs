@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Http\Exception\NotFoundException;
 use App\Http\Exception\UnauthorizedException;
 use App\Model\User;
 use App\View\View;
@@ -25,7 +26,14 @@ class JobService {
         }
 
         $lowongan = $lowonganRepo->getById($jobId);
+        if (!$lowongan) {
+            throw new NotFoundException('Job not found');
+        }
+
         $company = $companyRepo->getCompanyDetailByUserId($lowongan->company_id);
+
+
+
         $userCompany = $userRepo->getUserProfileById($lowongan->company_id);
 
         // If the user id is null, then lamaran is null
@@ -126,6 +134,10 @@ class JobService {
         }
 
         $lowongan = $lowonganRepo->getById($jobId);
+        if (!$lowongan) {
+            throw new NotFoundException('Job not found');
+        }
+
         $company = $companyRepo->getCompanyDetailByUserId($lowongan->company_id);
         $userCompany = $userRepo->getUserProfileById($lowongan->company_id);
 
