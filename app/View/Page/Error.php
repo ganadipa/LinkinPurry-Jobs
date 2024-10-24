@@ -9,7 +9,9 @@
         <div id="errorDetails" class="error-details">
             Status: <span id="statusCode">404</span><br>
             Message: <span id="statusMessage"><?= $error ?></span><br>
-            Timestamp: <span id="errorTimestamp"><?= date('Y-m-d H:i:s') ?></span>
+            Timestamp: <span id="errorTimestamp" class="server-time" data-timestamp='
+                <?= time() ?>
+            '>?></span>
         </div>
     </div>
 </div>

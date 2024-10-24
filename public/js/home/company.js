@@ -45,7 +45,9 @@ function createJobElement(job) {
         <h3>${escapeHTML(job.title)}</h3>
         <p>${escapeHTML(job.company)}</p>
         <p>${escapeHTML(job.location)}</p>
-        <p class="draft-info">Draft • Created ${escapeHTML(job.created)}</p>
+        <p class="draft-info">Draft • Created ${new Date(
+          parseInt(job.created) * 1000
+        ).toLocaleDateString()}</p>
       </div>
     </div>
     <div class="job-actions">

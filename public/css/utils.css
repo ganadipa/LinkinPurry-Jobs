@@ -46,3 +46,12 @@
 .w-full {
   width: 100%;
 }
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.self-start {
+  align-self: flex-start;
+}

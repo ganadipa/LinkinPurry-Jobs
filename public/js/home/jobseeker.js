@@ -35,7 +35,7 @@ function getSelectedCheckboxValues(checkboxGroup) {
 
 function createJobElement(job) {
   const jobElement = document.createElement("a");
-  const status = job.is_open ? 'Open' : 'Close';
+  const status = job.is_open ? "Open" : "Close";
   jobElement.href = `/job/${job.id}`;
   jobElement.className = "job-card";
   jobElement.innerHTML = `
@@ -45,9 +45,9 @@ function createJobElement(job) {
                 <h3>${escapeHTML(job.title)}</h3>
                 <p>${escapeHTML(job.company)}</p>
                 <p>${escapeHTML(job.location)}</p>
-                <p class="draft-info">Job • Created ${escapeHTML(
-                  job.created
-                )}</p>
+                  <p class="draft-info">Job • Created ${new Date(
+                    parseInt(job.created) * 1000
+                  ).toLocaleDateString()}</p>
             </div>
             <div class="status-indicator">
                 <div class="status status-${status}">${status}</div>

@@ -94,7 +94,8 @@ class JobService {
             'job' => [
                 'id' => $lowongan->lowongan_id,
                 'description' => $lowongan->deskripsi,
-                'created' => $lowongan->created_at->format('Y-m-d'),
+                'created' => $lowongan->created_at->getTimestamp(),
+                'updated' => $lowongan->updated_at->getTimestamp(),
                 'location' => $lowongan->jenis_lokasi->value,
                 'type' => $lowongan->jenis_pekerjaan->value,
                 'title' => $lowongan->posisi,
@@ -197,7 +198,8 @@ class JobService {
             'job' => [
                 'id' => $jobId,
                 'description' => $lowongan->deskripsi,
-                'created' => $lowongan->created_at->format('Y-m-d'),
+                'created' => $lowongan->created_at->getTimestamp(),
+                'updated' => $lowongan->updated_at->getTimestamp(),
                 'location' => $lowongan->jenis_lokasi->value,
                 'type' => $lowongan->jenis_pekerjaan->value,
                 'title' => $lowongan->posisi,
@@ -331,7 +333,7 @@ class JobService {
                 'id' => $job->lowongan_id,
                 'title' => $job->posisi,
                 'company_id' => $job->company_id,
-                'created' => $job->created_at->format('Y-m-d'),
+                'created' => $job->created_at->getTimestamp(),
                 'is_open' => $job->is_open
             ];
         }

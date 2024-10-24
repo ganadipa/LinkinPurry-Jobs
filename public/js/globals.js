@@ -99,3 +99,46 @@ document.addEventListener("DOMContentLoaded", function (e) {
     xhr.send();
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Select all elements with the 'server-time' class
+  const timeElements = document.querySelectorAll(".server-time");
+
+  timeElements.forEach(function (element) {
+    const unixTimestamp = element.getAttribute("data-timestamp");
+
+    if (unixTimestamp) {
+      // Convert Unix timestamp from seconds to milliseconds
+      const timestampInMs = parseInt(unixTimestamp, 10) * 1000;
+
+      // Create a Date object
+      const date = new Date(timestampInMs);
+
+      // Check if the date is valid
+      if (!isNaN(date.getTime())) {
+        // Format options for displaying date and time
+        const options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false, // Set to true for 12-hour format
+        };
+
+        // Convert to locale string based on client's locale
+        const localTime = date.toLocaleString(undefined, options);
+
+        // Display the local time
+        element.textContent = localTime;
+      } else {
+        // Handle invalid date
+        element.textContent = "Invalid Date";
+      }
+    } else {
+      // Handle missing timestamp
+      element.textContent = "No Date Provided";
+    }
+  });
+});

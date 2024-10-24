@@ -33,11 +33,23 @@ use App\View\View;
                 <?= htmlspecialchars($job['location']) ?>
             </span>
         </div>
-        <div class="job-details">
-            <i data-lucide="calendar" class='lucide-md mr-icon-sm'></i>
-            <span id="jobCreated">
-                <?= htmlspecialchars($job['created']) ?>
-            </span>
+        <div class="job-details flex-col">
+            <!-- Job post is created, make it 'created at'  without icon and use italic-->
+            <p class="self-start">
+                <span class="font-italic">Created on</span>
+                <span class="server-time" data-timestamp=<?= $job['created']?>>
+                <?= $job['created'] ?>
+            </p>
+            <?php
+                if ($job['created'] !== $job['updated']) {
+                    echo '<p class="self-start">
+                        <span class="font-italic">Updated on</span>
+                        <span class="server-time" data-timestamp=' . $job['updated'] . '>
+                        ' . $job['updated'] . '
+                    </p>';
+                }
+             ?>
+            
         </div>
     </div>
     <div class="content">
