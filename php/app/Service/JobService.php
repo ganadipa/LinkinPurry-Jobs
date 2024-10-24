@@ -391,4 +391,40 @@ class JobService {
 
         $jobRepo->deleteJob($jobId);
     }
+
+    public static function validateJobAuthorization(string $jobId, string $userId): void {
+        $lowonganrepo = Repositories::$lowongan;
+        $lowongan = $lowonganrepo->getById($jobId);
+
+        if ($lowongan->company_id != $userId) {
+            throw new UnauthorizedException('You are not authorized to get to this page');
+        }
+    }
+
+    public static function generateApplicationsCSV(string $jobId): string {
+        $BASE_URL = $_ENV['BASE_URL'];
+
+        $lamaranRepo = Repositories::$lamaran;
+        $userRepo = Repositories::$user;
+        $lowonganRepo = Repositories::$lowongan;
+
+        $lamarans = $lamaranRepo->getApplicantsByLowonganId($jobId);
+        $job = $lowonganRepo->getById($jobId);
+
+        
+
+        $csv = "Name,Posisi,Tanggal Melamar,CV,Video,Status\n";
+        foreach ($lamarans as $lamaran) {
+            $user = $userRepo->getUserProfileById($lamaran->user_id);
+            $cv = $BASE_URL . '/job/' . $jobId . '/apply/' . $lamaran->user_id . '/cv';
+
+            $video = $lamaran->video_path ? $BASE_URL . '/job/' . $jobId . '/apply/' . $lamaran->user_id . '/video' : '';
+
+            $status = $lamaran->status->value;
+
+            $csv .= $user->nama . ',' . $job->posisi . ',' . $lamaran->created_at->format('Y-m-d') . ',' . $cv . ',' . $video . ',' . $status . "\n";
+        }
+
+        return $csv;
+    }
 }

@@ -113,6 +113,29 @@ class Response
         return $this;
     }
 
+    public function csv(string $csv_content, string $filename = "data.csv") {
+        // Clear any previous output to prevent header issues
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+    
+        // Set the Content-Type header to indicate CSV format
+        $this->addHeader('Content-Type', 'text/csv; charset=utf-8');
+    
+        // Set the Content-Disposition header to prompt a download with the specified filename
+        $this->addHeader('Content-Disposition', 'attachment; filename="' . basename($filename) . '"');
+    
+        // Optionally, set headers to prevent caching
+        $this->addHeader('Pragma', 'no-cache');
+        $this->addHeader('Expires', '0');
+    
+        // Set the body to the CSV content
+        $this->setBody($csv_content);
+    
+        return $this;
+    }
+    
+
 
 
     public function send(): void
@@ -130,5 +153,7 @@ class Response
             echo $this->body;
         }
     }
+
+
 
 }

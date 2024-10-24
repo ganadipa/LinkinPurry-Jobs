@@ -192,6 +192,36 @@ class App {
             ]);
 
             /**
+             * Apply a job
+             * 
+             * @route /job/:id/apply
+             * @method POST
+             * 
+             * Must be a jobseeker and that job must not be applied yet
+             * else if not logged in will be redirected to login page
+             * otherwise 404.
+             */
+            $this->router->register(RequestMethodEnum::POST, '/job/:id/apply', [JobController::class, 'applyjob'], [
+                $redirectIfNotLoggedInMiddleware,
+                $cvAndVideoMiddleware
+            ]);
+
+            /**
+             * Get the list of applications of a job
+             * 
+             * @route /job/:id/applications/csv
+             * @method GET
+             * 
+             * Must be a company and the job must be owned by the company
+             * if not logged in will be redirected to login page
+             * otherwise 404
+             * 
+             */
+            $this->router->register(RequestMethodEnum::GET, '/job/:id/applications/csv', [JobController::class, 'applicationsCSV'], [
+                $redirectIfNotLoggedInMiddleware,
+            ]);
+
+            /**
              * Toggle the status of a job
              * 
              * @route /job/:id/togglestatus

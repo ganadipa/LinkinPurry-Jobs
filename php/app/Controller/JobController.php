@@ -70,6 +70,13 @@ class JobController {
     
             // Because using the redirect if not logged in middleware, the user will always be not null
             $user = $req->getUser();
+            if ($user == null) {
+                throw new UnauthorizedException('You must login first');
+            }
+
+            if ($user->role->value == 'company') {
+                throw new ForbiddenException('You must login as a jobseeker');
+            }
 
             if (!isset($id)) {
                 throw new Exception ('Job not found');
@@ -105,9 +112,13 @@ class JobController {
             $video = $req->getPost('video', null);
             $lowongan_id = $req->getUriParamsValue('id', null);
 
-            
-            if ($req->getUser() == null) {
+            $user = $req->getUser();
+            if ( $user == null) {
                 throw new UnauthorizedException('You must login first');
+            }
+
+            if ($user->role->value == 'company') {
+                throw new ForbiddenException('You must login as a jobseeker');
             }
             
             if (!isset($cv)) {
@@ -231,7 +242,9 @@ class JobController {
 
             $user = $req->getUser();
             if ($user == null) {
-                throw new UnauthorizedException('You must login first');
+                $res->redirect('/login');
+                $res->send();
+                return;
             }
 
             // Get the needed value
@@ -282,7 +295,9 @@ class JobController {
 
             $user = $req->getUser();
             if ($user == null) {
-                throw new UnauthorizedException('You must login first');
+                $res->redirect('/login');
+                $res->send();
+                return;
             }
 
             // Get the needed value
@@ -423,6 +438,46 @@ class JobController {
                 'data' => null
             ]);
     
+            $res->send();
+        }
+    }
+
+    public static function applicationsCSV(Request $req, Response $res) {
+        try {
+            $jobId = $req->getUriParamsValue('id', null);
+            if ($jobId == null) {
+                throw new BadRequestException('Job not found');
+            }
+
+            $user = $req->getUser();
+            if ($user == null) {
+                $res->redirect("/login");
+                $res->send();
+                return;
+            }
+
+            if ($user->role == 'jobseeker') {
+                throw new ForbiddenException('You must login as a company');
+            }
+
+            JobService::validateJobAuthorization($jobId, $user->user_id);
+
+            
+            $csv = JobService::generateApplicationsCSV($jobId);
+
+            $res->csv($csv, 'applications_job_'.$jobId.'.csv');
+            $res->send();
+        } catch (HttpException $e) {
+            $res->setBody(HomeService::errorPage($req->getUser(), $e->getMessage()));
+            $res->send();
+        } catch (Exception $e) {
+
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+
             $res->send();
         }
     }
