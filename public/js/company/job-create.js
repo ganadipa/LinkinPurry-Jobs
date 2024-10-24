@@ -165,10 +165,16 @@ function submitJobPosting(companyId) {
   xhr.open("POST", "/lowongan/create", true);
 
   // No need to set 'Content-Type' as it will be automatically set to 'multipart/form-data' when using FormData
+  /**
+   * {
+   * status: 'error' | 'success',
+   * message: string
+   * }
+   */
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
+      var response = JSON.parse(xhr.responseText);
       if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText);
         console.log("Success:", response);
 
         // Go to root (/) with:
@@ -178,7 +184,7 @@ function submitJobPosting(companyId) {
 
         redirectToRootWithToast("success", "Job is posted!");
       } else {
-        console.log("Error:", xhr.status, xhr.responseText);
+        toast("error", "Failed to post job: " + response.message);
       }
     }
   };

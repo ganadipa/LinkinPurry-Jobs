@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Http\Exception\BadRequestException;
 use App\Http\Exception\ForbiddenException;
+use App\Http\Exception\HttpException;
 use App\Http\Exception\UnauthorizedException;
 use App\Http\Request;
 use App\Http\Response;
@@ -31,11 +32,17 @@ class LowonganController {
             $jenis_pekerjaan = $req->getPost('jenis_pekerjaan', null);
             $jenis_lokasi = $req->getPost('jenis_lokasi', null);
 
+
+
             // Validate required fields
             $validatedCompanyId = NotNullValidator::validate($company_id);
             $validatedPosisi = NotNullValidator::validate($posisi);
             $validatedJenisLokasi = NotNullValidator::validate($jenis_lokasi);
             $validatedJenisPekerjaan = NotNullValidator::validate($jenis_pekerjaan);
+
+            if ($deskripsi === null || $deskripsi == '<p></p>') {
+                throw new BadRequestException("Job description is required.");
+            }
 
 
             $inputData = [
@@ -59,7 +66,8 @@ class LowonganController {
             ]);
 
             $res->send();
-        } catch (Exception $e) {
+        } catch (HttpException $e) {
+            $res->setStatusCode($e->getStatusCode());
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -67,7 +75,7 @@ class LowonganController {
             ]);
 
             $res->send();
-        } catch (BadRequestException $e) {
+        } catch (Exception $e) {
             $res->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -105,6 +113,11 @@ class LowonganController {
             $validatedJenisPekerjaan = NotNullValidator::validate($jenis_pekerjaan);
             $validatedId = PositiveNumericValidator::validate($id);
 
+
+            if ($deskripsi === null || $deskripsi == '<p></p>') {
+                throw new BadRequestException("Job description is required.");
+            }
+
             if (!isset($id)) {
                 throw new Exception("Lowongan ID is required.");
             }
@@ -129,6 +142,16 @@ class LowonganController {
             ]);
 
             $res->send();
+        } catch (HttpException $e) {
+            $res->setStatusCode($e->getStatusCode());
+            $res->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null
+            ]);
+
+            $res->send();
+
         } catch (Exception $e) {
             $res->json([
                 'status' => 'error',

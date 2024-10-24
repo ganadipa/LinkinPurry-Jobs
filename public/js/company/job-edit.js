@@ -91,12 +91,11 @@ function submitJobPosting(companyId) {
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
+      var response = JSON.parse(xhr.responseText);
       if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText);
-
         redirectToRootWithToast("success", "Job is updated!");
       } else {
-        toast("error", "Failed to update job post.");
+        toast("error", "Failed: " + response.message);
       }
     }
   };
