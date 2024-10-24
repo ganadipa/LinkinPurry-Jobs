@@ -190,6 +190,18 @@ nav {
 }
 
 /* Responsive Styles */
+@media only screen and (max-width: 1440px) {
+  #back-button {
+    left: 10% !important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  #back-button {
+    left: 24px !important;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .nav-right {
     display: none; /* Hide nav links */
@@ -201,6 +213,10 @@ nav {
 
   .search-bar {
     display: none; /* Optional: Hide search bar on small screens */
+  }
+
+  #back-button {
+    display: none;
   }
 }
 
@@ -258,13 +274,31 @@ button {
 }
 
 ol {
-  margin-left: 0; /* Removes any default left margin */
-  padding-left: 0; /* Removes any default left padding */
-  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
+  margin-left: 0;
+  padding-left: 0;
+  list-style-position: inside;
 }
 
 ul {
-  margin-left: 0; /* Removes any default left margin */
-  padding-left: 0; /* Removes any default left padding */
-  list-style-position: inside; /* Ensures the bullet points or numbers are inside the container */
+  margin-left: 0;
+  padding-left: 0;
+  list-style-position: inside;
+}
+
+#back-button {
+  position: fixed;
+  top: 8%;
+  left: 25%;
+  padding: 8px;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1000;
+}
+
+#back-button:hover {
+  opacity: 0.8;
 }

@@ -48,6 +48,7 @@ function createJobElement(job) {
         <p class="draft-info">Draft • Created ${new Date(
           parseInt(job.created) * 1000
         ).toLocaleDateString()}</p>
+        <p class="number-of-applicants"><b>${job['number_of_applicants']} Applicants</b></p> 
       </div>
     </div>
     <div class="job-actions">

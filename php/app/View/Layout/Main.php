@@ -63,6 +63,15 @@ use App\View\View;
     <?= View::render('Partial', 'Navbar', [
         'user' => $user
     ]) ?>
+
+    <?php
+        $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if ($currentPath !== '/'): ?>
+            <button id="back-button" onclick="history.back()">
+                <i data-lucide="arrow-left"></i>
+            </button>
+    <?php endif; ?>
+
     <div id="toast-container" 
     data-toast-onload-type= <?= $toast['type'] ?? '' ?>
     data-toast-onload-message = <?= $toast['message'] ?? '' ?>

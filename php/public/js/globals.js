@@ -1,3 +1,5 @@
+lucide.createIcons();
+
 export function escapeHTML(str) {
   return str
     .toString()

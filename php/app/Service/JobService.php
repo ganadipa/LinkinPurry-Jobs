@@ -334,7 +334,8 @@ class JobService {
                 'title' => $job->posisi,
                 'company_id' => $job->company_id,
                 'created' => $job->created_at->getTimestamp(),
-                'is_open' => $job->is_open
+                'is_open' => $job->is_open,
+                'number_of_applicants' => Repositories::$lamaran->getNumberOfApplicants($job->lowongan_id),
             ];
         }
 
@@ -348,6 +349,7 @@ class JobService {
             $job['company'] = $user->nama;
             $job['location'] = $company->lokasi;
             $job['is_open'] = $lowonganRepo->getById($job['id'])->is_open;
+            $job['number_of_applicants'] = Repositories::$lamaran->getNumberOfApplicants($job['id']);
         }
 
 
