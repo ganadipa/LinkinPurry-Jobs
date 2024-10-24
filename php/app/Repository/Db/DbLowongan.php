@@ -128,7 +128,8 @@ class DbLowongan implements RLowongan {
                 posisi = :posisi,
                 deskripsi = :deskripsi,
                 jenis_pekerjaan = :jenis_pekerjaan,
-                jenis_lokasi = :jenis_lokasi
+                jenis_lokasi = :jenis_lokasi,
+                updated_at = :updated_at
                 WHERE lowongan_id = :lowongan_id
             ');
 
@@ -139,6 +140,7 @@ class DbLowongan implements RLowongan {
                 'jenis_pekerjaan' => $lowongan->jenis_pekerjaan->value,
                 'jenis_lokasi' => $lowongan->jenis_lokasi->value,
                 'lowongan_id' => $lowonganId,
+                'updated_at' => $lowongan->updated_at->format('Y-m-d H:i:s')
             ]);
 
             if ($stmt->rowCount() > 0) {
@@ -149,7 +151,6 @@ class DbLowongan implements RLowongan {
 
             return $lowongan;
         } catch (PDOException $e) {
-            error_log('Update lowongan error: ' . $e->getMessage());
             throw new Exception('Update lowongan error. Please try again later.');
         }
     }    

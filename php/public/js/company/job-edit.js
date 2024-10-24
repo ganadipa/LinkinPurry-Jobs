@@ -93,7 +93,7 @@ function submitJobPosting(companyId) {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       var response = JSON.parse(xhr.responseText);
       if (xhr.status === 200) {
-        redirectToRootWithToast("success", "Job is updated!");
+        // redirectToRootWithToast("success", "Job is updated!");
       } else {
         toast("error", "Failed: " + response.message);
       }
