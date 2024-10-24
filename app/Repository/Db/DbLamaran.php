@@ -267,6 +267,7 @@ class DbLamaran implements RLamaran {
         }
     }
 
+    // Return a list of lamaran
     public function getLamaranByUserId(int $userId): array {
         try {
             $stmt = $this->db->prepare('

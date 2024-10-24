@@ -16,11 +16,15 @@
                                 <div class="meta">
                                     <div class="date">
                                         <i data-lucide="calendar" class="meta-icon"></i>
-                                        <?= htmlspecialchars(date('d M Y', strtotime($lamaran['created_at']))) ?>
+                                        <span class='server-date' data-timestamp=                                        <?= (new Datetime($lamaran['created_at']))->getTimestamp() ?>
+                                        >
+                                        </span> 
                                     </div>
                                     <div class="time">
                                         <i data-lucide="clock" class="meta-icon"></i>
-                                        <?= htmlspecialchars(date('H:i', strtotime($lamaran['created_at']))) ?>
+                                        <span class='server-time' data-timestamp=                                        <?= (new Datetime($lamaran['created_at']))->getTimestamp() ?>
+                                        >
+                                        </span> 
                                     </div>
                                 </div>
                             </div>

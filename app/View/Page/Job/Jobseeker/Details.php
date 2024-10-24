@@ -29,14 +29,14 @@ use App\View\View;
             <!-- Job post is created, make it 'created at'  without icon and use italic-->
             <p class="self-start">
                 <span class="font-italic">Created on</span>
-                <span class="server-time" data-timestamp=<?= $job['created']?>>
+                <span class="server-timestamp" data-timestamp=<?= $job['created']?>>
                 <?= $job['created'] ?>
             </p>
             <?php
                 if ($job['created'] !== $job['updated']) {
                     echo '<p class="self-start">
                         <span class="font-italic">Updated on</span>
-                        <span class="server-time" data-timestamp=' . $job['updated'] . '>
+                        <span class="server-timestamp" data-timestamp=' . $job['updated'] . '>
                         ' . $job['updated'] . '
                     </p>';
                 }
