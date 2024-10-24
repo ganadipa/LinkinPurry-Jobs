@@ -120,16 +120,17 @@ We made a great team! one task is not purely done alone
 
 (Wajib)
 
-1. Login: 13522066
-2. Register: 13522066
-3. Home: 13522066, 13522072
-4. Tambah Lowongan: 13522066, 13522072
-5. Detail Lowongan: 13522066, 13522072
-6. Detail Lamaran: 13522072
-7. Edit Lowongan: 13522066, 13522072
-8. Lamaran: 13522066
-9. Riwayat: 13522072, 13522096
-10. Profil: 13522072, 13522096
+1. Route, architecture, docker: 13522066
+2. Login: 13522066
+3. Register: 13522066
+4. Home: 13522066, 13522072
+5. Tambah Lowongan: 13522066, 13522072
+6. Detail Lowongan: 13522066, 13522072
+7. Detail Lamaran: 13522072
+8. Edit Lowongan: 13522066, 13522072
+9. Lamaran: 13522066
+10. Riwayat: 13522072, 13522096
+11. Profil: 13522072, 13522096
 
 (Bonus)
 
@@ -153,6 +154,7 @@ We made a great team! one task is not purely done alone
 
 (Bonus)
 
-1. All Responsive: 13522066, 13522072 12. UI/UX Linkedin: 13522066, 13522072, 13522096
-2. Data Export: 13522066
-3. Google Light House: 13522066, 13522072, 13522096
+1. All Responsive: 13522066, 13522072
+2. UI/UX Linkedin: 13522066, 13522072, 13522096
+3. Data Export: 13522066
+4. Google Light House: 13522066, 13522072, 13522096
