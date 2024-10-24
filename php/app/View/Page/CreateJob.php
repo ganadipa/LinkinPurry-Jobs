@@ -47,12 +47,6 @@
 </section>
 <aside class="right-sidebar">
     <div class="info-card">
-        <h2>Frontend Developer</h2>
-        <p>ITB Fair 2024</p>
-        <p>Makassar, South Sulawesi, Indonesia (On-site)</p>
-        <p>Saved as Draft</p>
-    </div>
-    <div class="info-card">
         <h2>Target your job to the right people</h2>
         <p>Include a job description and add required skills to target job seekers who match your criteria.</p>
     </div>
