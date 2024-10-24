@@ -66,23 +66,49 @@ statusButton.addEventListener("click", function (e) {
   xhr.send();
 });
 
+// Delete functionality with modal
 const deleteButton = document.querySelector("#deleteButton");
+const deleteModal = document.querySelector("#deleteModal");
+const closeDeleteModal = document.querySelector("#closeDeleteModal");
+const cancelDelete = document.querySelector("#cancelDelete");
+const confirmDelete = document.querySelector("#confirmDelete");
 
+// Show modal
 deleteButton.addEventListener("click", function (e) {
-  e.preventDefault();
+    e.preventDefault();
+    deleteModal.classList.remove("hidden");
+});
 
-  const path = window.location.href;
-  const jobId = path.split("/").pop();
+// Hide modal functions
+function hideModal() {
+    deleteModal.classList.add("hidden");
+}
 
-  const xhr = new XMLHttpRequest();
-  xhr.open("DELETE", `/job/${jobId}`, true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      // Redirect
-      window.location.href = "/";
+closeDeleteModal.addEventListener("click", hideModal);
+cancelDelete.addEventListener("click", hideModal);
+
+// Close modal when clicking outside
+deleteModal.addEventListener("click", function (e) {
+    if (e.target === deleteModal) {
+        hideModal();
     }
-  };
+});
 
-  xhr.send();
+// Handle delete confirmation
+confirmDelete.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const path = window.location.href;
+    const jobId = path.split("/").pop();
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", `/job/${jobId}`, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            window.location.href = "/";
+        }
+    };
+
+    xhr.send();
 });

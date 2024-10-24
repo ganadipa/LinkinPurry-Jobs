@@ -110,10 +110,23 @@ use App\View\View;
             <button class="button button-danger" id="deleteButton">
                 Delete Vacancy
             </button>
-            <!-- <button class="button button-secondary">
-                <i data-lucide="bookmark"></i>
-                Save
-            </button> -->
+        </div>
+    </div>
+
+    <!-- Add this HTML just before the closing </div> of the container -->
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+                <button class="close-button" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this job vacancy? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="button button-secondary" id="cancelDelete">Cancel</button>
+                <button class="button button-danger" id="confirmDelete">Delete</button>
+            </div>
         </div>
     </div>
 </div>
