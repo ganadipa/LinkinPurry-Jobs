@@ -25,7 +25,7 @@ Introducing, LinkinPurry, The simple copy of linkedin website application.
 
 # ✨ Wajib
 
-All required specifications is done.
+All required specifications are done.
 
 # ✨ Bonus
 
